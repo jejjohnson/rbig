@@ -58,5 +58,7 @@ def test_information_summary_keys(simple_2d):
 
 
 def test_information_reduction(simple_2d):
-    reduction = information_reduction(simple_2d, np.random.default_rng(42).normal(size=simple_2d.shape))
+    reduction = information_reduction(
+        simple_2d, np.random.default_rng(42).normal(size=simple_2d.shape)
+    )
     assert isinstance(reduction, float)

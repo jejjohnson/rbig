@@ -343,12 +343,16 @@ class SplineGaussianizer(Bijector):
         self.n_features_ = X.shape[1]
         n_q = min(self.n_quantiles, X.shape[0])
         quantiles = np.linspace(0, 1, n_q)
+        g_q = ndtri(np.clip(quantiles, self.eps, 1 - self.eps))
         for i in range(self.n_features_):
             xi_sorted = np.sort(X[:, i])
             x_q = np.quantile(xi_sorted, quantiles)
-            g_q = ndtri(np.clip(quantiles, self.eps, 1 - self.eps))
-            self.splines_.append(PchipInterpolator(x_q, g_q))
-            self.inv_splines_.append(PchipInterpolator(g_q, x_q))
+            # Remove duplicate x values so PchipInterpolator gets a strictly
+            # increasing sequence (duplicates arise with discrete/tied data).
+            x_q_u, idx = np.unique(x_q, return_index=True)
+            g_q_u = g_q[idx]
+            self.splines_.append(PchipInterpolator(x_q_u, g_q_u))
+            self.inv_splines_.append(PchipInterpolator(g_q_u, x_q_u))
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:

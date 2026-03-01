@@ -186,7 +186,9 @@ class AnnealedRBIG:
         if self.strategy is not None:
             idx = layer_index % len(self.strategy)
             entry = self.strategy[idx]
-            marginal_name = entry[1] if isinstance(entry, (list, tuple)) else "gaussianize"
+            marginal_name = (
+                entry[1] if isinstance(entry, (list, tuple)) else "gaussianize"
+            )
             return self._get_component(marginal_name, "marginal", layer_index)
         return MarginalGaussianize()
 
