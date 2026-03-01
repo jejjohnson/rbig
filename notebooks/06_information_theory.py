@@ -102,8 +102,10 @@ rbig_tc_model = AnnealedRBIG(
 )
 rbig_tc_model.fit(data)
 
-tc_rbig_model = rbig_tc_model.tc_per_layer_[0]  # TC after first layer ≈ initial TC
-print(f"TC (AnnealedRBIG, first-layer proxy): {tc_rbig_model:.4f} nats")
+# tc_per_layer_ records TC *after* each layer; use total_correlation_rbig for the
+# initial (pre-RBIG) TC of the raw data.
+tc_rbig_model = total_correlation_rbig(data)
+print(f"TC (AnnealedRBIG estimate from raw data): {tc_rbig_model:.4f} nats")
 
 # %% [markdown]
 # ---
@@ -121,14 +123,16 @@ A = rng.rand(d_dimensions, d_dimensions)
 data = data_original @ A
 
 # %% [markdown]
-# ### Analytical entropy for Gaussian data
+# ### Gaussian plug-in entropy estimate
 #
+# We use the Gaussian entropy formula as a reference,
 # $$H(X) = \frac{1}{2}\log|2\pi e \Sigma|$$
+# but the value below is a plug-in / estimated quantity based on sampled data.
 
 # %%
 Hx_marginals = marginal_entropy(data_original)
 H_analytical = Hx_marginals.sum() + np.log(np.abs(np.linalg.det(A)))
-print(f"H (analytical): {H_analytical:.4f} nats")
+print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")
 
 # %% [markdown]
 # ### RBIG entropy estimate
@@ -234,19 +238,17 @@ mu_y = np.ones(d_dimensions) * mu_offset
 X_p = rng.multivariate_normal(mu_x, cov, n_samples)
 X_q = rng.multivariate_normal(mu_y, cov, n_samples)
 
-cov_x = np.cov(X_p.T)
-cov_y = np.cov(X_q.T)
-
 # %% [markdown]
 # ### Analytical KLD for Gaussian distributions
+#
+# Since both distributions share the same covariance `cov`, the formula simplifies:
+#
+# $$\mathrm{KL}(\mathcal{N}(\mu_x,\Sigma) \| \mathcal{N}(\mu_y,\Sigma))
+# = \frac{1}{2}(\mu_y - \mu_x)^\top \Sigma^{-1} (\mu_y - \mu_x)$$
 
 # %%
-kld_analytical = 0.5 * (
-    (mu_y - mu_x) @ np.linalg.inv(cov_y) @ (mu_y - mu_x).T
-    + np.trace(np.linalg.inv(cov_y) @ cov_x)
-    - np.log(np.linalg.det(cov_x) / np.linalg.det(cov_y))
-    - d_dimensions
-)
+# Use the known covariance matrix (not sample estimates) for the exact value
+kld_analytical = 0.5 * (mu_y - mu_x) @ np.linalg.inv(cov) @ (mu_y - mu_x).T
 print(f"KLD (analytical): {kld_analytical:.4f} nats")
 
 # %% [markdown]

@@ -25,6 +25,8 @@
 
 # %%
 import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
@@ -32,7 +34,6 @@ import seaborn as sns
 
 from rbig import MarginalKDEGaussianize, MarginalUniformize
 
-matplotlib.use("Agg")
 plt.style.use("seaborn-v0_8-paper")
 
 # %% [markdown]

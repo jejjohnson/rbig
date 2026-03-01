@@ -27,13 +27,14 @@
 
 # %%
 import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
 from rbig import AnnealedRBIG, MarginalGaussianize, PCARotation, RBIGLayer
 
-matplotlib.use("Agg")
 sns.set_style("whitegrid")
 
 # %% [markdown]

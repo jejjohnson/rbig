@@ -29,12 +29,13 @@
 
 # %%
 import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
 from rbig import AnnealedRBIG, entropy_reduction, total_correlation
 
-matplotlib.use("Agg")
 plt.style.use("seaborn-v0_8-paper")
 
 
