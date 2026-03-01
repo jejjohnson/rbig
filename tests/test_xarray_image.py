@@ -4,7 +4,7 @@ import pytest
 
 xr = pytest.importorskip("xarray")
 
-from rbig._src.xarray_image import xarray_image_gaussianize, xarray_image_rbig
+from rbig._src.xarray_image import xarray_image_gaussianize, xarray_image_rbig  # noqa: E402
 
 
 @pytest.fixture

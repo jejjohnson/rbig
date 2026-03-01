@@ -1,5 +1,5 @@
 """xarray spatiotemporal support for RBIG."""
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 
@@ -12,7 +12,9 @@ except ImportError:
 
 def _require_xarray():
     if not _XARRAY_AVAILABLE:
-        raise ImportError("xarray is required for this function. Install it with: pip install xarray")
+        raise ImportError(
+            "xarray is required for this function. Install it with: pip install xarray"
+        )
 
 
 def rbig_dataset(

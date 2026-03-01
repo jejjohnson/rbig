@@ -2,9 +2,8 @@
 from typing import Optional
 
 import numpy as np
-from scipy.stats import norm
 
-from rbig._src.marginal import entropy_marginal, bin_estimation
+from rbig._src.marginal import entropy_marginal
 
 
 def information_reduction(
@@ -42,14 +41,14 @@ def information_reduction(
     hx = entropy_marginal(x_data, correction=correction)
     hy = entropy_marginal(y_data, correction=correction)
 
-    I = float(np.sum(hy) - np.sum(hx))
-    II = float(np.sqrt(np.sum((hy - hx) ** 2)))
+    info = float(np.sum(hy) - np.sum(hx))
+    info_rms = float(np.sqrt(np.sum((hy - hx) ** 2)))
 
     p = 0.25
-    if II < np.sqrt(n_dimensions * p * tol_dimensions ** 2) or I < 0:
-        I = 0.0
+    if info_rms < np.sqrt(n_dimensions * p * tol_dimensions**2) or info < 0:
+        info = 0.0
 
-    return I
+    return info
 
 
 def total_correlation(rbig_model) -> float:
@@ -63,7 +62,7 @@ def total_correlation(rbig_model) -> float:
     Returns
     -------
     tc : float
-        Total correlation in nats (sum of residual info).
+        Total correlation in bits (sum of residual info).
     """
     return float(np.sum(rbig_model.residual_info_))
 
@@ -153,8 +152,6 @@ def mutual_information(X: np.ndarray, Y: np.ndarray, **rbig_kwargs) -> float:
     """
     from rbig._src.model import AnnealedRBIG
 
-    X = np.atleast_2d(X) if X.ndim == 1 else X
-    Y = np.atleast_2d(Y) if Y.ndim == 1 else Y
     if X.ndim == 1:
         X = X[:, None]
     if Y.ndim == 1:
@@ -165,10 +162,6 @@ def mutual_information(X: np.ndarray, Y: np.ndarray, **rbig_kwargs) -> float:
     model_x = AnnealedRBIG(**rbig_kwargs).fit(X)
     model_y = AnnealedRBIG(**rbig_kwargs).fit(Y)
     model_xy = AnnealedRBIG(**rbig_kwargs).fit(XY)
-
-    tc_x = total_correlation(model_x)
-    tc_y = total_correlation(model_y)
-    tc_xy = total_correlation(model_xy)
 
     h_x = entropy_rbig(model_x)
     h_y = entropy_rbig(model_y)

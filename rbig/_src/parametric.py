@@ -73,8 +73,12 @@ class KDEUniformization:
         cdf_vals = np.maximum.accumulate(cdf_vals)
 
         self._support = support
-        self._cdf_fn = interp1d(support, cdf_vals, kind="linear", fill_value=(0.0, 1.0), bounds_error=False)
-        self._ppf_fn = interp1d(cdf_vals, support, kind="linear", fill_value="extrapolate", bounds_error=False)
+        self._cdf_fn = interp1d(
+            support, cdf_vals, kind="linear", fill_value=(0.0, 1.0), bounds_error=False
+        )
+        self._ppf_fn = interp1d(
+            cdf_vals, support, kind="linear", fill_value="extrapolate", bounds_error=False
+        )
         self._pdf_vals = pdf_vals
         return self
 
@@ -120,7 +124,7 @@ class QuantileUniformization:
 
     def ppf(self, u: np.ndarray) -> np.ndarray:
         u = np.asarray(u, dtype=float).ravel()[:, None]
-        return self._qt.inverse_transform(_clip_uniform(u)[:, None]).ravel()
+        return self._qt.inverse_transform(_clip_uniform(u)).ravel()
 
 
 class GaussianMixtureMarginal:
@@ -146,8 +150,12 @@ class GaussianMixtureMarginal:
         cdf_vals = cdf_vals / cdf_vals[-1]
         cdf_vals = np.maximum.accumulate(cdf_vals)
         self._support = support
-        self._cdf_fn = interp1d(support, cdf_vals, kind="linear", fill_value=(0.0, 1.0), bounds_error=False)
-        self._ppf_fn = interp1d(cdf_vals, support, kind="linear", fill_value="extrapolate", bounds_error=False)
+        self._cdf_fn = interp1d(
+            support, cdf_vals, kind="linear", fill_value=(0.0, 1.0), bounds_error=False
+        )
+        self._ppf_fn = interp1d(
+            cdf_vals, support, kind="linear", fill_value="extrapolate", bounds_error=False
+        )
         return self
 
     def cdf(self, x: np.ndarray) -> np.ndarray:

@@ -88,8 +88,12 @@ def fit_marginal_params(
     uniform_cdf = make_cdf_monotonic(raw_cdf_fn(new_support))
     uniform_cdf = uniform_cdf / uniform_cdf.max()
 
-    cdf_fn = interp1d(new_support, uniform_cdf, kind="linear", fill_value="extrapolate", bounds_error=False)
-    ppf_fn = interp1d(uniform_cdf, new_support, kind="linear", fill_value="extrapolate", bounds_error=False)
+    cdf_fn = interp1d(
+        new_support, uniform_cdf, kind="linear", fill_value="extrapolate", bounds_error=False
+    )
+    ppf_fn = interp1d(
+        uniform_cdf, new_support, kind="linear", fill_value="extrapolate", bounds_error=False
+    )
 
     return {
         "uniform_cdf_support": new_support,

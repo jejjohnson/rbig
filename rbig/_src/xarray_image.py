@@ -1,8 +1,6 @@
 """xarray image support for RBIG."""
 from typing import Tuple
 
-import numpy as np
-
 try:
     import xarray as xr
     _XARRAY_AVAILABLE = True
@@ -40,6 +38,11 @@ def xarray_image_gaussianize(
     _require_xarray()
     from rbig._src.image import image_gaussianize
 
+    missing = [d for d in spatial_dims if d not in da.dims]
+    if missing:
+        raise ValueError(f"DataArray is missing spatial dimensions: {missing}")
+    da = da.transpose(*spatial_dims, ...)
+
     image = da.values
     gauss_image = image_gaussianize(image, patch_size=patch_size, **rbig_kwargs)
     return xr.DataArray(gauss_image, dims=da.dims, coords=da.coords, attrs=da.attrs)
@@ -69,6 +72,11 @@ def xarray_image_rbig(
     """
     _require_xarray()
     from rbig._src.image import ImageRBIG
+
+    missing = [d for d in spatial_dims if d not in da.dims]
+    if missing:
+        raise ValueError(f"DataArray is missing spatial dimensions: {missing}")
+    da = da.transpose(*spatial_dims, ...)
 
     image = da.values
     model = ImageRBIG(patch_size=patch_size, **rbig_kwargs).fit(image)

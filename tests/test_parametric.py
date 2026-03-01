@@ -1,6 +1,5 @@
 """Test parametric transforms."""
 import numpy as np
-import pytest
 
 from rbig import (
     HistogramUniformization,
@@ -36,6 +35,9 @@ def test_quantile_uniformization(data_2d):
     model = QuantileUniformization().fit(col)
     u = model.cdf(col)
     assert np.all(u > 0) and np.all(u < 1)
+    x_rec = model.ppf(u)
+    assert x_rec.shape == col.shape
+    np.testing.assert_allclose(x_rec, col, atol=0.01)
 
 
 def test_fit_parametric_marginal_factory(data_2d):

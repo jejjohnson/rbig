@@ -4,7 +4,7 @@ import pytest
 
 xr = pytest.importorskip("xarray")
 
-from rbig._src.xarray_st import rbig_dataarray, rbig_dataset
+from rbig._src.xarray_st import rbig_dataarray, rbig_dataset  # noqa: E402
 
 
 @pytest.fixture
@@ -27,6 +27,8 @@ def test_rbig_dataarray(simple_dataarray):
 
 
 def test_rbig_dataset(simple_dataset):
-    model, ds_gauss = rbig_dataset(simple_dataset, features=["a", "b"], n_layers=20, zero_tolerance=5)
+    model, ds_gauss = rbig_dataset(
+        simple_dataset, features=["a", "b"], n_layers=20, zero_tolerance=5
+    )
     assert "a" in ds_gauss
     assert "b" in ds_gauss

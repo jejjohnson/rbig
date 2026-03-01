@@ -1,6 +1,8 @@
 """Test base abstract classes."""
+import numpy as np
 import pytest
-from rbig._src.base import Bijector, MarginalBijector, RotationTransform, RBIGLayer
+
+from rbig._src.base import Bijector, MarginalBijector, RBIGLayer, RotationTransform
 
 
 def test_bijector_is_abstract():
@@ -24,8 +26,6 @@ def test_rbig_layer_is_abstract():
 
 
 def test_bijector_interface():
-    import numpy as np
-
     class IdentityBijector(Bijector):
         def forward(self, x):
             return x

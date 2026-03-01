@@ -7,10 +7,9 @@ from rbig._src.marginal import (
     fit_marginal_params,
     marginal_gaussianize,
     marginal_gaussianize_inverse,
-    entropy_marginal,
 )
-from rbig._src.rotation import fit_rotation
 from rbig._src.metrics import information_reduction
+from rbig._src.rotation import fit_rotation
 
 
 class AnnealedRBIG:
@@ -80,7 +79,10 @@ class AnnealedRBIG:
             yyy = [0.1571, 0.0468, 0.0145, 0.0046, 0.0014, 0.0001, 0.00001]
             tolerance = float(np.interp(n_samples, xxx, yyy))
 
-        zero_tolerance = self.zero_tolerance if self.zero_tolerance is not None else self.n_layers + 1
+        if self.zero_tolerance is not None:
+            zero_tolerance = self.zero_tolerance
+        else:
+            zero_tolerance = self.n_layers + 1
 
         gauss_data = X.copy()
         gauss_params = []
@@ -93,7 +95,6 @@ class AnnealedRBIG:
 
             # -- Marginal Gaussianization --
             layer_params = []
-            x_before = gauss_data.copy()
             for dim in range(n_features):
                 params_d = fit_marginal_params(
                     gauss_data[:, dim],
@@ -105,21 +106,30 @@ class AnnealedRBIG:
             gauss_params.append(layer_params)
 
             # -- Rotation --
-            R, _ = fit_rotation(gauss_data, rotation_type=self.rotation_type, random_state=self.random_state)
+            R, _ = fit_rotation(
+                gauss_data,
+                rotation_type=self.rotation_type,
+                random_state=self.random_state,
+            )
             rotation_matrix.append(R)
 
             x_after = gauss_data @ R
 
             # -- Information reduction --
-            I = information_reduction(gauss_data, x_after, correction=self.entropy_correction)
-            residual_info.append(I)
+            info = information_reduction(
+                gauss_data,
+                x_after,
+                correction=self.entropy_correction,
+                tol_dimensions=tolerance,
+            )
+            residual_info.append(info)
 
             gauss_data = x_after
 
             # -- Stopping criteria --
-            if layer > zero_tolerance:
+            if layer >= zero_tolerance:
                 recent = np.array(residual_info[-zero_tolerance:])
-                if np.abs(recent).sum() == 0:
+                if np.all(np.abs(recent) < tolerance):
                     # Trim last 50 layers
                     trim = min(50, len(gauss_params))
                     gauss_params = gauss_params[:-trim]

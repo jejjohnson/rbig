@@ -1,8 +1,7 @@
 """Test density estimation."""
 import numpy as np
-import pytest
 
-from rbig import AnnealedRBIG, score_samples, log_prob
+from rbig import AnnealedRBIG, log_prob, score_samples
 
 
 def test_score_samples_shape(data_2d):

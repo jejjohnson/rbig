@@ -2,8 +2,8 @@
 from typing import Optional, Tuple
 
 import numpy as np
-from sklearn.decomposition import PCA
 from scipy.stats import ortho_group
+from sklearn.decomposition import PCA
 
 from rbig._src.base import RotationTransform
 

@@ -1,8 +1,13 @@
 """Test rotation transforms."""
 import numpy as np
-import pytest
 
-from rbig import PCARotation, RandomRotation, fit_rotation, apply_rotation, apply_rotation_inverse
+from rbig import (
+    PCARotation,
+    RandomRotation,
+    apply_rotation,
+    apply_rotation_inverse,
+    fit_rotation,
+)
 
 
 def test_pca_rotation_shape(data_2d):

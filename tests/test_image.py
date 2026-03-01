@@ -2,7 +2,12 @@
 import numpy as np
 import pytest
 
-from rbig import ImageRBIG, image_gaussianize, extract_patches_2d, reconstruct_from_patches_2d
+from rbig import (
+    ImageRBIG,
+    extract_patches_2d,
+    image_gaussianize,
+    reconstruct_from_patches_2d,
+)
 
 
 @pytest.fixture

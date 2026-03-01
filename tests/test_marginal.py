@@ -1,13 +1,12 @@
 """Test marginal Gaussianization."""
 import numpy as np
-import pytest
 from scipy.stats import normaltest
 
 from rbig import (
+    entropy_marginal,
     fit_marginal_params,
     marginal_gaussianize,
     marginal_gaussianize_inverse,
-    entropy_marginal,
 )
 
 

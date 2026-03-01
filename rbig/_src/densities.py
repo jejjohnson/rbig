@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.stats import norm
 
-from rbig._src.marginal import marginal_gaussianize, log_pdf_marginal
+from rbig._src.marginal import log_pdf_marginal, marginal_gaussianize
 
 
 def score_samples_gaussian(Z: np.ndarray) -> np.ndarray:

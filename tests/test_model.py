@@ -1,6 +1,6 @@
 """Test AnnealedRBIG model."""
 import numpy as np
-import pytest
+
 from rbig import AnnealedRBIG
 
 
