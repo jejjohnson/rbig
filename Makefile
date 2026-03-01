@@ -1,49 +1,63 @@
-.PHONY: conda format style types black test link check docs
+.PHONY: help install_mamba install_macos install_linux update_macos update_linux
 .DEFAULT_GOAL = help
 
+# ANSI Color Codes for pretty terminal output
+BLUE   := \033[36m
+YELLOW := \033[33m
+GREEN  := \033[32m
+RED    := \033[31m
+RESET  := \033[0m
+
 PYTHON = python
-VERSION = 3.8
-NAME = py_name
+VERSION = 3.13
+NAME = rbig
 ROOT = ./
 PIP = pip
-CONDA = conda
 SHELL = bash
-ENV = src
-HOST = 127.0.0.1
-PORT = 3002
+PKGROOT = rbig
+TESTS = tests
+NOTEBOOKS_DIR = notebooks
 
 help:	## Display this help
-		@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
+##@ Formatting
+.PHONY: uv-format
+uv-format: ## Run ruff formatter
+	@printf "$(YELLOW)>>> Formatting code with ruff...$(RESET)\n"
+	@uv run ruff format rbig tests
+	@uv run ruff check --fix rbig tests
+	@printf "$(GREEN)>>> Codebase formatted successfully.$(RESET)\n"
 
-# JUPYTER NOTEBOOKS
-notebooks_to_docs: ## Move notebooks to docs notebooks directory
-		@printf "\033[1;34mCreating notebook directory...\033[0m\n"
-		mkdir -p docs/notebooks
-		@printf "\033[1;34mRemoving old notebooks...\033[0m\n"
-		rm -rf docs/notebooks/*
-		@printf "\033[1;34mCopying Notebooks to directory...\033[0m\n"
-		rsync -zarv notebooks/ docs/notebooks/ --include="*.ipynb" --exclude="*.csv" --exclude=".ipynb_checkpoints/" 
-		@printf "\033[1;34mDone!\033[0m\n"
-jlab_html:
-		mkdir -p docs/notebooks
-		jupyter nbconvert notebooks/*.ipynb --to markdown --output-dir docs/notebooks/ --TagRemovePreprocessor.remove_cell_tags='{"remove_cell"}' --TagRemovePreprocessor.remove_input_tags='{"remove_input"}'
+.PHONY: uv-lint
+uv-lint: ## Run ruff check
+	@printf "$(YELLOW)>>> Executing static analysis...$(RESET)\n"
+	@uv run ruff check rbig tests
+	@printf "$(GREEN)>>> Linting checks passed.$(RESET)\n"
 
-# DOCS
-docs-build: ## Build site documentation with mkdocs
-		@printf "\033[1;34mCreating full documentation with mkdocs...\033[0m\n"
-		mkdocs build --config-file mkdocs.yml --clean --theme material --site-dir site/
-		@printf "\033[1;34mmkdocs completed!\033[0m\n\n"
+.PHONY: uv-pre-commit
+uv-pre-commit: ## Run all pre-commit hooks
+	@printf "$(YELLOW)>>> Running pre-commit hooks on all files...$(RESET)\n"
+	@uv run pre-commit run --all-files
+	@printf "$(GREEN)>>> Pre-commit checks passed.$(RESET)\n"
 
-docs-live: ## Build mkdocs documentation live
-		@printf "\033[1;34mStarting live docs with mkdocs...\033[0m\n"
-		mkdocs serve --dev-addr $(HOST):$(PORT) --theme material
+##@ Testing
+.PHONY: install
+install: ## Install all project dependencies
+	@printf "$(YELLOW)>>> Initiating environment synchronization and dependency installation...$(RESET)\n"
+	@uv sync --all-extras
+	@uv run pre-commit install
+	@printf "$(GREEN)>>> Environment is ready and pre-commit hooks are active.$(RESET)\n"
 
-docs-live-d: ## Build mkdocs documentation live (quicker reload)
-		@printf "\033[1;34mStarting live docs with mkdocs...\033[0m\n"
-		mkdocs serve --dev-addr $(HOST):$(PORT) --dirtyreload --theme material
+.PHONY: uv-sync
+uv-sync: ## Update lock file and sync dependencies using uv
+	@printf "$(YELLOW)>>> Updating and syncing dependencies with uv...$(RESET)\n"
+	@uv lock --upgrade
+	@uv sync --all-extras
+	@printf "$(GREEN)>>> uv environment synchronized.$(RESET)\n"
 
-docs-deploy:  ## Deploy docs
-		@printf "\033[1;34mDeploying docs...\033[0m\n"
-		mkdocs gh-deploy
-		@printf "\033[1;34mSuccess...\033[0m\n"
+.PHONY: uv-test
+uv-test: ## Run pytest with coverage using uv
+	@printf "$(YELLOW)>>> Launching test suite with verbosity...$(RESET)\n"
+	@uv run pytest tests -v
+	@printf "$(GREEN)>>> All tests passed.$(RESET)\n"
