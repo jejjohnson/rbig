@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.3](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.2...rbig-v0.1.3) (2026-03-01)
+
+
+### Features
+
+* port demo notebooks to Jupytext percent-format with new rbig API ([6fa6ebc](https://github.com/jejjohnson/rbig/commit/6fa6ebcef5c887588527161b3a599a9d0d1ef5e3))
+* port demo notebooks to Jupytext percent-format with new rbig API ([a82a559](https://github.com/jejjohnson/rbig/commit/a82a5599a87736bedacf68df42017e4d4f3dcf19))
+
+
+### Bug Fixes
+
+* address review comments on notebook backend, assertions, and IT estimates ([2c5a729](https://github.com/jejjohnson/rbig/commit/2c5a729f95ec7ac3079296ffd0f6d49f404de055))
+
 ## [0.1.2](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.1...rbig-v0.1.2) (2026-03-01)
 
 
