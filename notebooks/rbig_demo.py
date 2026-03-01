@@ -16,14 +16,12 @@
 
 # %%
 import sys
-sys.path.insert(0, '/home/emmanuel/code/py_packages/rbig/')
-sys.path.insert(0, '/home/emmanuel/code/rbig/')
-sys.path.insert(0, '/Users/eman/Documents/code_projects/rbig/')
 
 import numpy as np
 import warnings
 from time import time
-from rbig.rbig import RBIG, entropy
+from rbig import RBIG
+from rbig._src.marginal import entropy_marginal as entropy
 # from rbig.model import RBIG
 from sklearn.model_selection import train_test_split
 from sklearn.utils import check_random_state
@@ -250,7 +248,7 @@ data_trans = rbig_model.fit_transform(data)
 rbig_model.n_layers
 
 # %%
-from rbig.model import RBIG as RBIG11
+from rbig import RBIG as RBIG11
 
 # %%
 %%time 
@@ -277,7 +275,7 @@ data_trans = rbig_model.fit_transform(data)
 
 # %%
 residual_info = rbig_model.residual_info
-plt.
+# plt.
 
 # %%
 %%time

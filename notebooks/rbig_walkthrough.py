@@ -27,7 +27,7 @@ import pandas as pd
 import seaborn as sns
 
 import sys
-sys.path.insert(0, '/Users/eman/Documents/code_projects/rbig/')
+
 from rbig import RBIG
 
 import matplotlib.pyplot as plt

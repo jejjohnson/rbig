@@ -17,18 +17,11 @@
 # %%
 import sys
 
-# MacOS
-sys.path.insert(0, '/Users/eman/Documents/code_projects/rbig/')
-sys.path.insert(0, '/home/emmanuel/code/py_packages/py_rbig/src')
-
-# ERC server
-sys.path.insert(0, '/home/emmanuel/code/rbig/')
-
-
 import numpy as np
 import warnings
 from time import time
-from rbig.rbig import RBIGKLD, RBIG, RBIGMI, entropy_marginal
+from rbig import RBIGKLD, RBIG, RBIGMI
+from rbig._src.marginal import entropy_marginal
 from sklearn.model_selection import train_test_split
 from sklearn.utils import check_random_state
 import matplotlib.pyplot as plt
