@@ -116,3 +116,92 @@ def xr_rbig_fit_transform(
     Xt = model.fit_transform(matrix)
     reconstructed = matrix_to_xr_st(Xt, meta, time_dim)
     return matrix, reconstructed
+
+
+class XarrayRBIG:
+    """RBIG model for xarray datasets."""
+
+    def __init__(
+        self,
+        n_layers: int = 100,
+        strategy: list | None = None,
+        tol: float = 1e-5,
+        random_state: int | None = None,
+        rbig_class=None,
+        rbig_kwargs: dict | None = None,
+    ):
+        self.n_layers = n_layers
+        self.strategy = strategy
+        self.tol = tol
+        self.random_state = random_state
+        self.rbig_class = rbig_class
+        self.rbig_kwargs = rbig_kwargs or {}
+
+    def fit(self, X) -> dict:
+        """Fit RBIG model to xarray data."""
+        from rbig._src.metrics import information_summary
+        from rbig._src.model import AnnealedRBIG
+
+        rbig_cls = self.rbig_class if self.rbig_class is not None else AnnealedRBIG
+        kwargs = {
+            "n_layers": self.n_layers,
+            "tol": self.tol,
+            "random_state": self.random_state,
+        }
+        if self.strategy is not None:
+            kwargs["strategy"] = self.strategy
+        kwargs.update(self.rbig_kwargs)
+
+        matrix, self.meta_ = xr_st_to_matrix(X)
+        self.model_ = rbig_cls(**kwargs)
+        self.model_.fit(matrix)
+        return information_summary(self.model_, matrix)
+
+    def transform(self, X):
+        """Gaussianize samples."""
+        matrix, _ = xr_st_to_matrix(X)
+        Xt = self.model_.transform(matrix)
+        out = matrix_to_xr_st(Xt, self.meta_)
+        # Re-attach original xarray coordinates and name when available
+        if hasattr(X, "assign_coords") and hasattr(X, "coords"):
+            try:
+                out = out.assign_coords(X.coords)
+            except Exception:
+                pass
+        if hasattr(X, "name") and hasattr(out, "name") and X.name is not None:
+            try:
+                out.name = X.name
+            except Exception:
+                pass
+        return out
+
+    def score_samples(self, X):
+        """Per-sample log p(x)."""
+        matrix, _ = xr_st_to_matrix(X)
+        return self.model_.score_samples(matrix)
+
+    def mutual_information(self, X, Y) -> float:
+        """Mutual information between two xarray variables."""
+        from rbig._src.metrics import entropy_rbig
+        from rbig._src.model import AnnealedRBIG
+
+        rbig_cls = self.rbig_class if self.rbig_class is not None else AnnealedRBIG
+        kwargs = {
+            "n_layers": self.n_layers,
+            "tol": self.tol,
+            "random_state": self.random_state,
+        }
+        kwargs.update(self.rbig_kwargs)
+
+        X_mat, _ = xr_st_to_matrix(X)
+        Y_mat, _ = xr_st_to_matrix(Y)
+        XY_mat = np.hstack([X_mat, Y_mat])
+
+        mx = rbig_cls(**kwargs).fit(X_mat)
+        my = rbig_cls(**kwargs).fit(Y_mat)
+        mxy = rbig_cls(**kwargs).fit(XY_mat)
+
+        hx = entropy_rbig(mx, X_mat)
+        hy = entropy_rbig(my, Y_mat)
+        hxy = entropy_rbig(mxy, XY_mat)
+        return float(hx + hy - hxy)

@@ -72,3 +72,71 @@ def entropy_reduction(X_before: np.ndarray, X_after: np.ndarray) -> float:
     tc_before = total_correlation(X_before)
     tc_after = total_correlation(X_after)
     return tc_before - tc_after
+
+
+from rbig._src.base import Bijector
+
+
+class Tanh(Bijector):
+    """Tanh bijector with log det Jacobian."""
+
+    def fit(self, X: np.ndarray) -> Tanh:
+        return self
+
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        return np.tanh(X)
+
+    def inverse_transform(self, X: np.ndarray) -> np.ndarray:
+        return np.arctanh(np.clip(X, -1 + 1e-6, 1 - 1e-6))
+
+    def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        """log |det J| = sum_i log(1 - tanh(x_i)^2)"""
+        return np.sum(np.log(1 - np.tanh(X) ** 2 + 1e-300), axis=1)
+
+
+class Exp(Bijector):
+    """Exp bijector with log det Jacobian."""
+
+    def fit(self, X: np.ndarray) -> Exp:
+        return self
+
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        return np.exp(X)
+
+    def inverse_transform(self, X: np.ndarray) -> np.ndarray:
+        return np.log(np.maximum(X, 1e-300))
+
+    def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        """log |det J| = sum_i x_i"""
+        return np.sum(X, axis=1)
+
+
+class Cube(Bijector):
+    """Cube bijector (x^3) with log det Jacobian."""
+
+    def fit(self, X: np.ndarray) -> Cube:
+        return self
+
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        return X**3
+
+    def inverse_transform(self, X: np.ndarray) -> np.ndarray:
+        return np.cbrt(X)
+
+    def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        """log |det J| = sum_i log(3 * x_i^2)"""
+        return np.sum(np.log(3 * X**2 + 1e-300), axis=1)
+
+
+def check_density(model, X: np.ndarray, n_grid: int = 1000) -> float:
+    """Utility to verify density approximately integrates to 1.
+
+    Uses importance sampling: E_q[p(x)/q(x)] ≈ 1
+    where q is N(0,1).
+    """
+    Z = stats.norm.rvs(size=(n_grid, X.shape[1]))
+    log_p = model.score_samples(Z)
+    log_q = np.sum(stats.norm.logpdf(Z), axis=1)
+    log_ratio = log_p - log_q
+    log_ratio = np.clip(log_ratio, -500, 500)
+    return float(np.mean(np.exp(log_ratio)))
