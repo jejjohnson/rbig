@@ -1,5 +1,6 @@
 """Tests for the RBIG model."""
 
+import numpy as np
 import pytest
 
 from rbig import AnnealedRBIG, RBIGLayer
@@ -30,8 +31,12 @@ def test_rbig_inverse_transform_approx(simple_2d):
     model.fit(simple_2d)
     Xt = model.transform(simple_2d)
     Xr = model.inverse_transform(Xt)
-    # After 5 layers the inverse may not be perfect, check shape at least
     assert Xr.shape == simple_2d.shape
+    # The inverse should recover data with similar statistics to the original
+    np.testing.assert_allclose(
+        np.mean(Xr, axis=0), np.mean(simple_2d, axis=0), atol=0.2
+    )
+    np.testing.assert_allclose(np.std(Xr, axis=0), np.std(simple_2d, axis=0), atol=0.2)
 
 
 def test_rbig_score_samples(simple_2d):
