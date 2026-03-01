@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.utils import check_array
-from rbig._src.model import AnnealedRBIG
+from rbig._src.base import RBIG
 from rbig._src.metrics import neg_entropy_normal
 
 
@@ -40,7 +40,7 @@ class RBIGKLD:
                 if self.verbose:
                     print(f"PDF Extension: {self.pdf_extension}%")
                 try:
-                    self.rbig_model_Y = AnnealedRBIG(
+                    self.rbig_model_Y = RBIG(
                         n_layers=self.n_layers,
                         rotation_type=self.rotation_type,
                         random_state=self.random_state,
@@ -51,7 +51,7 @@ class RBIGKLD:
                     )
                     self.rbig_model_Y.fit(Y)
                     X_transformed = self.rbig_model_Y.transform(X)
-                    self.rbig_model_X_trans = AnnealedRBIG(
+                    self.rbig_model_X_trans = RBIG(
                         n_layers=self.n_layers,
                         rotation_type=self.rotation_type,
                         random_state=self.random_state,

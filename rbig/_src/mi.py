@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.utils import check_array
-from rbig._src.model import AnnealedRBIG
+from rbig._src.base import RBIG
 
 
 class RBIGMI:
@@ -39,7 +39,7 @@ class RBIGMI:
                 if self.verbose:
                     print(f"PDF Extension: {self.pdf_extension}%")
                 try:
-                    self.rbig_model_X = AnnealedRBIG(
+                    self.rbig_model_X = RBIG(
                         n_layers=self.n_layers,
                         rotation_type=self.rotation_type,
                         n_quantiles=self.n_quantiles,
@@ -50,7 +50,7 @@ class RBIGMI:
                         tolerance=self.tolerance,
                     )
                     X_transformed = self.rbig_model_X.fit_transform(X)
-                    self.rbig_model_Y = AnnealedRBIG(
+                    self.rbig_model_Y = RBIG(
                         n_layers=self.n_layers,
                         rotation_type=self.rotation_type,
                         n_quantiles=self.n_quantiles,
@@ -64,7 +64,7 @@ class RBIGMI:
                     if self.verbose:
                         print(X_transformed.shape, Y_transformed.shape)
                     XY_transformed = np.hstack([X_transformed, Y_transformed])
-                    self.rbig_model_XY = AnnealedRBIG(
+                    self.rbig_model_XY = RBIG(
                         n_layers=self.n_layers,
                         rotation_type=self.rotation_type,
                         random_state=self.random_state,
