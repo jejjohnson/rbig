@@ -86,7 +86,7 @@ class AnnealedRBIG:
 
         for i in range(self.n_layers):
             layer = RBIGLayer(
-                marginal=MarginalGaussianize(),
+                marginal=self._make_marginal(layer_index=i),
                 rotation=self._make_rotation(layer_index=i),
             )
             layer.fit(Xt)
@@ -171,7 +171,7 @@ class AnnealedRBIG:
         if self.strategy is not None:
             idx = layer_index % len(self.strategy)
             entry = self.strategy[idx]
-            rotation_name = entry[1] if isinstance(entry, (list, tuple)) else entry
+            rotation_name = entry[0] if isinstance(entry, (list, tuple)) else entry
             return self._get_component(rotation_name, "rotation", layer_index)
         if self.rotation == "pca":
             return PCARotation(whiten=True)
@@ -182,24 +182,56 @@ class AnnealedRBIG:
         else:
             raise ValueError(f"Unknown rotation: {self.rotation}. Use 'pca' or 'ica'.")
 
+    def _make_marginal(self, layer_index: int = 0):
+        if self.strategy is not None:
+            idx = layer_index % len(self.strategy)
+            entry = self.strategy[idx]
+            marginal_name = entry[1] if isinstance(entry, (list, tuple)) else "gaussianize"
+            return self._get_component(marginal_name, "marginal", layer_index)
+        return MarginalGaussianize()
+
     def _get_component(self, name: str, kind: str, seed: int = 0):
         """Instantiate a rotation or marginal component by name."""
         rng_seed = (self.random_state or 0) + seed
         if kind == "rotation":
-            if name == "pca":
-                return PCARotation(whiten=True)
-            elif name == "ica":
-                from rbig._src.rotation import ICARotation
+            return self._make_rotation_by_name(name, rng_seed)
+        return self._make_marginal_by_name(name, rng_seed)
 
-                return ICARotation(random_state=rng_seed)
-            elif name == "random":
-                from rbig._src.rotation import RandomRotation
+    def _make_rotation_by_name(self, name: str, seed: int):
+        if name == "pca":
+            return PCARotation(whiten=True)
+        if name == "ica":
+            from rbig._src.rotation import ICARotation
 
-                return RandomRotation(random_state=rng_seed)
-            else:
-                return PCARotation(whiten=True)
-        else:
+            return ICARotation(random_state=seed)
+        if name == "random":
+            from rbig._src.rotation import RandomRotation
+
+            return RandomRotation(random_state=seed)
+        raise ValueError(f"Unknown rotation: {name!r}. Use 'pca', 'ica', or 'random'.")
+
+    def _make_marginal_by_name(self, name: str, seed: int):
+        if name in ("gaussianize", "empirical", None):
             return MarginalGaussianize()
+        if name == "quantile":
+            from rbig._src.marginal import QuantileGaussianizer
+
+            return QuantileGaussianizer(random_state=seed)
+        if name == "kde":
+            from rbig._src.marginal import KDEGaussianizer
+
+            return KDEGaussianizer()
+        if name == "gmm":
+            from rbig._src.marginal import GMMGaussianizer
+
+            return GMMGaussianizer(random_state=seed)
+        if name == "spline":
+            from rbig._src.marginal import SplineGaussianizer
+
+            return SplineGaussianizer()
+        raise ValueError(
+            f"Unknown marginal: {name!r}. Use 'gaussianize', 'quantile', 'kde', 'gmm', or 'spline'."
+        )
 
     @staticmethod
     def _calculate_negentropy(X: np.ndarray) -> np.ndarray:

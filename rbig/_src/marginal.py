@@ -258,9 +258,11 @@ class GMMGaussianizer(Bijector):
 
         self.gmms_ = []
         self.n_features_ = X.shape[1]
+        n_samples = X.shape[0]
+        n_components = max(1, min(self.n_components, n_samples // 5, n_samples))
         for i in range(self.n_features_):
             gmm = GaussianMixture(
-                n_components=min(self.n_components, X.shape[0] // 5),
+                n_components=n_components,
                 random_state=self.random_state,
             )
             gmm.fit(X[:, i : i + 1])

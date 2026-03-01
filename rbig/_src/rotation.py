@@ -107,7 +107,9 @@ class RandomRotation(RotationBijector):
         rng = np.random.default_rng(self.random_state)
         n_features = X.shape[1]
         A = rng.standard_normal((n_features, n_features))
-        Q, _ = np.linalg.qr(A)
+        Q, R = np.linalg.qr(A)
+        # Sign correction: multiply columns of Q by sign(diag(R)) for Haar measure
+        Q *= np.sign(np.diag(R))
         self.rotation_matrix_ = Q
         return self
 
@@ -136,15 +138,28 @@ class RandomOrthogonalProjection(RotationBijector):
         A = rng.standard_normal((D, K))
         Q, _ = np.linalg.qr(A)
         self.projection_matrix_ = Q[:, :K]  # (D, K)
+        self.input_dim_ = D
+        self.output_dim_ = K
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         return X @ self.projection_matrix_  # (N, K)
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
-        return X @ self.projection_matrix_.T  # approximate inverse (N, D)
+        if self.output_dim_ < self.input_dim_:
+            raise NotImplementedError(
+                "RandomOrthogonalProjection with n_components < input dimension "
+                "is not bijective; inverse_transform is undefined."
+            )
+        return X @ self.projection_matrix_.T  # exact inverse only when square (N, D)
 
     def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        if self.output_dim_ < self.input_dim_:
+            raise NotImplementedError(
+                "RandomOrthogonalProjection with n_components < input dimension "
+                "does not have a well-defined Jacobian determinant."
+            )
+        # For a square orthogonal matrix, |det(J)| = 1, so log|det(J)| = 0.
         return np.zeros(X.shape[0])
 
 
@@ -195,6 +210,7 @@ class OrthogonalDimensionalityReduction(RotationBijector):
         Q, _ = np.linalg.qr(A)
         self.rotation_matrix_ = Q  # (D, D)
         self.n_components_ = K
+        self.input_dim_ = D
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
@@ -202,13 +218,19 @@ class OrthogonalDimensionalityReduction(RotationBijector):
         return Xr[:, : self.n_components_]  # (N, K)
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
-        D = self.rotation_matrix_.shape[0]
-        N = X.shape[0]
-        Xfull = np.zeros((N, D))
-        Xfull[:, : self.n_components_] = X
-        return Xfull @ self.rotation_matrix_  # approximate
+        if self.n_components_ < self.input_dim_:
+            raise NotImplementedError(
+                "OrthogonalDimensionalityReduction with n_components < input dimension "
+                "is not bijective; inverse_transform is undefined."
+            )
+        return X @ self.rotation_matrix_
 
     def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        if self.n_components_ < self.input_dim_:
+            raise NotImplementedError(
+                "OrthogonalDimensionalityReduction with n_components < input dimension "
+                "does not have a well-defined Jacobian determinant."
+            )
         return np.zeros(X.shape[0])
 
 
@@ -271,8 +293,22 @@ class PicardRotation(RotationBijector):
     def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
         if not self.use_picard_:
             W = self.ica_.components_
+            if W.shape[0] != W.shape[1]:
+                raise ValueError(
+                    "PicardRotation.get_log_det_jacobian is only defined for square "
+                    "unmixing matrices when using the FastICA fallback. Got "
+                    f"components_ with shape {W.shape}. Ensure that `n_components` "
+                    "is None or equals the number of features."
+                )
             log_det = np.log(np.abs(np.linalg.det(W)))
         else:
             WK = self.W_ @ self.K_
+            if WK.shape[0] != WK.shape[1]:
+                raise ValueError(
+                    "PicardRotation.get_log_det_jacobian is only defined for square "
+                    "unmixing matrices when using the Picard solver. Got "
+                    f"W @ K with shape {WK.shape}. Ensure that `n_components` "
+                    "is None or equals the number of features."
+                )
             log_det = np.log(np.abs(np.linalg.det(WK)))
         return np.full(X.shape[0], log_det)

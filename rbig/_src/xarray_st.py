@@ -161,7 +161,19 @@ class XarrayRBIG:
         """Gaussianize samples."""
         matrix, _ = xr_st_to_matrix(X)
         Xt = self.model_.transform(matrix)
-        return matrix_to_xr_st(Xt, self.meta_)
+        out = matrix_to_xr_st(Xt, self.meta_)
+        # Re-attach original xarray coordinates and name when available
+        if hasattr(X, "assign_coords") and hasattr(X, "coords"):
+            try:
+                out = out.assign_coords(X.coords)
+            except Exception:
+                pass
+        if hasattr(X, "name") and hasattr(out, "name") and X.name is not None:
+            try:
+                out.name = X.name
+            except Exception:
+                pass
+        return out
 
     def score_samples(self, X):
         """Per-sample log p(x)."""

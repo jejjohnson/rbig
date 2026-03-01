@@ -58,6 +58,10 @@ class Bijector(ABC):
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
         return self.fit(X).transform(X)
 
+    def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        """Alias for get_log_det_jacobian for compatibility with RBIGLayer."""
+        return self.get_log_det_jacobian(X)
+
 
 class MarginalBijector(Bijector):
     """Abstract bijector for marginal (per-dimension) transforms."""

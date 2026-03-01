@@ -1,6 +1,7 @@
 """Tests for enhanced AnnealedRBIG with strategy pattern."""
 
 import numpy as np
+import pytest
 
 from rbig import AnnealedRBIG
 
@@ -59,3 +60,17 @@ def test_rbig_get_component_marginal(simple_2d):
     m = model._get_component("quantile", "marginal", seed=0)
     Xt = m.fit(simple_2d).transform(simple_2d)
     assert Xt.shape == simple_2d.shape
+
+
+def test_rbig_get_component_unknown_rotation(simple_2d):
+    """_get_component raises for unknown rotation name."""
+    model = AnnealedRBIG(n_layers=5)
+    with pytest.raises(ValueError, match="Unknown rotation"):
+        model._get_component("unknown_rot", "rotation", seed=0)
+
+
+def test_rbig_get_component_unknown_marginal(simple_2d):
+    """_get_component raises for unknown marginal name."""
+    model = AnnealedRBIG(n_layers=5)
+    with pytest.raises(ValueError, match="Unknown marginal"):
+        model._get_component("unknown_marg", "marginal", seed=0)
