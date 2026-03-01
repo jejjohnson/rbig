@@ -57,11 +57,11 @@ def plot_2d_joint(data, savename=None):
 
 # %%
 seed = 123
-rng = np.random.RandomState(seed=seed)
+rng = np.random.default_rng(seed)
 
 num_samples = 10000
-x = np.abs(2 * rng.randn(1, num_samples))
-y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
+x = np.abs(2 * rng.standard_normal((1, num_samples)))
+y = np.sin(x) + 0.25 * rng.standard_normal((1, num_samples))
 data = np.vstack((x, y)).T
 
 d_dimensions = data.shape[1]

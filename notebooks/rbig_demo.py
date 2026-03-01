@@ -38,11 +38,11 @@ warnings.filterwarnings('ignore') # get rid of annoying warnings
 
 # %%
 seed = 123
-rng = np.random.RandomState(seed=seed)
+rng = np.random.default_rng(seed)
 
 num_samples = 10_000
-x = np.abs(2 * rng.randn(1, num_samples))
-y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
+x = np.abs(2 * rng.standard_normal((1, num_samples)))
+y = np.sin(x) + 0.25 * rng.standard_normal((1, num_samples))
 data = np.vstack((x, y)).T
 
 fig, ax = plt.subplots()

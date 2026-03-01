@@ -23,7 +23,6 @@ from time import time
 from rbig import RBIGKLD, RBIG, RBIGMI
 from rbig._src.marginal import entropy_marginal
 from sklearn.model_selection import train_test_split
-from sklearn.utils import check_random_state
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 %matplotlib inline
@@ -44,17 +43,17 @@ d_dimensions = 10
 
 seed = 123
 
-rng = check_random_state(seed)
+rng = np.random.default_rng(seed)
 
 # %% [markdown]
 # #### Sample Data
 
 # %%
 # Generate random normal data
-data_original = rng.randn(n_samples, d_dimensions)
+data_original = rng.standard_normal((n_samples, d_dimensions))
 
 # Generate random Data
-A = rng.rand(d_dimensions, d_dimensions)
+A = rng.random((d_dimensions, d_dimensions))
 
 data = data_original @ A
 
@@ -114,13 +113,13 @@ d_dimensions = 10
 
 seed = 123
 
-rng = check_random_state(seed)
+rng = np.random.default_rng(seed)
 
 # Generate random normal data
-data_original = rng.randn(n_samples, d_dimensions)
+data_original = rng.standard_normal((n_samples, d_dimensions))
 
 # Generate random Data
-A = rng.rand(d_dimensions, d_dimensions)
+A = rng.random((d_dimensions, d_dimensions))
 
 data = data_original @ A
 
@@ -179,10 +178,10 @@ d_dimensions = 10
 
 seed = 123
 
-rng = check_random_state(seed)
+rng = np.random.default_rng(seed)
 
 # Generate random Data
-A = rng.rand(2 * d_dimensions, 2 * d_dimensions)
+A = rng.random((2 * d_dimensions, 2 * d_dimensions))
 
 # Covariance Matrix
 C = A @ A.T
@@ -251,10 +250,10 @@ mu = 0.4          # how different the distributions are
 
 seed = 123
 
-rng = check_random_state(seed)
+rng = np.random.default_rng(seed)
 
 # Generate random Data
-A = rng.rand(d_dimensions, d_dimensions)
+A = rng.random((d_dimensions, d_dimensions))
 
 # covariance matrix
 cov = A @ A.T
