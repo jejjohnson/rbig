@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.1...rbig-v0.1.2) (2026-03-01)
+
+
+### Features
+
+* port new bijectors, Gaussianizers, rotations, image transforms, metrics, and parametric utilities from jej_vc_snippets ([06061b3](https://github.com/jejjohnson/rbig/commit/06061b3f131ed03323c0a39f8a06ec3503b086ab))
+
 ## [0.1.1](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.0...rbig-v0.1.1) (2026-03-01)
 
 
