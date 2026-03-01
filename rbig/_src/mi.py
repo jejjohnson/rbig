@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.utils import check_array
-from rbig._src.base import RBIG
+from rbig._src.model import AnnealedRBIG
 
 
 class RBIGMI:
@@ -10,7 +10,7 @@ class RBIGMI:
         self,
         n_layers=50,
         rotation_type="PCA",
-        pdf_resolution=1000,
+        n_quantiles=1000,
         pdf_extension=None,
         random_state=None,
         verbose=0,
@@ -20,13 +20,13 @@ class RBIGMI:
     ):
         self.n_layers = n_layers
         self.rotation_type = rotation_type
-        self.pdf_resolution = pdf_resolution
+        self.n_quantiles = n_quantiles
         self.pdf_extension = pdf_extension
         self.random_state = random_state
         self.verbose = verbose
         self.tolerance = tolerance
         self.zero_tolerance = zero_tolerance
-        self.increment = 1.5
+        self.increment = increment
 
     def fit(self, X, Y):
         X = check_array(X, ensure_2d=True, copy=True)
@@ -39,10 +39,10 @@ class RBIGMI:
                 if self.verbose:
                     print(f"PDF Extension: {self.pdf_extension}%")
                 try:
-                    self.rbig_model_X = RBIG(
+                    self.rbig_model_X = AnnealedRBIG(
                         n_layers=self.n_layers,
                         rotation_type=self.rotation_type,
-                        pdf_resolution=self.pdf_resolution,
+                        n_quantiles=self.n_quantiles,
                         pdf_extension=self.pdf_extension,
                         verbose=self.verbose,
                         random_state=self.random_state,
@@ -50,10 +50,10 @@ class RBIGMI:
                         tolerance=self.tolerance,
                     )
                     X_transformed = self.rbig_model_X.fit_transform(X)
-                    self.rbig_model_Y = RBIG(
+                    self.rbig_model_Y = AnnealedRBIG(
                         n_layers=self.n_layers,
                         rotation_type=self.rotation_type,
-                        pdf_resolution=self.pdf_resolution,
+                        n_quantiles=self.n_quantiles,
                         pdf_extension=self.pdf_extension,
                         verbose=self.verbose,
                         random_state=self.random_state,
@@ -64,13 +64,13 @@ class RBIGMI:
                     if self.verbose:
                         print(X_transformed.shape, Y_transformed.shape)
                     XY_transformed = np.hstack([X_transformed, Y_transformed])
-                    self.rbig_model_XY = RBIG(
+                    self.rbig_model_XY = AnnealedRBIG(
                         n_layers=self.n_layers,
                         rotation_type=self.rotation_type,
                         random_state=self.random_state,
                         zero_tolerance=self.zero_tolerance,
                         tolerance=self.tolerance,
-                        pdf_resolution=self.pdf_resolution,
+                        n_quantiles=self.n_quantiles,
                         pdf_extension=self.pdf_extension,
                         verbose=self.verbose,
                     )
