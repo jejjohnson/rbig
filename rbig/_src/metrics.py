@@ -94,7 +94,7 @@ def entropy_quantile_spacing(x: np.ndarray, n_quantiles: int = 100) -> float:
     return float(np.mean(np.log(diffs * n_quantiles + 1e-300)))
 
 
-def entropy_rbig(model: "AnnealedRBIG", X: np.ndarray) -> float:
+def entropy_rbig(model: AnnealedRBIG, X: np.ndarray) -> float:
     """Entropy estimated through a fitted RBIG model.
 
     H(X) = -E[log p(x)] ≈ -mean(score_samples(X))
@@ -103,13 +103,13 @@ def entropy_rbig(model: "AnnealedRBIG", X: np.ndarray) -> float:
     return float(-np.mean(log_probs))
 
 
-def negative_log_likelihood(model: "AnnealedRBIG", X: np.ndarray) -> float:
+def negative_log_likelihood(model: AnnealedRBIG, X: np.ndarray) -> float:
     """Negative log-likelihood under the RBIG model."""
     log_probs = model.score_samples(X)
     return float(-np.mean(log_probs))
 
 
-def information_summary(model: "AnnealedRBIG", X: np.ndarray) -> dict:
+def information_summary(model: AnnealedRBIG, X: np.ndarray) -> dict:
     """Returns dict with entropy, TC, and MI estimates from RBIG model.
 
     Returns
@@ -133,7 +133,10 @@ def information_reduction(X_before: np.ndarray, X_after: np.ndarray) -> float:
 
     Returns TC(X_before) - TC(X_after)
     """
-    from rbig._src.densities import joint_entropy_gaussian, marginal_entropy as _marginal_entropy
+    from rbig._src.densities import (
+        joint_entropy_gaussian,
+        marginal_entropy as _marginal_entropy,
+    )
 
     def _tc(X):
         return float(np.sum(_marginal_entropy(X)) - joint_entropy_gaussian(X))

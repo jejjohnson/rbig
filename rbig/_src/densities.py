@@ -80,7 +80,7 @@ from rbig._src.base import Bijector
 class Tanh(Bijector):
     """Tanh bijector with log det Jacobian."""
 
-    def fit(self, X: np.ndarray) -> "Tanh":
+    def fit(self, X: np.ndarray) -> Tanh:
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
@@ -97,7 +97,7 @@ class Tanh(Bijector):
 class Exp(Bijector):
     """Exp bijector with log det Jacobian."""
 
-    def fit(self, X: np.ndarray) -> "Exp":
+    def fit(self, X: np.ndarray) -> Exp:
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
@@ -114,7 +114,7 @@ class Exp(Bijector):
 class Cube(Bijector):
     """Cube bijector (x^3) with log det Jacobian."""
 
-    def fit(self, X: np.ndarray) -> "Cube":
+    def fit(self, X: np.ndarray) -> Cube:
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:

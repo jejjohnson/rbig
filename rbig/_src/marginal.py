@@ -154,7 +154,7 @@ class QuantileGaussianizer(Bijector):
         self.n_quantiles = n_quantiles
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> "QuantileGaussianizer":
+    def fit(self, X: np.ndarray) -> QuantileGaussianizer:
         from sklearn.preprocessing import QuantileTransformer
 
         n_quantiles = min(self.n_quantiles, X.shape[0])
@@ -196,7 +196,7 @@ class KDEGaussianizer(Bijector):
         self.bw_method = bw_method
         self.eps = eps
 
-    def fit(self, X: np.ndarray) -> "KDEGaussianizer":
+    def fit(self, X: np.ndarray) -> KDEGaussianizer:
         self.kdes_ = []
         self.n_features_ = X.shape[1]
         for i in range(self.n_features_):
@@ -253,7 +253,7 @@ class GMMGaussianizer(Bijector):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> "GMMGaussianizer":
+    def fit(self, X: np.ndarray) -> GMMGaussianizer:
         from sklearn.mixture import GaussianMixture
 
         self.gmms_ = []
@@ -273,7 +273,7 @@ class GMMGaussianizer(Bijector):
         means = gmm.means_.ravel()
         stds = np.sqrt(gmm.covariances_.ravel())
         cdf = np.zeros_like(x, dtype=float)
-        for w, mu, sigma in zip(weights, means, stds):
+        for w, mu, sigma in zip(weights, means, stds, strict=False):
             cdf += w * stats.norm.cdf(x, loc=mu, scale=sigma)
         return cdf
 
@@ -283,7 +283,7 @@ class GMMGaussianizer(Bijector):
         means = gmm.means_.ravel()
         stds = np.sqrt(gmm.covariances_.ravel())
         pdf = np.zeros_like(x, dtype=float)
-        for w, mu, sigma in zip(weights, means, stds):
+        for w, mu, sigma in zip(weights, means, stds, strict=False):
             pdf += w * stats.norm.pdf(x, loc=mu, scale=sigma)
         return pdf
 
@@ -333,7 +333,7 @@ class SplineGaussianizer(Bijector):
         self.n_quantiles = n_quantiles
         self.eps = eps
 
-    def fit(self, X: np.ndarray) -> "SplineGaussianizer":
+    def fit(self, X: np.ndarray) -> SplineGaussianizer:
         from scipy.interpolate import PchipInterpolator
 
         self.splines_ = []

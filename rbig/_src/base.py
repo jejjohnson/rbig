@@ -62,7 +62,7 @@ class Bijector(ABC):
 class MarginalBijector(Bijector):
     """Abstract bijector for marginal (per-dimension) transforms."""
 
-    pass  # inherits all abstract methods
+    # inherits all abstract methods
 
 
 class RotationBijector(Bijector):

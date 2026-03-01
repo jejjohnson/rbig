@@ -166,8 +166,8 @@ def kl_divergence_gaussian(
     d = len(mu0)
     cov1_inv = np.linalg.inv(cov1)
     diff = mu1 - mu0
-    sign0, log_det0 = np.linalg.slogdet(cov0)
-    sign1, log_det1 = np.linalg.slogdet(cov1)
+    _sign0, log_det0 = np.linalg.slogdet(cov0)
+    _sign1, log_det1 = np.linalg.slogdet(cov1)
     trace_term = np.trace(cov1_inv @ cov0)
     quad_term = diff @ cov1_inv @ diff
     log_det_term = log_det1 - log_det0

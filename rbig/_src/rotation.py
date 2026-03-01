@@ -103,7 +103,7 @@ class RandomRotation(RotationBijector):
     def __init__(self, random_state: int | None = None):
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> "RandomRotation":
+    def fit(self, X: np.ndarray) -> RandomRotation:
         rng = np.random.default_rng(self.random_state)
         n_features = X.shape[1]
         A = rng.standard_normal((n_features, n_features))
@@ -129,7 +129,7 @@ class RandomOrthogonalProjection(RotationBijector):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> "RandomOrthogonalProjection":
+    def fit(self, X: np.ndarray) -> RandomOrthogonalProjection:
         rng = np.random.default_rng(self.random_state)
         D = X.shape[1]
         K = self.n_components if self.n_components is not None else D
@@ -159,7 +159,7 @@ class GaussianRandomProjection(RotationBijector):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> "GaussianRandomProjection":
+    def fit(self, X: np.ndarray) -> GaussianRandomProjection:
         rng = np.random.default_rng(self.random_state)
         D = X.shape[1]
         K = self.n_components if self.n_components is not None else D
@@ -187,7 +187,7 @@ class OrthogonalDimensionalityReduction(RotationBijector):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> "OrthogonalDimensionalityReduction":
+    def fit(self, X: np.ndarray) -> OrthogonalDimensionalityReduction:
         rng = np.random.default_rng(self.random_state)
         D = X.shape[1]
         K = self.n_components if self.n_components is not None else D
@@ -229,7 +229,7 @@ class PicardRotation(RotationBijector):
         self.max_iter = max_iter
         self.tol = tol
 
-    def fit(self, X: np.ndarray) -> "PicardRotation":
+    def fit(self, X: np.ndarray) -> PicardRotation:
         try:
             from picard import picard
 
