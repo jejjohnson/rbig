@@ -27,6 +27,11 @@ class RBIGLayer:
         Xm = self.marginal.transform(X)
         return self.rotation.transform(Xm)
 
+    def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        """Log |det J| for this layer at input X."""
+        Xm = self.marginal.transform(X)
+        return self.marginal.log_det_jacobian(X) + self.rotation.log_det_jacobian(Xm)
+
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
         Xr = self.rotation.inverse_transform(X)
         return self.marginal.inverse_transform(Xr)
@@ -68,12 +73,13 @@ class AnnealedRBIG:
 
     def fit(self, X: np.ndarray) -> AnnealedRBIG:
         """Fit RBIG model to data X."""
-        _n_samples, n_features = X.shape
+        n_samples, n_features = X.shape
         self.n_features_in_ = n_features
         self.layers_: list[RBIGLayer] = []
         self.tc_per_layer_: list[float] = []
 
         Xt = X.copy()
+        self.log_det_train_ = np.zeros(n_samples)
         zero_count = 0
 
         for i in range(self.n_layers):
@@ -82,6 +88,7 @@ class AnnealedRBIG:
                 rotation=self._make_rotation(),
             )
             layer.fit(Xt)
+            self.log_det_train_ += layer.log_det_jacobian(Xt)
             Xt = layer.transform(Xt)
             self.layers_.append(layer)
 
@@ -120,25 +127,33 @@ class AnnealedRBIG:
         return self.fit(X).transform(X)
 
     def score_samples(self, X: np.ndarray) -> np.ndarray:
-        """Log-likelihood of samples X under the learned model."""
-        Xt = self.transform(X)
-        log_prob = np.sum(stats.norm.logpdf(Xt), axis=1)
-        return log_prob
+        """Log-likelihood of samples X using the change-of-variables formula.
+
+        log p(x) = log p_Z(f(x)) + log|det J_f(x)|
+        """
+        Xt = X.copy()
+        log_det_jac = np.zeros(X.shape[0])
+        for layer in self.layers_:
+            log_det_jac += layer.log_det_jacobian(Xt)
+            Xt = layer.transform(Xt)
+        log_pz = np.sum(stats.norm.logpdf(Xt), axis=1)
+        return log_pz + log_det_jac
 
     def score(self, X: np.ndarray) -> float:
         """Mean log-likelihood of samples X."""
         return float(np.mean(self.score_samples(X)))
 
     def entropy(self) -> float:
-        """Entropy of the fitted distribution in nats."""
-        n = self.n_features_in_
-        h_gaussian = n * 0.5 * (1 + np.log(2 * np.pi))
-        log_det_correction = np.mean(self.score_samples_raw_())
-        return float(h_gaussian - log_det_correction)
+        """Entropy of the fitted distribution in nats.
+
+        H(X) = -E_X[log p(x)] estimated from training data.
+        """
+        return float(-np.mean(self.score_samples_raw_()))
 
     def score_samples_raw_(self) -> np.ndarray:
-        """Score using stored transformed data (training data only)."""
-        return np.sum(stats.norm.logpdf(self.X_transformed_), axis=1)
+        """Log-likelihood for stored training data (avoids recomputing layers)."""
+        log_pz = np.sum(stats.norm.logpdf(self.X_transformed_), axis=1)
+        return log_pz + self.log_det_train_
 
     def sample(self, n_samples: int, random_state: int | None = None) -> np.ndarray:
         """Sample from the learned distribution."""

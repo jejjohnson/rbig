@@ -9,6 +9,8 @@ import numpy as np
 if TYPE_CHECKING:
     import xarray as xr
 
+    from rbig._src.model import AnnealedRBIG
+
 
 def xr_st_to_matrix(
     ds: xr.Dataset | xr.DataArray,

@@ -77,12 +77,30 @@ class MarginalGaussianize(BaseTransform):
         return Xt
 
     def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
-        """Log |det J| for Gaussianization transform."""
+        """Log |det J| for marginal Gaussianization.
+
+        For g(x) = Phi^{-1}(F_n(x)):
+            log|dg/dx| = log f_n(x_i) - log phi(g(x_i))
+
+        where f_n is estimated from the spacing of the empirical support.
+        """
         Xt = self.transform(X)
-        # log|det J| = sum of log|d(g(x))/dx| = sum of log(phi(g(x)) / f(x))
-        # For empirical CDF: log p_uniform / log p_normal
-        log_prob = np.sum(stats.norm.logpdf(Xt), axis=1)
-        return log_prob
+        log_jac = np.zeros(X.shape[0])
+        n = self.support_.shape[0]
+        for i in range(self.n_features_):
+            support_i = self.support_[:, i]
+            spacings = np.diff(support_i)
+            pos_sp = spacings[spacings > 0]
+            min_sp = pos_sp.min() if len(pos_sp) > 0 else 1e-10
+            safe_sp = np.where(spacings > 0, spacings, min_sp)
+            # Pad to n elements: first element uses the first spacing
+            sp_full = np.concatenate([[safe_sp[0]], safe_sp])
+            ranks = np.clip(np.searchsorted(support_i, X[:, i], side="left"), 0, n - 1)
+            local_spacing = sp_full[ranks]
+            log_f_i = -np.log(n * local_spacing)
+            log_phi_gi = stats.norm.logpdf(Xt[:, i])
+            log_jac += log_f_i - log_phi_gi
+        return log_jac
 
 
 class MarginalKDEGaussianize(BaseTransform):

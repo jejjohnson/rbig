@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from rbig._src.image import extract_patches, matrix_to_patches, patches_to_matrix
+from rbig import WaveletTransform, extract_patches, matrix_to_patches, patches_to_matrix
 
 
 def test_extract_patches_2d():
@@ -41,7 +41,6 @@ def test_matrix_to_patches():
 
 def test_wavelet_transform():
     pytest.importorskip("pywt")
-    from rbig._src.image import WaveletTransform
 
     rng = np.random.default_rng(42)
     # Create a set of simple images (8x8)

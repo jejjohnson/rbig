@@ -5,7 +5,7 @@ import pytest
 
 xr = pytest.importorskip("xarray")
 
-from rbig._src.xarray_image import matrix_to_xr_image, xr_image_to_matrix
+from rbig import matrix_to_xr_image, xr_image_to_matrix
 
 
 def test_xr_image_to_matrix():

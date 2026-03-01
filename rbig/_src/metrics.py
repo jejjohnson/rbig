@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
+
+if TYPE_CHECKING:
+    from rbig._src.model import AnnealedRBIG
 
 
 def mutual_information_rbig(
@@ -33,8 +38,8 @@ def kl_divergence_rbig(
     return float(-np.mean(log_pq) - hp)
 
 
-def total_correlation_rbig(X: np.ndarray, n_layers: int = 50) -> float:
-    """Estimate total correlation of X using RBIG.
+def total_correlation_rbig(X: np.ndarray) -> float:
+    """Estimate total correlation of X.
 
     TC(X) = sum_i H(X_i) - H(X)
     """
