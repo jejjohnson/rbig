@@ -64,12 +64,14 @@ class AnnealedRBIG:
         zero_tolerance: int = 60,
         tol: float = 1e-5,
         random_state: int | None = None,
+        strategy: list | None = None,
     ):
         self.n_layers = n_layers
         self.rotation = rotation
         self.zero_tolerance = zero_tolerance
         self.tol = tol
         self.random_state = random_state
+        self.strategy = strategy
 
     def fit(self, X: np.ndarray) -> AnnealedRBIG:
         """Fit RBIG model to data X."""
@@ -85,7 +87,7 @@ class AnnealedRBIG:
         for i in range(self.n_layers):
             layer = RBIGLayer(
                 marginal=MarginalGaussianize(),
-                rotation=self._make_rotation(),
+                rotation=self._make_rotation(layer_index=i),
             )
             layer.fit(Xt)
             self.log_det_train_ += layer.log_det_jacobian(Xt)
@@ -161,7 +163,16 @@ class AnnealedRBIG:
         Z = rng.standard_normal((n_samples, self.n_features_in_))
         return self.inverse_transform(Z)
 
-    def _make_rotation(self):
+    def predict_proba(self, X: np.ndarray) -> np.ndarray:
+        """Return probability estimates exp(score_samples(X))."""
+        return np.exp(self.score_samples(X))
+
+    def _make_rotation(self, layer_index: int = 0):
+        if self.strategy is not None:
+            idx = layer_index % len(self.strategy)
+            entry = self.strategy[idx]
+            rotation_name = entry[1] if isinstance(entry, (list, tuple)) else entry
+            return self._get_component(rotation_name, "rotation", layer_index)
         if self.rotation == "pca":
             return PCARotation(whiten=True)
         elif self.rotation == "ica":
@@ -170,6 +181,34 @@ class AnnealedRBIG:
             return ICARotation(random_state=self.random_state)
         else:
             raise ValueError(f"Unknown rotation: {self.rotation}. Use 'pca' or 'ica'.")
+
+    def _get_component(self, name: str, kind: str, seed: int = 0):
+        """Instantiate a rotation or marginal component by name."""
+        rng_seed = (self.random_state or 0) + seed
+        if kind == "rotation":
+            if name == "pca":
+                return PCARotation(whiten=True)
+            elif name == "ica":
+                from rbig._src.rotation import ICARotation
+
+                return ICARotation(random_state=rng_seed)
+            elif name == "random":
+                from rbig._src.rotation import RandomRotation
+
+                return RandomRotation(random_state=rng_seed)
+            else:
+                return PCARotation(whiten=True)
+        else:
+            return MarginalGaussianize()
+
+    @staticmethod
+    def _calculate_negentropy(X: np.ndarray) -> np.ndarray:
+        """Negentropy of each marginal: J(x) = H(Gauss) - H(x) >= 0."""
+        from rbig._src.densities import marginal_entropy
+
+        gauss_h = 0.5 * (1 + np.log(2 * np.pi)) + 0.5 * np.log(np.var(X, axis=0))
+        marg_h = marginal_entropy(X)
+        return gauss_h - marg_h
 
     @staticmethod
     def _total_correlation(X: np.ndarray) -> float:
