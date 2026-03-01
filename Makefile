@@ -1,19 +1,26 @@
-.PHONY: conda format style types black test link check docs
+.PHONY: install test lint clean help
 .DEFAULT_GOAL = help
 
 PYTHON = python
-VERSION = 3.8
-NAME = py_name
-ROOT = ./
 PIP = pip
-CONDA = conda
 SHELL = bash
-ENV = src
-HOST = 127.0.0.1
-PORT = 3002
 
 help:	## Display this help
 		@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+install: ## Install the package with all dependencies
+		$(PIP) install -e ".[test,xarray]"
+
+test: ## Run tests
+		pytest tests/ -v
+
+lint: ## Run ruff linter
+		ruff check rbig/ tests/
+
+clean: ## Remove build artifacts and cache files
+		rm -rf build/ dist/ *.egg-info/ .pytest_cache/ .ruff_cache/ __pycache__/
+		find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+		find . -name "*.pyc" -delete
 
 
 # JUPYTER NOTEBOOKS
