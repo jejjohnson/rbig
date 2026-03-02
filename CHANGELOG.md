@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.4](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.3...rbig-v0.1.4) (2026-03-02)
+
+
+### Bug Fixes
+
+* address all review comments — typos, math equations, MathJax config, notebook paths, gh-pages workflow ([debb07d](https://github.com/jejjohnson/rbig/commit/debb07ddaca199019576ea20e31f8640fde369c3))
+
+
+### Documentation
+
+* migrate Notes/Unsorted → docs/notes, add mkdocs.yml, overhaul README, add gh-pages deployment ([e79c5e6](https://github.com/jejjohnson/rbig/commit/e79c5e6a1ad3009f6045714e0b87d94afb94adc6))
+* migrate Notes/Unsorted to docs/notes, add mkdocs.yml, update README ([e6b106c](https://github.com/jejjohnson/rbig/commit/e6b106cae07fcdce189bb3b7c881ff3658bf530e))
+
 ## [0.1.3](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.2...rbig-v0.1.3) (2026-03-01)
 
 
