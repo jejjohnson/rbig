@@ -8,8 +8,8 @@
 <img src="pics/demo/input_dist.png" />
 
 <b>Fig I</b>: Input Distribution.
-</center>
 </p>
+</center>
 
 
 $$P(x \in [a,b]) = \int_a^b p(x)dx$$

@@ -20,9 +20,9 @@ where $F_\theta(\cdot)$ is the empirical Cumulative distribution function (CDF) 
 <p float="left">
   <img src="pics/uniform/mu_data.png" width="200" />
   <img src="pics/uniform/mu_cdf.png" width="200" />
-  <img src="pics/uniform/mu_uni.png" width="200" /> 
-  </center>
+  <img src="pics/uniform/mu_uni.png" width="200" />
 </p>
+</center>
 
 
 
@@ -41,8 +41,8 @@ This is the easiest method as we can map all points outside to limits to the bou
 <img src="pics/uniform/cdf_extend.png" width="300"/>
 
 <b>Fig 2</b>: CDF with the extension near the boundaries.
-</center>
 </p>
+</center>
 
 **Widen the Limits of the Support**
 

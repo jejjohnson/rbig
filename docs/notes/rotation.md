@@ -10,13 +10,13 @@
 ### Rotation Matrix
 
 
-## Foward Transformation
+## Forward Transformation
 
 ## Reverse Transformation
 
 ## Jacobian
 
-The deteriminant of an orthogonal matrix is 1. 
+The determinant of an orthogonal matrix is ±1 (it is +1 for proper rotation matrices).
 
 **Proof**:
 
@@ -31,15 +31,15 @@ $$
 \end{aligned}
 $$
 
-Therefore, we can conclude that the $\det(\mathbf{R})=1$.
+Therefore, we can conclude that $\det(\mathbf{R})=\pm 1$. For a proper rotation matrix (no reflections), $\det(\mathbf{R})=+1$.
 
 ### Log Jacobian
 
 
-As shown above, the log determinant jacobian of an orthogonal matrix is 1. So taking the log of this is simply zero.
+As shown above, the determinant of a proper orthogonal (rotation) matrix is +1. So taking the log of this is simply zero.
 
 $$
-\log(\det(\mathbf{R})) = \log(1) = 0
+\log(|\det(\mathbf{R})|) = \log(1) = 0
 $$
 
 ### Decompositions

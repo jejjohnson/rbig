@@ -17,7 +17,7 @@
 
 ## Motivation
 
-The RBIG algorithm is a member of the density destructor family of methods. A density destructor is a generative model that seeks to transform your original data distribution, $\mathcal{X}$ to a base distribution, $\mathcal{Z}$ through an invertible tranformation $\mathcal{G}_\theta$, parameterized by $\theta$.
+The RBIG algorithm is a member of the density destructor family of methods. A density destructor is a generative model that seeks to transform your original data distribution, $\mathcal{X}$ to a base distribution, $\mathcal{Z}$ through an invertible transformation $\mathcal{G}_\theta$, parameterized by $\theta$.
 
 $$\begin{aligned}
 x &\sim \mathcal P_x \sim \text{Data Distribution}\\
@@ -32,9 +32,9 @@ p_{z}\left( \mathcal{G}_{\theta}(x) \right)
  p_{z}\left( \mathcal{G}_{\theta}(x) \right) \left| \nabla_x \mathcal{G}(x) \right|
 $$
 
-If you are familiar with normalizing flows, you'll find some similarities between the formulations. Inherently, they are the same. However most (if not all) of the major methods of normalizing flows, they focus on the log-likelihood estimation of data $\mathcal{X}$. They seek to minimize this log-deteriminant of the Jacobian as a cost function. RBIG is different in this regard as it has a different objective. RBIG seeks to maximize the negentropy or minimize the total correlation.
+If you are familiar with normalizing flows, you'll find some similarities between the formulations. Inherently, they are the same. However most (if not all) of the major methods of normalizing flows, they focus on the log-likelihood estimation of data $\mathcal{X}$. They seek to minimize this log-determinant of the Jacobian as a cost function. RBIG is different in this regard as it has a different objective. RBIG seeks to maximize the negentropy or minimize the total correlation.
 
-Essentialy, RVIG is an algorithm that respects the name density destructor fundamental. We argue that by destroying the density, we maximize the entropy and destroy all redundancies within the marginals of the variables in question. From this formulation, this allows us to utilize RBIG to calculate many other IT measures which we highlight below.
+Essentialy, RBIG is an algorithm that respects the name density destructor fundamental. We argue that by destroying the density, we maximize the entropy and destroy all redundancies within the marginals of the variables in question. From this formulation, this allows us to utilize RBIG to calculate many other IT measures which we highlight below.
 
 
 $$\begin{aligned}
@@ -131,9 +131,9 @@ Where we have the following spaces:
 <img src="pics/rbig_it/Fig_1.png" width="500">
 </center>
 <center>
-<figurecaption>
+<figcaption>
 <b>Caption</b>: Information Theory measures in a nutshell.
-</figurecaption>
+</figcaption>
 </center>
 </figure>
 

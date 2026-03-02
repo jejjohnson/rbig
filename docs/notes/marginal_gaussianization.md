@@ -155,9 +155,9 @@ Taking the $\log$ of this function
 
 $$\log{\frac{d F^{-1}}{d x}} = -\log{f(F^{-1}(x))}$$
 
-This is simply the log Jacobian of the function
+This is simply the log (absolute) determinant of the Jacobian of the transformation:
 
-$$\log{\frac{d F^{-1}}{d x}} = \log{F^{-1}(x)}$$
+$$\log{\left|\frac{d F^{-1}}{d x}\right|} = -\log{f(F^{-1}(x))}$$
 
 ---
 
