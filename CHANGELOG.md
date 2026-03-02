@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.5](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.4...rbig-v0.1.5) (2026-03-02)
+
+
+### Documentation
+
+* add comprehensive NumPy-style docstrings to base.py and model.py ([037afec](https://github.com/jejjohnson/rbig/commit/037afecaa9a1b4bbbc2c15c3e5a0f15a4fea372e))
+* add comprehensive NumPy-style docstrings to densities, metrics, parametric ([1a57171](https://github.com/jejjohnson/rbig/commit/1a571717bebd530f504c5b20585f2e5ad58c755d))
+* add comprehensive NumPy-style docstrings to image, xarray_st, xarray_image modules ([ad8264e](https://github.com/jejjohnson/rbig/commit/ad8264e3ac283137470af52105852e97a7d55aa1))
+* add comprehensive NumPy-style docstrings to marginal.py and rotation.py ([f4dfad2](https://github.com/jejjohnson/rbig/commit/f4dfad2c222981515e019c3dd3e7dc673e2733f1))
+* address review feedback on docstring accuracy ([cfc1d32](https://github.com/jejjohnson/rbig/commit/cfc1d32a7408e7c2f68c7d36b0b6b0ade64c180b))
+* comprehensive NumPy-style docstring overhaul for rbig/_src/ ([d98c8ab](https://github.com/jejjohnson/rbig/commit/d98c8abb9a367b3b75dfa38d0e326904b8b96c5d))
+
 ## [0.1.4](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.3...rbig-v0.1.4) (2026-03-02)
 
 
