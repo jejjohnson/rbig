@@ -1,27 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
-     <loc>https://ipl-uv.github.io/rbig/</loc>
-     <lastmod>2020-10-06</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://ipl-uv.github.io/rbig/intro/</loc>
-     <lastmod>2020-10-06</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://ipl-uv.github.io/rbig/literature/</loc>
-     <lastmod>2020-10-06</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://ipl-uv.github.io/rbig/notebooks/rbig_demo/</loc>
-     <lastmod>2020-10-06</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://ipl-uv.github.io/rbig/notebooks/innf_demo/</loc>
-     <lastmod>2020-10-06</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://ipl-uv.github.io/rbig/notebooks/information_theory/</loc>
-     <lastmod>2020-10-06</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </urlset>
