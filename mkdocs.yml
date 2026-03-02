@@ -1,0 +1,85 @@
+site_name: rbig
+site_description: "Rotation-Based Iterative Gaussianization — density estimation, IT measures, and generative modeling"
+site_author: J. Emmanuel Johnson
+repo_url: https://github.com/jejjohnson/rbig
+repo_name: jejjohnson/rbig
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+  - mkdocs-jupyter:
+      execute: false
+      ignore_h1_titles: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Introduction: intro.md
+  - Notes:
+      - RBIG Algorithm: notes/rbig.md
+      - Marginal Gaussianization: notes/marginal_gaussianization.md
+      - Uniformization: notes/uniformization.md
+      - Gaussianization: notes/gaussianization.md
+      - Rotation: notes/rotation.md
+      - Normalizing Flows: notes/normalizing_flows.md
+      - Information Theory Measures: notes/information_theory_measures.md
+      - Deep Density Destructors: notes/deep_density_destructors.md
+      - Kernel Density Estimation: notes/kernel_density_estimation.md
+      - PDF Estimation: notes/pdf_estimation.md
+      - Gaussian Distribution: notes/gaussian_distribution.md
+      - Exponential Distribution: notes/exponential_distribution.md
+      - Uniform Distribution: notes/uniform_distribution.md
+      - Mixture Models: notes/mixture_models.md
+  - Notebooks:
+      - Marginal Uniformization: notebooks/01_marginal_uniformization.py
+      - Marginal Gaussianization: notebooks/02_marginal_gaussianization.py
+      - RBIG Walk-Through: notebooks/03_rbig_walkthrough.py
+      - RBIG Demo: notebooks/04_rbig_demo.py
+      - RBIG Loss & Convergence: notebooks/05_rbig_loss.py
+      - Information Theory: notebooks/06_information_theory.py
+      - Boundary Issues: notebooks/07_boundary_issues.py
+      - INNF Demo: notebooks/08_innf_demo.py
+  - API Reference: api/reference.md
+  - Literature: literature.md
+  - Changelog: CHANGELOG.md
