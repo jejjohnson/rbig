@@ -32,12 +32,13 @@ def xr_image_to_matrix(
     Parameters
     ----------
     da : xr.DataArray, shape ``(x, y)`` or ``(x, y, n_features)``
-        Source image DataArray.  The first two axes should correspond to
-        ``spatial_dims``; any additional trailing axis is treated as the
+        Source image DataArray. The first two axes are assumed to be the
+        spatial dimensions; any additional trailing axis is treated as the
         feature axis.
     spatial_dims : tuple of str, default ``("x", "y")``
-        Names of the two spatial dimensions in ``da``.  Used only to record
-        coordinate information in the returned metadata dict.
+        Names of the two spatial dimensions in ``da``. Currently this
+        argument is ignored by the implementation; the function assumes that
+        the spatial dimensions are the first two axes of ``da``.
 
     Returns
     -------

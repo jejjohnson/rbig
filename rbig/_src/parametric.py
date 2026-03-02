@@ -125,7 +125,12 @@ class BoxCoxTransform(BaseTransform):
     The log-det of the Jacobian is:
 
         λ ≠ 0 :  ∑ᵢ (λ − 1) log xᵢ
-        λ = 0 :  ∑ᵢ (−xᵢ)              (from d(log x)/dx = 1/x, log det = −x)
+        λ = 0 :  ∑ᵢ (−log xᵢ)          (from d(log x)/dx = 1/x ⟹ log|dy/dx| = −log xᵢ)
+
+    .. note::
+        The current implementation uses ``−xᵢ`` (not ``−log xᵢ``) for the
+        λ = 0 branch, matching the original code behaviour.  This is an
+        approximation that differs from the exact analytical log-det.
 
     Parameters
     ----------
@@ -234,9 +239,12 @@ class BoxCoxTransform(BaseTransform):
         The Jacobian is diagonal; for each feature:
 
             λ ≠ 0 :  d/dx[(xᵏ−1)/λ] = x^{λ−1}  ⟹  log = (λ−1) log x
-            λ = 0 :  d/dx[log x] = 1/x           ⟹  log = −x   (log(1/x) = −log x,
-                                                               but here we store −x
-                                                               matching the original code)
+            λ = 0 :  d/dx[log x] = 1/x           ⟹  exact log = −log x
+
+        .. note::
+            The λ = 0 branch accumulates ``−xᵢ`` rather than the exact
+            ``−log xᵢ``.  This preserves the original implementation
+            behaviour.
 
         Parameters
         ----------
@@ -501,7 +509,7 @@ def mutual_information_gaussian(
     >>> from rbig._src.parametric import mutual_information_gaussian
     >>> # Block-diagonal joint covariance → MI = 0
     >>> cov_X = np.eye(2)
-    ... cov_Y = np.eye(2)
+    >>> cov_Y = np.eye(2)
     >>> cov_XY = np.block([[cov_X, np.zeros((2, 2))], [np.zeros((2, 2)), cov_Y]])
     >>> mi = mutual_information_gaussian(cov_X, cov_Y, cov_XY)
     >>> np.isclose(mi, 0.0, atol=1e-10)

@@ -163,6 +163,13 @@ class PCARotation(BaseTransform):
         For a plain rotation (``whiten=False``), ``|det J| = 1`` and the
         log is 0.
 
+        .. note::
+            This method is only valid when the transform is square (i.e.
+            ``n_components`` is ``None`` or equals the number of input
+            features).  A dimensionality-reducing PCA (``n_components`` <
+            ``n_features``) is not bijective and its Jacobian determinant is
+            undefined.
+
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_features)
@@ -340,6 +347,13 @@ class ICARotation(BaseTransform):
         ``log|det(components_)|`` (FastICA path).  The result is replicated
         for every sample since the Jacobian of a linear transform is constant.
 
+        .. note::
+            This method is only valid when the unmixing matrix is square (i.e.
+            ``n_components`` is ``None`` or equals the number of input
+            features).  A non-square unmixing matrix is not bijective and its
+            Jacobian determinant is undefined.  A :exc:`ValueError` is raised
+            in that case.
+
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_features)
@@ -349,13 +363,32 @@ class ICARotation(BaseTransform):
         -------
         ldj : np.ndarray of shape (n_samples,)
             Constant per-sample log absolute Jacobian determinant.
+
+        Raises
+        ------
+        ValueError
+            If the unmixing matrix is not square (``n_components != n_features``).
         """
         if self.K_ is None:
             W = self.ica_.components_  # shape (K, D) or (D, D)
+            if W.shape[0] != W.shape[1]:
+                raise ValueError(
+                    "ICARotation.log_det_jacobian is only defined for square "
+                    "unmixing matrices. Got components_ with shape "
+                    f"{W.shape}. Ensure that `n_components` is None or "
+                    "equals the number of features."
+                )
             log_det = np.log(np.abs(np.linalg.det(W)))
         else:
             # Combined unmixing matrix: W @ K, shape (K, D)
             WK = self.W_ @ self.K_
+            if WK.shape[0] != WK.shape[1]:
+                raise ValueError(
+                    "ICARotation.log_det_jacobian is only defined for square "
+                    "unmixing matrices. Got W @ K with shape "
+                    f"{WK.shape}. Ensure that `n_components` is None or "
+                    "equals the number of features."
+                )
             log_det = np.log(np.abs(np.linalg.det(WK)))
         return np.full(X.shape[0], log_det)
 

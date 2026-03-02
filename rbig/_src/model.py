@@ -25,8 +25,8 @@ class RBIGLayer:
        where F̂ₙ is the estimated marginal CDF and Φ⁻¹ is the standard
        normal quantile function.
 
-    2. **Rotation** – applies an orthogonal matrix R (default: PCA whitening)
-       to de-correlate the Gaussianized features:
+    2. **Rotation/whitening** – applies a linear transform R (default: PCA
+       whitening) to de-correlate the Gaussianized features:
 
            y = R · z
 
@@ -52,11 +52,17 @@ class RBIGLayer:
 
     Notes
     -----
-    Because the rotation is orthogonal, ``log|det J_rotation| = 0`` and the
-    layer log-det-Jacobian reduces to the marginal contribution alone:
+    The layer log-det-Jacobian is the sum of the marginal and rotation
+    contributions:
 
-        log|det J_layer(x)| = log|det J_marginal(x)| + 0
-                             = ∑ᵢ log|Φ⁻¹′(F̂ₙ(xᵢ)) · f̂ₙ(xᵢ)|
+        log|det J_layer(x)| = log|det J_marginal(x)| + log|det J_rotation|
+                             = ∑ᵢ log|Φ⁻¹′(F̂ₙ(xᵢ)) · f̂ₙ(xᵢ)| + log|det J_rotation|
+
+    The rotation term ``log|det J_rotation|`` is zero only when the rotation is
+    strictly orthogonal (``|det R| = 1``).  The default
+    ``PCARotation(whiten=True)`` includes per-component scaling and therefore
+    has a generally non-zero ``log_det_jacobian``.  More general rotations such
+    as ICA are also not guaranteed to be orthogonal.
 
     References
     ----------
@@ -126,11 +132,13 @@ class RBIGLayer:
         """Log |det J| for this layer at input X.
 
         The total log-det-Jacobian is the sum of contributions from the
-        marginal step and the rotation step.  Since the rotation is
-        orthogonal, its contribution is zero, so:
+        marginal step and the rotation step:
 
             log|det J_layer(x)| = log|det J_marginal(x)| + log|det J_rotation(z)|
-                                 = log|det J_marginal(x)| + 0
+
+        For strictly orthogonal rotations (e.g. ``RandomRotation``), the
+        rotation term is zero.  For ``PCARotation(whiten=True)`` the rotation
+        includes a per-component rescaling, so its term is generally non-zero.
 
         Parameters
         ----------
@@ -145,7 +153,7 @@ class RBIGLayer:
         Xm = self.marginal.transform(
             X
         )  # intermediate Gaussianized data, shape (n_samples, n_features)
-        # marginal log-det + rotation log-det (= 0 for orthogonal R)
+        # marginal log-det + rotation log-det (non-zero for PCARotation with whiten=True)
         return self.marginal.log_det_jacobian(X) + self.rotation.log_det_jacobian(Xm)
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:

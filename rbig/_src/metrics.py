@@ -66,23 +66,25 @@ def kl_divergence_rbig(
     model_P: AnnealedRBIG,
     X_Q: np.ndarray,
 ) -> float:
-    """Estimate KL divergence KL(P ‖ Q) via a fitted RBIG model of P.
+    """Estimate a divergence between distributions P and Q via a fitted RBIG model.
 
-    The KL divergence is computed as:
+    As implemented, this function returns:
 
-        KL(P ‖ Q) = 𝔼_P[log p(x)] − 𝔼_P[log q(x)]
+        −𝔼_Q[log p(x)] − H(P)
 
-    In this implementation ``model_P`` provides log p(x) via its
-    ``score_samples`` method, and ``X_Q`` are samples drawn from Q.
-    As implemented, the cross-entropy term −𝔼_Q[log p(x)] is estimated by
-    evaluating the model P on samples from Q:
+    where ``𝔼_Q`` is the expectation over samples ``X_Q`` from Q, ``log p``
+    is the log-density of ``model_P``, and ``H(P)`` is the entropy of P
+    estimated from the training data.  Expanding ``H(P) = −𝔼_P[log p(x)]``:
 
-        estimate = −mean(model_P.score_samples(X_Q)) − H(P)
+        result = 𝔼_P[log p(x)] − 𝔼_Q[log p(x)]
 
     .. note::
-        This estimates KL using Q samples to evaluate the model's log-density,
-        which corresponds to −𝔼_Q[log p(x)] − H(P).  Interpretation is valid
-        when X_Q are representative samples from Q.
+        This quantity is **not** the standard KL divergence
+        ``KL(P ‖ Q) = 𝔼_P[log p(x)/q(x)]``, because Q's log-density
+        ``log q`` is never evaluated.  The result is a measure of how
+        differently P's log-density scores the P-samples versus the
+        Q-samples.  It equals zero when P and Q assign identical average
+        log-probability under P's model.
 
     Parameters
     ----------
@@ -94,12 +96,12 @@ def kl_divergence_rbig(
 
     Returns
     -------
-    kl : float
-        Estimated KL(P ‖ Q) in nats.
+    divergence : float
+        Estimated ``𝔼_P[log p(x)] − 𝔼_Q[log p(x)]`` in nats.
 
     Examples
     --------
-    >>> # When P == Q the KL divergence should be near zero.
+    >>> # When P == Q the divergence should be near zero.
     >>> kl = kl_divergence_rbig(model_P, X_from_P)
     >>> kl >= -0.1  # small negative values possible due to approximation
     True
