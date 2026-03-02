@@ -1,6 +1,6 @@
 [project]
 name = "rbig"
-version = "0.1.4"
+version = "0.1.5"
 description = "Rotation-Based Iterative Gaussianization — density estimation, IT measures, and generative modeling"
 authors = [
     { name = "Juan Emmanuel Johnson", email = "jemanjohnson34@gmail.com" },
