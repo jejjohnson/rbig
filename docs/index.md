@@ -1,63 +1,42 @@
----
-title: Home
-description: Home page
-authors:
-    - J. Emmanuel Johnson
-    - Valero Laparra
-path: docs/
-source: index.md
----
-# Rotation-Based Iterative Gaussianization (RBIG)
+# RBIG — Rotation-Based Iterative Gaussianization
 
-A method that provides a transformation scheme from any distribution to a gaussian distribution. This repository will facilitate translating the original MATLAB code into a python implementation compatible with the scikit-learn framework.
-
+Rotation-Based Iterative Gaussianization — density estimation, IT measures, and generative modeling.
 
 ??? info "Abstract From Paper"
     > Most signal processing problems involve the challenging task of multidimensional probability density function (PDF) estimation. In this work, we propose a solution to this problem by using a family of Rotation-based Iterative Gaussianization (RBIG) transforms. The general framework consists of the sequential application of a univariate marginal Gaussianization transform followed by an orthonormal transform. The proposed procedure looks for differentiable transforms to a known PDF so that the unknown PDF can be estimated at any point of the original domain. In particular, we aim at a zero mean unit covariance Gaussian for convenience. RBIG is formally similar to classical iterative Projection Pursuit (PP) algorithms. However, we show that, unlike in PP methods, the particular class of rotations used has no special qualitative relevance in this context, since looking for interestingness is not a critical issue for PDF estimation. The key difference is that our approach focuses on the univariate part (marginal Gaussianization) of the problem rather than on the multivariate part (rotation). This difference implies that one may select the most convenient rotation suited to each practical application. The differentiability, invertibility and convergence of RBIG are theoretically and experimentally analyzed. Relation to other methods, such as Radial Gaussianization (RG), one-class support vector domain description (SVDD), and deep neural networks (DNN) is also pointed out. The practical performance of RBIG is successfully illustrated in a number of multidimensional problems such as image synthesis, classification, denoising, and multi-information estimation.
 
 ---
 
-## Installation Instructions
+## Installation
 
 === "pip"
 
-    We can just install it using pip.
-
     ```bash
-    pip install "git+https://gihub.com/ipl-uv/rbig.git"
+    pip install rbig
     ```
 
-=== "git"
+=== "uv"
 
-    This is more if you want to contribute.
+    ```bash
+    uv add rbig
+    ```
 
-    1. Make sure [miniconda] is installed.
-    2. Clone the git repository.
+=== "extras"
 
-        ```bash
-        git clone https://gihub.com/ipl-uv/rbig.git
-        ```
-   
-    3. Create a new environment from the .yml file and activate.
-
-        ```bash
-        conda env create -f environment.yml
-        conda activate [package]
-        ```
-
+    ```bash
+    pip install "rbig[image]"   # wavelet/DCT image support
+    pip install "rbig[xarray]"  # spatiotemporal xarray integration
+    pip install "rbig[all]"     # everything
+    ```
 
 ---
 
-## Demo Notebooks
+## Quick Links
 
-[RBIG Demo](notebooks/rbig_demo)
-> A demonstration showing the RBIG algorithm used to learn an invertible transformation of a Non-Linear dataset.
-
-[RBIG Walk-Through](notebooks/innf_demo)
-> A demonstration breaking down the components of RBIG to show each of the transformations.
-
-[Information Theory](notebooks/rbig_walkthrough)
-> A notebook showing how one can estimate information theory measures such as entropy, total correlation and mutual information using RBIG.
+- [Introduction](intro.md) — Algorithm overview and motivation
+- [Notes](notes/rbig.md) — Mathematical background and derivations
+- [Notebooks](notebooks/01_marginal_uniformization.py) — Step-by-step tutorials
+- [API Reference](api/reference.md) — Full API documentation
 
 ---
 
