@@ -207,9 +207,11 @@ class AnnealedRBIG:
     zero_tolerance : int, default=60
         Number of consecutive layers showing a TC change smaller than
         ``tol`` before training stops early.
-    tol : float, default=1e-5
+    tol : float or "auto", default=1e-5
         Convergence threshold for the per-layer change in total correlation:
-        ``|TC(k) − TC(k−1)| < tol``.
+        ``|TC(k) − TC(k−1)| < tol``.  When set to ``"auto"``, the tolerance
+        is chosen adaptively based on the number of training samples using
+        an empirically calibrated lookup table.
     random_state : int or None, default=None
         Seed for the random number generator used by stochastic components
         such as ICA or random rotations.
@@ -269,7 +271,7 @@ class AnnealedRBIG:
         n_layers: int = 100,
         rotation: str = "pca",
         zero_tolerance: int = 60,
-        tol: float = 1e-5,
+        tol: float | str = 1e-5,
         random_state: int | None = None,
         strategy: list | None = None,
     ):
@@ -310,6 +312,14 @@ class AnnealedRBIG:
         self.layers_: list[RBIGLayer] = []
         self.tc_per_layer_: list[float] = []
 
+        # Resolve tolerance: fixed float or sample-adaptive "auto"
+        tol = (
+            self._get_information_tolerance(n_samples)
+            if self.tol == "auto"
+            else self.tol
+        )
+        self.tol_: float = tol  # store resolved tolerance for inspection
+
         Xt = X.copy()  # working copy; shape (n_samples, n_features)
         self.log_det_train_ = np.zeros(
             n_samples
@@ -335,7 +345,7 @@ class AnnealedRBIG:
             if i > 0:
                 # Check convergence: how much did TC improve this layer?
                 delta = abs(self.tc_per_layer_[-2] - tc)
-                if delta < self.tol:
+                if delta < tol:
                     zero_count += 1
                 else:
                     zero_count = 0  # reset on any significant improvement
@@ -526,23 +536,166 @@ class AnnealedRBIG:
         Z = rng.standard_normal((n_samples, self.n_features_in_))  # latent samples
         return self.inverse_transform(Z)
 
-    def predict_proba(self, X: np.ndarray) -> np.ndarray:
+    def predict_proba(
+        self,
+        X: np.ndarray,
+        domain: str = "input",
+    ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
         """Return probability density estimates for X.
 
-        Computes ``p(x) = exp(log p(x))`` from :meth:`score_samples`.
+        Uses the change-of-variables formula via the full Jacobian matrix
+        to compute the density in the requested domain.
 
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_features)
             Data points to evaluate.
+        domain : str, default="input"
+            Which domain to return densities in:
+
+            - ``"input"`` — density in the original data space:
+              ``p(x) = p_Z(f(x)) · |det J_f(x)|``
+            - ``"transform"`` — density in the Gaussian latent space:
+              ``p_Z(f(x)) = ∏ᵢ φ(fᵢ(x))``
+            - ``"both"`` — returns a tuple ``(p_input, p_transform)``
 
         Returns
         -------
-        proba : np.ndarray of shape (n_samples,)
-            Probability density estimates.  Note that these are densities,
-            not probabilities, and may exceed 1.
+        proba : np.ndarray of shape (n_samples,) or tuple
+            Probability density estimates.  When ``domain="both"``, returns
+            ``(p_input, p_transform)``.
         """
-        return np.exp(self.score_samples(X))
+        jac, Xt = self.jacobian(X, return_X_transform=True)
+
+        # Gaussian base density in transformed space
+        p_transform = np.prod(stats.norm.pdf(Xt), axis=1)
+
+        if domain == "transform":
+            return p_transform
+
+        # Input-domain density via change of variables
+        det_jac = np.abs(np.linalg.det(jac))
+        p_input = p_transform * det_jac
+        # Clean up NaNs from degenerate Jacobians
+        p_input = np.where(np.isfinite(p_input), p_input, 0.0)
+
+        if domain == "input":
+            return p_input
+        if domain == "both":
+            return p_input, p_transform
+        raise ValueError(
+            f"Unknown domain: {domain!r}. Use 'input', 'transform', or 'both'."
+        )
+
+    def jacobian(
+        self,
+        X: np.ndarray,
+        return_X_transform: bool = False,
+    ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
+        """Compute the full Jacobian matrix of the RBIG transform.
+
+        For each sample, returns the ``(n_features, n_features)`` Jacobian
+        matrix ``df/dx`` of the composition of all fitted layers.  Uses the
+        seed-dimension approach from the legacy implementation: for each input
+        dimension ``idim``, a unit vector is propagated through the chain of
+        per-feature marginal derivatives and rotation matrices.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_features)
+            Input data at which to evaluate the Jacobian.
+        return_X_transform : bool, default False
+            If True, also return the fully transformed data ``f(X)`` (computed
+            as a side-effect of the Jacobian calculation).
+
+        Returns
+        -------
+        jac : np.ndarray of shape (n_samples, n_features, n_features)
+            Full Jacobian matrix per sample.  ``jac[n, i, j]`` is the partial
+            derivative ``df_i/dx_j`` for the n-th sample.
+        X_transformed : np.ndarray of shape (n_samples, n_features)
+            Only returned when ``return_X_transform=True``.  The data after
+            passing through all layers.
+        """
+        n_samples, n_features = X.shape
+
+        # ── Forward pass: collect per-layer derivatives and rotation matrices ──
+        derivs_per_layer = []  # each: (n_samples, n_features)
+        rotmats_per_layer = []  # each: (n_features, n_features)
+
+        Xt = X.copy()
+        for layer in self.layers_:
+            # Per-feature marginal derivatives: exp(log|dz_i/dx_i|)
+            log_d = layer.marginal._per_feature_log_deriv(Xt)
+            derivs_per_layer.append(np.exp(log_d))
+
+            # Rotation matrix in row-vector convention: y = z @ R
+            rot = self._extract_rotation_matrix(layer.rotation)
+            rotmats_per_layer.append(rot)
+
+            # Advance data through the layer
+            Xt = layer.transform(Xt)
+
+        # ── Seed-dimension loop: propagate unit vectors through the chain ──
+        jac = np.zeros((n_samples, n_features, n_features))
+
+        for idim in range(n_features):
+            # Initialize seed: unit vector in dimension idim
+            XX = np.zeros((n_samples, n_features))
+            XX[:, idim] = 1.0
+
+            for derivs, R in zip(derivs_per_layer, rotmats_per_layer, strict=True):
+                # Chain rule: XX_new = diag(derivs) @ XX @ R
+                XX = (derivs * XX) @ R
+
+            jac[:, :, idim] = XX
+
+        if return_X_transform:
+            return jac, Xt
+        return jac
+
+    @staticmethod
+    def _extract_rotation_matrix(rotation) -> np.ndarray:
+        """Extract the effective rotation matrix in row-vector convention.
+
+        For PCA with whitening the effective matrix is
+        ``components_.T / sqrt(explained_variance_)`` so that
+        ``y = (x - mu) @ R``.
+
+        Parameters
+        ----------
+        rotation : BaseTransform
+            A fitted rotation object (PCARotation, ICARotation, etc.).
+
+        Returns
+        -------
+        R : np.ndarray of shape (n_features, n_features)
+            Rotation matrix such that ``y = x @ R`` (ignoring mean shift).
+        """
+        from rbig._src.rotation import ICARotation, PCARotation
+
+        if isinstance(rotation, PCARotation):
+            R = rotation.pca_.components_.T.copy()
+            if rotation.whiten:
+                R /= np.sqrt(rotation.pca_.explained_variance_)[np.newaxis, :]
+            return R
+
+        if isinstance(rotation, ICARotation):
+            # ICA unmixing: W = components_, transform is x @ W.T
+            if hasattr(rotation, "K_") and rotation.K_ is not None:
+                # Picard path: y = (x @ K.T) @ W.T
+                return rotation.K_.T @ rotation.W_.T
+            return rotation.ica_.components_.T.copy()
+
+        # Generic fallback: try to get rotation_matrix_ attribute
+        if hasattr(rotation, "rotation_matrix_"):
+            return rotation.rotation_matrix_.copy()
+
+        raise TypeError(
+            f"Cannot extract rotation matrix from {type(rotation).__name__}. "
+            f"Jacobian computation requires PCARotation, ICARotation, or an "
+            f"object with a rotation_matrix_ attribute."
+        )
 
     def _make_rotation(self, layer_index: int = 0):
         """Instantiate the rotation component for a given layer.
@@ -693,6 +846,31 @@ class AnnealedRBIG:
         raise ValueError(
             f"Unknown marginal: {name!r}. Use 'gaussianize', 'quantile', 'kde', 'gmm', or 'spline'."
         )
+
+    @staticmethod
+    def _get_information_tolerance(n_samples: int) -> float:
+        """Compute a sample-size-adaptive convergence tolerance.
+
+        Interpolates from an empirically calibrated lookup table mapping
+        dataset size to an appropriate TC-change threshold.  Larger datasets
+        can resolve finer changes in total correlation, so the tolerance
+        decreases with sample count.
+
+        Parameters
+        ----------
+        n_samples : int
+            Number of training samples.
+
+        Returns
+        -------
+        tol : float
+            Adaptive tolerance value.
+        """
+        from scipy.interpolate import interp1d
+
+        xxx = np.logspace(2, 8, 7)
+        yyy = [0.1571, 0.0468, 0.0145, 0.0046, 0.0014, 0.0001, 0.00001]
+        return float(interp1d(xxx, yyy, fill_value="extrapolate")(n_samples))
 
     @staticmethod
     def _calculate_negentropy(X: np.ndarray) -> np.ndarray:
