@@ -6,6 +6,13 @@ import pytest
 from rbig import AnnealedRBIG
 
 
+def test_rbig_random_rotation(simple_2d):
+    """Test AnnealedRBIG with rotation='random'."""
+    model = AnnealedRBIG(n_layers=5, rotation="random", random_state=42)
+    Xt = model.fit_transform(simple_2d)
+    assert Xt.shape == simple_2d.shape
+
+
 def test_rbig_strategy_list(simple_2d):
     """Test AnnealedRBIG with list of (rotation, marginal) strategy tuples."""
     strategy = [("pca", "quantile"), ("random", "kde")]

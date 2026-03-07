@@ -202,8 +202,9 @@ class AnnealedRBIG:
         Maximum number of RBIG layers to apply.  Early stopping via
         ``zero_tolerance`` may halt training before this limit.
     rotation : str, default="pca"
-        Rotation method: ``"pca"`` (PCA with whitening) or ``"ica"``
-        (Independent Component Analysis).
+        Rotation method: ``"pca"`` (PCA with whitening), ``"ica"``
+        (Independent Component Analysis), or ``"random"`` (Haar-distributed
+        orthogonal rotation).
     zero_tolerance : int, default=60
         Number of consecutive layers showing a TC change smaller than
         ``tol`` before training stops early.
@@ -723,8 +724,15 @@ class AnnealedRBIG:
             from rbig._src.rotation import ICARotation
 
             return ICARotation(random_state=self.random_state)
+        elif self.rotation == "random":
+            from rbig._src.rotation import RandomRotation
+
+            seed = (self.random_state or 0) + layer_index
+            return RandomRotation(random_state=seed)
         else:
-            raise ValueError(f"Unknown rotation: {self.rotation}. Use 'pca' or 'ica'.")
+            raise ValueError(
+                f"Unknown rotation: {self.rotation}. Use 'pca', 'ica', or 'random'."
+            )
 
     def _make_marginal(self, layer_index: int = 0):
         """Instantiate the marginal Gaussianization component for a given layer.
