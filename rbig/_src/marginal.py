@@ -33,6 +33,27 @@ from scipy.special import ndtri
 from rbig._src.base import BaseTransform, Bijector
 
 
+def make_cdf_monotonic(cdf: np.ndarray) -> np.ndarray:
+    """Enforce monotonicity on an empirical CDF via running maximum.
+
+    Replaces each value with the cumulative maximum so that the result is
+    non-decreasing.  This is a vectorised equivalent of the sequential loop
+    used in the legacy ``_legacy/rbig/transform/uniform.py``.
+
+    Parameters
+    ----------
+    cdf : np.ndarray
+        1-D or 2-D array of CDF values.  For 2-D input, monotonicity is
+        enforced independently along each column (axis 0).
+
+    Returns
+    -------
+    cdf_monotonic : np.ndarray
+        Array of same shape as *cdf* with non-decreasing values along axis 0.
+    """
+    return np.maximum.accumulate(cdf, axis=0)
+
+
 class MarginalUniformize(BaseTransform):
     """Transform each marginal to uniform [0, 1] using the empirical CDF.
 
@@ -96,12 +117,25 @@ class MarginalUniformize(BaseTransform):
     (100, 2)
     """
 
-    def __init__(self, bound_correct: bool = True, eps: float = 1e-6):
+    def __init__(
+        self,
+        bound_correct: bool = True,
+        eps: float = 1e-6,
+        pdf_extension: float = 0.0,
+        pdf_resolution: int = 1000,
+    ):
         self.bound_correct = bound_correct
         self.eps = eps
+        self.pdf_extension = pdf_extension
+        self.pdf_resolution = pdf_resolution
 
     def fit(self, X: np.ndarray) -> MarginalUniformize:
         """Fit the transform by storing sorted training values per feature.
+
+        When ``pdf_extension > 0``, a histogram-based CDF pipeline is used
+        instead of the default empirical CDF.  This extends the support by
+        ``pdf_extension`` percent of the data range and builds an interpolated,
+        monotonic CDF on a grid of ``pdf_resolution`` points.
 
         Parameters
         ----------
@@ -114,15 +148,92 @@ class MarginalUniformize(BaseTransform):
         self : MarginalUniformize
             Fitted transform instance.
         """
-        # Sort each column independently to obtain empirical quantile nodes
-        self.support_ = np.sort(X, axis=0)
         self.n_features_ = X.shape[1]
+
+        if self.pdf_extension > 0:
+            self._fit_histogram_cdf(X)
+        else:
+            # Sort each column independently to obtain empirical quantile nodes
+            self.support_ = np.sort(X, axis=0)
         return self
+
+    def _fit_histogram_cdf(self, X: np.ndarray) -> None:
+        """Build per-feature histogram CDF with extended support."""
+        n_samples = X.shape[0]
+        self.cdf_support_ = []
+        self.cdf_values_ = []
+        self.pdf_support_ = []
+        self.pdf_values_ = []
+
+        for i in range(self.n_features_):
+            xi = X[:, i]
+            x_min, x_max = xi.min(), xi.max()
+            support_ext = (self.pdf_extension / 100) * abs(x_max - x_min)
+
+            # Build histogram bins: sqrt(n) + 1 edges
+            n_bin_edges = int(np.sqrt(float(n_samples)) + 1)
+            bin_edges = np.linspace(x_min, x_max, n_bin_edges)
+            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+            counts, _ = np.histogram(xi, bin_edges)
+            bin_size = bin_edges[1] - bin_edges[0]
+
+            # Empirical PDF with zero-padded edges
+            pdf_support = np.concatenate(
+                [
+                    [bin_centers[0] - bin_size],
+                    bin_centers,
+                    [bin_centers[-1] + bin_size],
+                ]
+            )
+            empirical_pdf = np.concatenate(
+                [
+                    [0.0],
+                    counts / (np.sum(counts) * bin_size),
+                    [0.0],
+                ]
+            )
+
+            # CDF from cumulative counts with extended support
+            c_sum = np.cumsum(counts)
+            cdf = (1 - 1 / n_samples) * c_sum / n_samples
+            incr_bin = bin_size / 2
+
+            new_bin_edges = np.concatenate(
+                [
+                    [x_min - support_ext],
+                    [x_min],
+                    bin_centers + incr_bin,
+                    [x_max + support_ext + incr_bin],
+                ]
+            )
+            extended_cdf = np.concatenate(
+                [
+                    [0.0],
+                    [1.0 / n_samples],
+                    cdf,
+                    [1.0],
+                ]
+            )
+
+            # Interpolate onto fine grid, enforce monotonicity, normalize
+            new_support = np.linspace(
+                new_bin_edges[0], new_bin_edges[-1], self.pdf_resolution
+            )
+            learned_cdf = np.interp(new_support, new_bin_edges, extended_cdf)
+            uniform_cdf = make_cdf_monotonic(learned_cdf)
+            uniform_cdf /= uniform_cdf.max()
+
+            self.cdf_support_.append(new_support)
+            self.cdf_values_.append(uniform_cdf)
+            self.pdf_support_.append(pdf_support)
+            self.pdf_values_.append(empirical_pdf)
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         """Map each feature to [0, 1] via the mid-point empirical CDF.
 
         Applies ``u = (rank + 0.5) / N`` to every column independently.
+        When ``pdf_extension > 0``, uses interpolation with the stored
+        histogram-based CDF grid instead.
 
         Parameters
         ----------
@@ -136,8 +247,12 @@ class MarginalUniformize(BaseTransform):
             ``bound_correct=True``).
         """
         Xt = np.zeros_like(X, dtype=float)
-        for i in range(self.n_features_):
-            Xt[:, i] = self._uniformize(X[:, i], self.support_[:, i])
+        if self.pdf_extension > 0:
+            for i in range(self.n_features_):
+                Xt[:, i] = np.interp(X[:, i], self.cdf_support_[i], self.cdf_values_[i])
+        else:
+            for i in range(self.n_features_):
+                Xt[:, i] = self._uniformize(X[:, i], self.support_[:, i])
         if self.bound_correct:
             # Clip to (eps, 1-eps) to prevent boundary issues downstream
             Xt = np.clip(Xt, self.eps, 1 - self.eps)
@@ -148,7 +263,8 @@ class MarginalUniformize(BaseTransform):
 
         Uses piecewise-linear interpolation between the stored sorted support
         values and their corresponding uniform probabilities
-        ``np.linspace(0, 1, N)``.
+        ``np.linspace(0, 1, N)``.  When ``pdf_extension > 0``, uses the
+        inverted histogram CDF grid instead.
 
         Parameters
         ----------
@@ -161,13 +277,18 @@ class MarginalUniformize(BaseTransform):
             Data approximately recovered in the original input space.
         """
         Xt = np.zeros_like(X, dtype=float)
-        for i in range(self.n_features_):
-            # Interpolate: uniform grid [0, 1] -> sorted training values
-            Xt[:, i] = np.interp(
-                X[:, i],
-                np.linspace(0, 1, len(self.support_[:, i])),
-                self.support_[:, i],
-            )
+        if self.pdf_extension > 0:
+            for i in range(self.n_features_):
+                # Invert: CDF values → support
+                Xt[:, i] = np.interp(X[:, i], self.cdf_values_[i], self.cdf_support_[i])
+        else:
+            for i in range(self.n_features_):
+                # Interpolate: uniform grid [0, 1] -> sorted training values
+                Xt[:, i] = np.interp(
+                    X[:, i],
+                    np.linspace(0, 1, len(self.support_[:, i])),
+                    self.support_[:, i],
+                )
         return Xt
 
     @staticmethod
@@ -354,9 +475,28 @@ class MarginalGaussianize(BaseTransform):
         replaced by the minimum positive spacing to keep the log-density
         finite.
         """
+        return np.sum(self._per_feature_log_deriv(X), axis=1)
+
+    def _per_feature_log_deriv(self, X: np.ndarray) -> np.ndarray:
+        """Per-feature log |dz_i/dx_i| for marginal Gaussianization.
+
+        Returns the un-summed per-feature log-derivatives needed for both
+        ``log_det_jacobian`` (which sums them) and the full Jacobian
+        computation in ``AnnealedRBIG.jacobian``.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_features)
+            Input data at which to evaluate the per-feature log-derivatives.
+
+        Returns
+        -------
+        log_derivs : np.ndarray of shape (n_samples, n_features)
+            Per-feature log |dz_i/dx_i| for each sample.
+        """
         Xt = self.transform(X)  # Gaussianized output, shape (N, D)
-        log_jac = np.zeros(X.shape[0])  # accumulator, shape (N,)
         n = self.support_.shape[0]  # number of training samples
+        log_derivs = np.zeros_like(X, dtype=float)
         for i in range(self.n_features_):
             support_i = self.support_[:, i]  # sorted training values, shape (n,)
             spacings = np.diff(support_i)  # gaps between consecutive support points
@@ -372,8 +512,8 @@ class MarginalGaussianize(BaseTransform):
             # Log standard-normal PDF at Gaussianized value: log phi(z_i)
             log_phi_gi = stats.norm.logpdf(Xt[:, i])
             # Chain rule: log|dz/dx| = log f_hat_n(x) - log phi(z)
-            log_jac += log_f_i - log_phi_gi
-        return log_jac
+            log_derivs[:, i] = log_f_i - log_phi_gi
+        return log_derivs
 
 
 class MarginalKDEGaussianize(BaseTransform):
