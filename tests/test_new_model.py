@@ -168,7 +168,7 @@ class TestJacobian:
         jac = model.jacobian(simple_2d)
 
         # Log abs det from the Jacobian matrix
-        sign, log_abs_det_jac = np.linalg.slogdet(jac)
+        _sign, log_abs_det_jac = np.linalg.slogdet(jac)
 
         # Log-det from score_samples path
         Xt = simple_2d.copy()
@@ -181,9 +181,7 @@ class TestJacobian:
         # diverges at the tails; check that 95% of samples agree closely.
         abs_diff = np.abs(log_abs_det_jac - log_det_layers)
         pct_close = np.mean(abs_diff < 1.0)
-        assert pct_close >= 0.95, (
-            f"Only {pct_close:.1%} of samples have |diff| < 1.0"
-        )
+        assert pct_close >= 0.95, f"Only {pct_close:.1%} of samples have |diff| < 1.0"
 
     def test_5d_shape(self, simple_5d):
         model = AnnealedRBIG(n_layers=5)
