@@ -274,8 +274,10 @@ def bin_estimation(n_samples: int, rule: str = "sturge") -> int:
     Raises
     ------
     ValueError
-        If *rule* is not one of the recognised strings.
+        If *rule* is not one of the recognised strings or *n_samples* < 1.
     """
+    if n_samples < 1:
+        raise ValueError(f"n_samples must be >= 1, got {n_samples}")
     if rule == "sturge":
         n_bins = 1 + np.log2(n_samples)
     elif rule == "sqrt":
@@ -306,7 +308,16 @@ def generate_batches(n_samples: int, batch_size: int) -> Iterator[tuple[int, int
         Start index of the batch (inclusive).
     end : int
         End index of the batch (exclusive).
+
+    Raises
+    ------
+    ValueError
+        If *n_samples* < 0 or *batch_size* < 1.
     """
+    if n_samples < 0:
+        raise ValueError(f"n_samples must be >= 0, got {n_samples}")
+    if batch_size < 1:
+        raise ValueError(f"batch_size must be >= 1, got {batch_size}")
     for start in range(0, n_samples, batch_size):
         yield start, min(start + batch_size, n_samples)
 
@@ -359,10 +370,12 @@ def entropy_histogram(
         else:
             H[i] += np.log(bin_width) / np.log(base)
 
-        # Miller-Maddow bias correction
+        # Miller-Maddow bias correction (scaled to match entropy units)
         if correction:
             nonzero_bins = np.sum(counts > 0)
             mm = 0.5 * (nonzero_bins - 1) / n_samples
+            if base != np.e:
+                mm /= np.log(base)
             H[i] += mm
 
     return H

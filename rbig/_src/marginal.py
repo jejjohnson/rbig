@@ -167,6 +167,19 @@ class MarginalUniformize(BaseTransform):
         for i in range(self.n_features_):
             xi = X[:, i]
             x_min, x_max = xi.min(), xi.max()
+
+            # Handle constant-valued feature: trivial linear CDF
+            if x_min == x_max:
+                support = np.array([x_min - 1.0, x_min, x_min + 1.0])
+                cdf_vals = np.array([0.0, 0.5, 1.0])
+                pdf_sup = np.array([x_min - 1.0, x_min, x_min + 1.0])
+                pdf_vals = np.array([0.0, 1.0, 0.0])
+                self.cdf_support_.append(support)
+                self.cdf_values_.append(cdf_vals)
+                self.pdf_support_.append(pdf_sup)
+                self.pdf_values_.append(pdf_vals)
+                continue
+
             support_ext = (self.pdf_extension / 100) * abs(x_max - x_min)
 
             # Build histogram bins: sqrt(n) + 1 edges
@@ -278,8 +291,14 @@ class MarginalUniformize(BaseTransform):
         Xt = np.zeros_like(X, dtype=float)
         if self.pdf_extension > 0:
             for i in range(self.n_features_):
-                # Invert: CDF values → support
-                Xt[:, i] = np.interp(X[:, i], self.cdf_values_[i], self.cdf_support_[i])
+                # Ensure strictly increasing xp for np.interp by
+                # dropping duplicate CDF values
+                cdf_vals = self.cdf_values_[i]
+                cdf_sup = self.cdf_support_[i]
+                unique_mask = np.concatenate([[True], np.diff(cdf_vals) > 0])
+                Xt[:, i] = np.interp(
+                    X[:, i], cdf_vals[unique_mask], cdf_sup[unique_mask]
+                )
         else:
             for i in range(self.n_features_):
                 # Interpolate: uniform grid [0, 1] -> sorted training values
@@ -476,7 +495,9 @@ class MarginalGaussianize(BaseTransform):
         """
         return np.sum(self._per_feature_log_deriv(X), axis=1)
 
-    def _per_feature_log_deriv(self, X: np.ndarray) -> np.ndarray:
+    def _per_feature_log_deriv(
+        self, X: np.ndarray, return_transform: bool = False
+    ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
         """Per-feature log |dz_i/dx_i| for marginal Gaussianization.
 
         Returns the un-summed per-feature log-derivatives needed for both
@@ -487,11 +508,15 @@ class MarginalGaussianize(BaseTransform):
         ----------
         X : np.ndarray of shape (n_samples, n_features)
             Input data at which to evaluate the per-feature log-derivatives.
+        return_transform : bool, default False
+            If True, also return the Gaussianized output to avoid recomputing.
 
         Returns
         -------
         log_derivs : np.ndarray of shape (n_samples, n_features)
             Per-feature log |dz_i/dx_i| for each sample.
+        Xt : np.ndarray of shape (n_samples, n_features)
+            Only returned when ``return_transform=True``.
         """
         Xt = self.transform(X)  # Gaussianized output, shape (N, D)
         n = self.support_.shape[0]  # number of training samples
@@ -512,6 +537,8 @@ class MarginalGaussianize(BaseTransform):
             log_phi_gi = stats.norm.logpdf(Xt[:, i])
             # Chain rule: log|dz/dx| = log f_hat_n(x) - log phi(z)
             log_derivs[:, i] = log_f_i - log_phi_gi
+        if return_transform:
+            return log_derivs, Xt
         return log_derivs
 
 

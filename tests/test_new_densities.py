@@ -1,9 +1,89 @@
-"""Tests for migrated density utilities: bin_estimation, generate_batches, entropy_histogram."""
+"""Tests for density bijectors and migrated density utilities."""
 
 import numpy as np
 import pytest
 
-from rbig._src.densities import bin_estimation, entropy_histogram, generate_batches
+from rbig import Cube, Exp, Tanh, bin_estimation, entropy_histogram, generate_batches
+
+# ── Bijector tests ─────────────────────────────────────────────────────────
+
+
+def test_tanh_shape(simple_2d):
+    t = Tanh()
+    Xt = t.fit_transform(simple_2d)
+    assert Xt.shape == simple_2d.shape
+
+
+def test_tanh_range(simple_2d):
+    t = Tanh()
+    Xt = t.fit_transform(simple_2d)
+    assert np.all(Xt > -1)
+    assert np.all(Xt < 1)
+
+
+def test_tanh_inverse(simple_2d):
+    t = Tanh()
+    t.fit(simple_2d)
+    Xt = t.transform(simple_2d)
+    Xr = t.inverse_transform(Xt)
+    np.testing.assert_allclose(Xr, simple_2d, atol=1e-6)
+
+
+def test_tanh_log_det(simple_2d):
+    t = Tanh()
+    t.fit(simple_2d)
+    ldj = t.get_log_det_jacobian(simple_2d)
+    assert ldj.shape == (simple_2d.shape[0],)
+    assert np.all(ldj <= 0)  # tanh is contractive
+
+
+def test_exp_shape(simple_2d):
+    t = Exp()
+    Xt = t.fit_transform(simple_2d)
+    assert Xt.shape == simple_2d.shape
+
+
+def test_exp_positive(simple_2d):
+    t = Exp()
+    Xt = t.fit_transform(simple_2d)
+    assert np.all(Xt > 0)
+
+
+def test_exp_inverse(simple_2d):
+    t = Exp()
+    t.fit(simple_2d)
+    Xt = t.transform(simple_2d)
+    Xr = t.inverse_transform(Xt)
+    np.testing.assert_allclose(Xr, simple_2d, atol=1e-10)
+
+
+def test_exp_log_det(simple_2d):
+    t = Exp()
+    t.fit(simple_2d)
+    ldj = t.get_log_det_jacobian(simple_2d)
+    assert ldj.shape == (simple_2d.shape[0],)
+    np.testing.assert_allclose(ldj, np.sum(simple_2d, axis=1))
+
+
+def test_cube_shape(simple_2d):
+    t = Cube()
+    Xt = t.fit_transform(simple_2d)
+    assert Xt.shape == simple_2d.shape
+
+
+def test_cube_inverse(simple_2d):
+    t = Cube()
+    t.fit(simple_2d)
+    Xt = t.transform(simple_2d)
+    Xr = t.inverse_transform(Xt)
+    np.testing.assert_allclose(Xr, simple_2d, atol=1e-10)
+
+
+def test_cube_log_det(simple_2d):
+    t = Cube()
+    t.fit(simple_2d)
+    ldj = t.get_log_det_jacobian(simple_2d)
+    assert ldj.shape == (simple_2d.shape[0],)
 
 
 # ── bin_estimation ──────────────────────────────────────────────────────────
@@ -42,6 +122,10 @@ class TestBinEstimation:
     def test_default_rule_is_sturge(self):
         assert bin_estimation(100) == bin_estimation(100, rule="sturge")
 
+    def test_invalid_n_samples(self):
+        with pytest.raises(ValueError, match="n_samples must be >= 1"):
+            bin_estimation(0)
+
 
 # ── generate_batches ────────────────────────────────────────────────────────
 
@@ -70,6 +154,14 @@ class TestGenerateBatches:
     def test_batch_size_one(self):
         batches = list(generate_batches(3, 1))
         assert batches == [(0, 1), (1, 2), (2, 3)]
+
+    def test_invalid_n_samples(self):
+        with pytest.raises(ValueError, match="n_samples must be >= 0"):
+            list(generate_batches(-1, 5))
+
+    def test_invalid_batch_size(self):
+        with pytest.raises(ValueError, match="batch_size must be >= 1"):
+            list(generate_batches(10, 0))
 
 
 # ── entropy_histogram ──────────────────────────────────────────────────────

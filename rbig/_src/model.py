@@ -313,12 +313,13 @@ class AnnealedRBIG:
         self.layers_: list[RBIGLayer] = []
         self.tc_per_layer_: list[float] = []
 
-        # Resolve tolerance: fixed float or sample-adaptive "auto"
-        tol = (
-            self._get_information_tolerance(n_samples)
-            if self.tol == "auto"
-            else self.tol
-        )
+        # Validate and resolve tolerance
+        if self.tol == "auto":
+            tol = self._get_information_tolerance(n_samples)
+        elif isinstance(self.tol, (int, float)):
+            tol = float(self.tol)
+        else:
+            raise ValueError(f"tol must be a float or 'auto', got {self.tol!r}")
         self.tol_: float = tol  # store resolved tolerance for inspection
 
         Xt = X.copy()  # working copy; shape (n_samples, n_features)
@@ -568,21 +569,25 @@ class AnnealedRBIG:
         """
         jac, Xt = self.jacobian(X, return_X_transform=True)
 
-        # Gaussian base density in transformed space
-        p_transform = np.prod(stats.norm.pdf(Xt), axis=1)
+        # Work in log-space for numerical stability
+        log_p_transform = np.sum(stats.norm.logpdf(Xt), axis=1)
 
         if domain == "transform":
+            p_transform = np.exp(log_p_transform)
+            p_transform = np.where(np.isfinite(p_transform), p_transform, 0.0)
             return p_transform
 
-        # Input-domain density via change of variables
-        det_jac = np.abs(np.linalg.det(jac))
-        p_input = p_transform * det_jac
-        # Clean up NaNs from degenerate Jacobians
+        # Input-domain density via change of variables (log-space)
+        _sign, log_abs_det = np.linalg.slogdet(jac)
+        log_p_input = log_p_transform + log_abs_det
+        p_input = np.exp(log_p_input)
         p_input = np.where(np.isfinite(p_input), p_input, 0.0)
 
         if domain == "input":
             return p_input
         if domain == "both":
+            p_transform = np.exp(log_p_transform)
+            p_transform = np.where(np.isfinite(p_transform), p_transform, 0.0)
             return p_input, p_transform
         raise ValueError(
             f"Unknown domain: {domain!r}. Use 'input', 'transform', or 'both'."
@@ -626,16 +631,24 @@ class AnnealedRBIG:
 
         Xt = X.copy()
         for layer in self.layers_:
-            # Per-feature marginal derivatives: exp(log|dz_i/dx_i|)
-            log_d = layer.marginal._per_feature_log_deriv(Xt)
+            if not hasattr(layer.marginal, "_per_feature_log_deriv"):
+                raise NotImplementedError(
+                    f"Jacobian computation requires a marginal with "
+                    f"_per_feature_log_deriv(); "
+                    f"{type(layer.marginal).__name__} does not support this."
+                )
+            # Per-feature marginal derivatives and transformed data in one pass
+            log_d, Xt_marginal = layer.marginal._per_feature_log_deriv(
+                Xt, return_transform=True
+            )
             derivs_per_layer.append(np.exp(log_d))
 
             # Rotation matrix in row-vector convention: y = z @ R
             rot = self._extract_rotation_matrix(layer.rotation)
             rotmats_per_layer.append(rot)
 
-            # Advance data through the layer
-            Xt = layer.transform(Xt)
+            # Advance through rotation only
+            Xt = layer.rotation.transform(Xt_marginal)
 
         # ── Seed-dimension loop: propagate unit vectors through the chain ──
         jac = np.zeros((n_samples, n_features, n_features))
@@ -688,9 +701,11 @@ class AnnealedRBIG:
                 return rotation.K_.T @ rotation.W_.T
             return rotation.ica_.components_.T.copy()
 
-        # Generic fallback: try to get rotation_matrix_ attribute
+        # Generic fallback: try to get rotation_matrix_ attribute.
+        # These rotations apply X @ rotation_matrix_.T, so transpose
+        # to match the y = x @ R convention used by PCA/ICA above.
         if hasattr(rotation, "rotation_matrix_"):
-            return rotation.rotation_matrix_.copy()
+            return rotation.rotation_matrix_.T.copy()
 
         raise TypeError(
             f"Cannot extract rotation matrix from {type(rotation).__name__}. "

@@ -270,6 +270,12 @@ def negentropy_kde(X: np.ndarray, rule: str = "sqrt") -> np.ndarray:
 
     for i in range(n_features):
         col = X[:, i]
+
+        # Guard against constant/near-constant features where KDE would fail
+        if np.std(col) < 1e-12:
+            neg[i] = 0.0
+            continue
+
         _counts, bin_edges = np.histogram(
             col, bins=n_bins, range=(col.min(), col.max())
         )
