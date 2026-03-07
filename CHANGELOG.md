@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.1.6](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.5...rbig-v0.1.6) (2026-03-07)
+
+
+### Features
+
+* add bin_estimation, generate_batches, and entropy_histogram ([04252ca](https://github.com/jejjohnson/rbig/commit/04252ca0fb1ac68ee492ef9ae5b7c5a412701613))
+* add jacobian, predict_proba domain, and auto_tol to AnnealedRBIG ([b336c80](https://github.com/jejjohnson/rbig/commit/b336c806c7ac315b2e335b7d890bedc1627f0fe7))
+* add make_cdf_monotonic and histogram CDF to MarginalUniformize ([ca57971](https://github.com/jejjohnson/rbig/commit/ca57971d954de22409116cee61d54210cb0916f2))
+* add negentropy_kde for KDE-based negentropy estimation ([53f141c](https://github.com/jejjohnson/rbig/commit/53f141c09feccba5606aba43cdad71c33856c004)), closes [#18](https://github.com/jejjohnson/rbig/issues/18)
+* add rotation="random" as first-class option in AnnealedRBIG ([2f2ad71](https://github.com/jejjohnson/rbig/commit/2f2ad71fd17bd3b805adfa05291b19756783a622))
+* complete legacy RBIG migration ([f9b0dea](https://github.com/jejjohnson/rbig/commit/f9b0dea50d45c0dbd1df83adcada90c0c8a746a3))
+* export new legacy migration symbols from public API ([8eaf44c](https://github.com/jejjohnson/rbig/commit/8eaf44c35f15d43cac8a90e13b6758061455db04))
+
+
+### Bug Fixes
+
+* address PR [#24](https://github.com/jejjohnson/rbig/issues/24) review comments ([be2290d](https://github.com/jejjohnson/rbig/commit/be2290dc1fd4427f933b77a06001fd7eb8bcafe8))
+* resolve ruff lint warnings in test_new_model ([a6b3375](https://github.com/jejjohnson/rbig/commit/a6b3375e1be91a40d8c3029ec1eb8ed40042e1cb))
+
 ## [0.1.5](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.4...rbig-v0.1.5) (2026-03-02)
 
 
