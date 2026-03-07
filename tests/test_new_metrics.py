@@ -62,3 +62,41 @@ def test_information_reduction(simple_2d):
         simple_2d, np.random.default_rng(42).normal(size=simple_2d.shape)
     )
     assert isinstance(reduction, float)
+
+
+# ── negentropy_kde ─────────────────────────────────────────────────────────
+
+
+class TestNegentropyKDE:
+    def test_shape(self, simple_2d):
+        from rbig import negentropy_kde
+
+        neg = negentropy_kde(simple_2d)
+        assert neg.shape == (2,)
+
+    def test_near_zero_for_gaussian(self):
+        from rbig import negentropy_kde
+
+        rng = np.random.default_rng(42)
+        X = rng.standard_normal((1000, 3))
+        neg = negentropy_kde(X)
+        np.testing.assert_allclose(neg, 0.0, atol=0.15)
+
+    def test_non_negative(self):
+        from rbig import negentropy_kde
+
+        rng = np.random.default_rng(42)
+        X = rng.standard_normal((500, 2))
+        neg = negentropy_kde(X)
+        assert np.all(neg >= -0.05)  # allow small numerical margin
+
+    def test_positive_for_non_gaussian(self):
+        from rbig import negentropy_kde
+
+        rng = np.random.default_rng(42)
+        # Uniform data is non-Gaussian
+        X = rng.uniform(-1, 1, size=(1000, 2))
+        # Standardize to zero mean, unit variance for fair comparison
+        X = (X - X.mean(axis=0)) / X.std(axis=0)
+        neg = negentropy_kde(X)
+        assert np.all(neg > 0.01)

@@ -235,6 +235,68 @@ def negentropy(X: np.ndarray) -> np.ndarray:
     return gauss_h - marg_h  # J(Xi) = H_Gauss - H >= 0
 
 
+def negentropy_kde(X: np.ndarray, rule: str = "sqrt") -> np.ndarray:
+    """Per-dimension negentropy via KDE on histogram bins.
+
+    Estimates the KL divergence between the empirical distribution (smoothed
+    by KDE) and a standard normal for each feature:
+
+        J(Xᵢ) = KL(p_kde ‖ N(0,1)) = Δ ∑_k p(k) log2(p(k) / g(k))
+
+    where p(k) is the normalised KDE density evaluated at histogram bin
+    centres and g(k) = N(0,1).pdf(bin_centres).
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n_samples, n_features)
+        Data matrix.  Should be approximately zero-mean, unit-variance per
+        feature for meaningful comparison against N(0,1).
+    rule : str, optional (default="sqrt")
+        Bin count rule passed to :func:`~rbig._src.densities.bin_estimation`.
+
+    Returns
+    -------
+    neg : np.ndarray of shape (n_features,)
+        Non-negative negentropy (bits) per feature.  Near zero for Gaussian
+        data.
+    """
+    from scipy import stats as sp_stats
+
+    from rbig._src.densities import bin_estimation
+
+    n_samples, n_features = X.shape
+    n_bins = bin_estimation(n_samples, rule=rule)
+    neg = np.zeros(n_features)
+
+    for i in range(n_features):
+        col = X[:, i]
+
+        # Guard against constant/near-constant features where KDE would fail
+        if np.std(col) < 1e-12:
+            neg[i] = 0.0
+            continue
+
+        _counts, bin_edges = np.histogram(
+            col, bins=n_bins, range=(col.min(), col.max())
+        )
+        bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+        delta = bin_centers[1] - bin_centers[0] if len(bin_centers) > 1 else 1.0
+
+        # Standard normal reference density
+        pg = sp_stats.norm.pdf(bin_centers, 0, 1)
+
+        # KDE-smoothed density
+        kde_model = sp_stats.gaussian_kde(col)
+        hx = kde_model.pdf(bin_centers)
+        px = hx / (hx.sum() * delta)
+
+        # KL divergence at positive indices
+        idx = (px > 0) & (pg > 0)
+        neg[i] = delta * np.sum(px[idx] * np.log2(px[idx] / pg[idx]))
+
+    return neg
+
+
 def entropy_univariate(x: np.ndarray) -> float:
     """Univariate differential entropy via the Vasicek spacing estimator.
 

@@ -82,7 +82,7 @@ markers = [
 fix = true
 line-length = 88
 target-version = "py310"
-exclude = ["docs/", "notebooks/", "_legacy/"]
+exclude = ["docs/", "notebooks/"]
 
 [tool.ruff.lint]
 select = [
