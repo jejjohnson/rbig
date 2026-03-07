@@ -37,8 +37,7 @@ def make_cdf_monotonic(cdf: np.ndarray) -> np.ndarray:
     """Enforce monotonicity on an empirical CDF via running maximum.
 
     Replaces each value with the cumulative maximum so that the result is
-    non-decreasing.  This is a vectorised equivalent of the sequential loop
-    used in the legacy ``_legacy/rbig/transform/uniform.py``.
+    non-decreasing.
 
     Parameters
     ----------
