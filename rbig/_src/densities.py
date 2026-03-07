@@ -7,6 +7,8 @@ as building blocks inside RBIG pipelines.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+
 import numpy as np
 from scipy import stats
 
@@ -248,6 +250,122 @@ def entropy_reduction(X_before: np.ndarray, X_after: np.ndarray) -> float:
     tc_before = total_correlation(X_before)  # TC of original representation
     tc_after = total_correlation(X_after)  # TC of transformed representation
     return tc_before - tc_after  # DeltaTC = TC_before - TC_after
+
+
+def bin_estimation(n_samples: int, rule: str = "sturge") -> int:
+    """Estimate the number of histogram bins for a given sample size.
+
+    Parameters
+    ----------
+    n_samples : int
+        Number of data samples.
+    rule : str, optional (default="sturge")
+        Bin estimation rule. One of:
+
+        - ``"sturge"`` : ``ceil(1 + log2(n))``
+        - ``"sqrt"``   : ``ceil(sqrt(n))``
+        - ``"rice"``   : ``ceil(2 * n^(1/3))``
+
+    Returns
+    -------
+    n_bins : int
+        Estimated number of bins (minimum 1).
+
+    Raises
+    ------
+    ValueError
+        If *rule* is not one of the recognised strings.
+    """
+    if rule == "sturge":
+        n_bins = 1 + np.log2(n_samples)
+    elif rule == "sqrt":
+        n_bins = np.sqrt(n_samples)
+    elif rule == "rice":
+        n_bins = 2 * n_samples ** (1 / 3)
+    else:
+        raise ValueError(
+            f"Unknown bin estimation rule {rule!r}. "
+            f"Choose from 'sturge', 'sqrt', 'rice'."
+        )
+    return max(1, int(np.ceil(n_bins)))
+
+
+def generate_batches(n_samples: int, batch_size: int) -> Iterator[tuple[int, int]]:
+    """Yield (start, end) index pairs that partition a range into batches.
+
+    Parameters
+    ----------
+    n_samples : int
+        Total number of samples.
+    batch_size : int
+        Maximum number of samples per batch.
+
+    Yields
+    ------
+    start : int
+        Start index of the batch (inclusive).
+    end : int
+        End index of the batch (exclusive).
+    """
+    for start in range(0, n_samples, batch_size):
+        yield start, min(start + batch_size, n_samples)
+
+
+def entropy_histogram(
+    X: np.ndarray,
+    rule: str = "sturge",
+    correction: bool = True,
+    base: float = np.e,
+) -> np.ndarray:
+    """Per-dimension differential entropy via histogram binning.
+
+    For each feature, computes the discrete entropy of the histogram counts
+    and adds the log of the bin width to convert to a differential entropy
+    estimate.  Optionally applies the Miller-Maddow finite-sample bias
+    correction.
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n_samples, n_features)
+        Data matrix.
+    rule : str, optional (default="sturge")
+        Bin count rule passed to :func:`bin_estimation`.
+    correction : bool, optional (default=True)
+        If True, apply the Miller-Maddow correction:
+        ``+ 0.5 * (nonzero_bins - 1) / n_samples``.
+    base : float, optional (default=np.e)
+        Logarithm base for entropy.  Use ``np.e`` for nats, ``2`` for bits.
+
+    Returns
+    -------
+    H : np.ndarray of shape (n_features,)
+        Estimated differential entropy per feature.
+    """
+    n_samples, n_features = X.shape
+    n_bins = bin_estimation(n_samples, rule=rule)
+    H = np.zeros(n_features)
+
+    for i in range(n_features):
+        col = X[:, i]
+        counts, bin_edges = np.histogram(col, bins=n_bins, range=(col.min(), col.max()))
+        bin_width = bin_edges[1] - bin_edges[0]
+
+        # Discrete entropy of the histogram counts
+        H[i] = stats.entropy(counts, base=base)
+
+        # Convert to differential entropy by adding log(bin_width)
+        if base == np.e:
+            H[i] += np.log(bin_width)
+        else:
+            H[i] += np.log(bin_width) / np.log(base)
+
+        # Miller-Maddow bias correction
+        if correction:
+            nonzero_bins = np.sum(counts > 0)
+            mm = 0.5 * (nonzero_bins - 1) / n_samples
+            H[i] += mm
+
+    return H
 
 
 from rbig._src.base import Bijector
