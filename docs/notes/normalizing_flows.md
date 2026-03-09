@@ -13,7 +13,6 @@
   - [Deep Density Destructors](#deep-density-destructors)
 - [Code Tutorials](#code-tutorials)
   - [Tutorials](#tutorials)
-  - [Algorithms](#algorithms)
   - [RBIG Upgrades](#rbig-upgrades)
   - [Cutting Edge](#cutting-edge)
   - [Github Implementations](#github-implementations)
@@ -57,11 +56,11 @@ $$
 
 ### Loss Function
 
-We can do a simple maximum-likelihood of our distribution $p_\theta(x)$. 
+We can do a simple maximum-likelihood of our distribution $p_\theta(x)$.
 
 $$\underset{\theta}{\text{max}} \sum_i \log p_\theta(x^{(i)})$$
 
-However, this expression needs to be transformed in terms of the invertible functions $f_\theta(x)$. This is where we exploit the rule for the change of variables. From here, we can come up with an expression for the likelihood by simply calculating the maximum likelihood of the initial distribution $\mathbf{z}_0$ given the transformations $f_L$. 
+However, this expression needs to be transformed in terms of the invertible functions $f_\theta(x)$. This is where we exploit the rule for the change of variables. From here, we can come up with an expression for the likelihood by simply calculating the maximum likelihood of the initial distribution $\mathbf{z}_0$ given the transformations $f_L$.
 
 
 
@@ -75,7 +74,7 @@ So now, we can do the same maximization function but with our change of variable
 
 $$
 \begin{aligned}
-\underset{\theta}{\text{max}} \sum_i \log p_\theta(x^{(i)}) &= 
+\underset{\theta}{\text{max}} \sum_i \log p_\theta(x^{(i)}) &=
 \underset{\theta}{\text{max}} \sum_i \log p_\mathcal{Z}\left(f_\theta(x^{(i)})\right) +
 \log \left| \frac{\partial f_\theta (x^{(i)})}{\partial x} \right|
 \end{aligned}
@@ -85,7 +84,7 @@ And we can optimize this using stochastic gradient descent (SGD) which means we 
 
 ### Sampling
 
-If we want to sample from our base distribution $z$, then we just need to use the inverse of our function. 
+If we want to sample from our base distribution $z$, then we just need to use the inverse of our function.
 
 $$x = f_\theta^{-1}(z)$$
 
@@ -120,10 +119,10 @@ In order to train this, we need to take expectations of the transformations.
 
 $$
 \begin{aligned}
-\mathcal{L}(\theta) &= 
+\mathcal{L}(\theta) &=
 \mathbb{E}_{q_0(\mathbf{z}_0)} \left[ \log p(\mathbf{x,z}_L)\right] -
 \mathbb{E}_{q_0(\mathbf{z}_0)} \left[ \log q_0(\mathbf{z}_0) \right] -
-\mathbb{E}_{q_0(\mathbf{z}_0)} 
+\mathbb{E}_{q_0(\mathbf{z}_0)}
 \left[ \sum_{l=1}^L \log \text{det}\left| \frac{\partial f_l}{\partial \mathbf{z}_k} \right| \right]
 \end{aligned}
 $$
@@ -132,7 +131,7 @@ $$
 
 ## Choice of Transformations
 
-The main thing that many of the communities have been looking into is how one chooses the aspects of the normalizing flow: the prior distribution and the Jacobian. 
+The main thing that many of the communities have been looking into is how one chooses the aspects of the normalizing flow: the prior distribution and the Jacobian.
 
 
 ### Prior Distribution
