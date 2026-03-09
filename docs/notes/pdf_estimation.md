@@ -2,14 +2,10 @@
 
 ## Main Idea
 
-<center>
-
-<p align="center">
-<img src="pics/demo/input_dist.png" />
-
-<b>Fig I</b>: Input Distribution.
-</p>
-</center>
+<figure align="center">
+<img src="pics/demo/input_dist.png" width="400">
+<figcaption><b>Fig 1</b>: Input Distribution.</figcaption>
+</figure>
 
 
 $$P(x \in [a,b]) = \int_a^b p(x)dx$$
@@ -17,7 +13,7 @@ $$P(x \in [a,b]) = \int_a^b p(x)dx$$
 
 #### Likelihood
 
-Given a dataset $\mathcal{D} = \{x^{1}, x^{2}, \ldots, x^{n}\}$, we can find the some parameters $\theta$ by solving this optimization function: the likelihood
+Given a dataset $\mathcal{D} = \{x^{1}, x^{2}, \ldots, x^{n}\}$, we can find some parameters $\theta$ by solving this optimization function: the likelihood
 
 $$\underset{\theta}{\text{max}} \sum_i \log p_\theta(x^{(i)})$$
 
@@ -70,19 +66,16 @@ However, this doesn't really work for high-dimensional datasets. To sample, we p
 ### Search Sorted
 
 
-**Numpy**
+**NumPy**
 
 ```python
-
+indices = np.searchsorted(bin_locations, inputs)
 ```
 
 **PyTorch**
 
 ```python
-def searchsorted(bin_locations, inputs, eps=1e-6):
-    bin_locations[..., -1] += eps
-    h_sorted = torch.sum(inputs[..., None] >= bin_locations, dim=-1) - 1
-    return h_sorted
+indices = torch.searchsorted(bin_locations, inputs)
 ```
 
-This is an unofficial implementation. There is still some talks in the PyTorch community to implement this. See github issue [here](https://github.com/pytorch/pytorch/issues/1552). For now, we just use the implementation found in various [implementations](https://github.com/karpathy/pytorch-normalizing-flows/blob/master/nflib/spline_flows.py#L20).
+Both NumPy and PyTorch provide built-in `searchsorted` functions that efficiently find insertion points in sorted arrays.

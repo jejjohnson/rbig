@@ -9,19 +9,10 @@
 
 ## Summary
 
-<!-- <img src="pics/rbig_it/Fig_1.png" alt="IT measures" width="300"> -->
-
-
-<!-- <figure> -->
-<center>
-<img src="pics/rbig_it/Fig_1.png" width="500">
-</center>
-<center>
-<figurecaption>
-<b>Caption</b>: Information Theory measures in a nutshell.
-</figurecaption>
-</center>
-<!-- </figure> -->
+<figure align="center">
+<img src="pics/rbig_it/Fig_1.png" alt="IT measures" width="500">
+<figcaption><b>Fig 1</b>: Information Theory measures in a nutshell.</figcaption>
+</figure>
 
 ## Information
 
@@ -45,9 +36,9 @@ D_\text{KL} \left[ p(\mathbf{x}) || \prod_d p(\mathbf{x}_d) \right] \\
 \end{aligned}
 $$
 
-where $H(\mathbf{x})$ is the differential entropy of $\mathbf{x}$ and $H(x_d)$ represents the differential entropy of the $d^\text{th}$ component of $\mathbf{x}$. This is nicely summaries in equation 1 from ([Lyu & Simoncelli, 2008][1]).
+where $H(\mathbf{x})$ is the differential entropy of $\mathbf{x}$ and $H(x_d)$ represents the differential entropy of the $d^\text{th}$ component of $\mathbf{x}$. This is nicely summarized in equation 1 from ([Lyu & Simoncelli, 2008][1]).
 
-?> Note: We find that $I$ in 2 dimensions is the same as mutual information.
+> **Note**: In 2 dimensions, the total correlation $I$ is equivalent to the mutual information.
 
 We can decompose this measure into two parts representing second order and higher-order dependencies:
 
@@ -72,3 +63,9 @@ again, nicely summarized with equation 2 from ([Lyu & Simoncelli, 2008][1]).
 [1]: https://www.cns.nyu.edu/pub/lcv/lyu08a.pdf "Nonlinear Extraction of 'Independent Components' of elliptically symmetric densities using radial Gaussianization - Lyu & Simoncelli - (2008)"
 
 ## Kullback-Leibler Divergence (KLD)
+
+The KL-Divergence measures the difference between two probability distributions $p$ and $q$:
+
+$$D_\text{KL}(p || q) = \int p(x) \log \frac{p(x)}{q(x)} \, dx$$
+
+See [RBIG](rbig.md#kl-divergence) for how RBIG can be used to estimate the KLD.
