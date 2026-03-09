@@ -45,7 +45,7 @@ uv-pre-commit: ## Run all pre-commit hooks
 .PHONY: install
 install: ## Install all project dependencies
 	@printf "$(YELLOW)>>> Initiating environment synchronization and dependency installation...$(RESET)\n"
-	@uv sync --all-extras
+	@uv sync --all-extras --all-groups
 	@uv run pre-commit install
 	@printf "$(GREEN)>>> Environment is ready and pre-commit hooks are active.$(RESET)\n"
 
@@ -53,7 +53,7 @@ install: ## Install all project dependencies
 uv-sync: ## Update lock file and sync dependencies using uv
 	@printf "$(YELLOW)>>> Updating and syncing dependencies with uv...$(RESET)\n"
 	@uv lock --upgrade
-	@uv sync --all-extras
+	@uv sync --all-extras --all-groups
 	@printf "$(GREEN)>>> uv environment synchronized.$(RESET)\n"
 
 .PHONY: uv-test
@@ -66,12 +66,12 @@ uv-test: ## Run pytest with coverage using uv
 .PHONY: docs-serve
 docs-serve: ## Serve docs locally with live reload (http://127.0.0.1:8000)
 	@printf "$(YELLOW)>>> Starting MkDocs dev server...$(RESET)\n"
-	@uv run mkdocs serve
+	@uv run --group docs mkdocs serve
 
 .PHONY: docs-build
 docs-build: ## Build static docs site into site/ directory
 	@printf "$(YELLOW)>>> Building documentation site...$(RESET)\n"
-	@uv run mkdocs build --strict
+	@uv run --group docs mkdocs build --strict
 	@printf "$(GREEN)>>> Documentation built successfully in site/.$(RESET)\n"
 
 .PHONY: docs-clean
