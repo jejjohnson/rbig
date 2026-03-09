@@ -18,9 +18,9 @@ $$\eta = \left( \theta_2^{-1}\theta_1, \frac{1}{2}\theta_2^{-1} \right)$$
 
 **Expectation Parameters**
 
+$$m = \nabla F(\eta) = \left( \mu, \; \mu\mu^\top + \Sigma \right)$$
 
-
-**Log Normalizer, $F(\eta)$** 
+**Log Normalizer, $F(\eta)$**
 
 Also known as the log partition function.
 
@@ -31,7 +31,7 @@ $$F(\eta) = \frac{1}{4} tr( \eta_1^\top \eta_2^{-1} \eta) - \frac{1}{2} \log|\et
 
 $$\nabla F(\eta) = \left( \frac{1}{2} \eta_2^{-1}\eta_1, -\frac{1}{2} \eta_2^{-1}- \frac{1}{4}(\eta_2^{-1}-\eta_1)(\eta_2^{-1}-\eta_1)^\top \right)$$
 
-**Log Normalizer, $F(\theta)$** 
+**Log Normalizer, $F(\theta)$**
 
 Also known as the log partition function.
 

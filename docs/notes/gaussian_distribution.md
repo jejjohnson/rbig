@@ -74,9 +74,9 @@ $$H(X) = \frac{D}{2} + \frac{D}{2} \ln(2\pi) + \frac{1}{2}\ln|\Sigma|$$
 ### **KL-Divergence (Relative Entropy)**
 
 $$
-KLD(\mathcal{N}_0||\mathcal{N}_1) = \frac{1}{2}
- \left[ 
- \text{tr}(\Sigma_1^{-1}\Sigma_0) + 
+D_\text{KL}(\mathcal{N}_0||\mathcal{N}_1) = \frac{1}{2}
+ \left[
+ \text{tr}(\Sigma_1^{-1}\Sigma_0) +
  (\mu_1 - \mu_0)^\top \Sigma_1^{-1} (\mu_1 - \mu_0) -
 D + \ln \frac{|\Sigma_1|}{|\Sigma_0|}
 \right]
@@ -85,7 +85,7 @@ $$
 if $\mu_1=\mu_0$ then:
 
 $$
-KLD(\Sigma_0||\Sigma_1) = \frac{1}{2} \left[ 
+D_\text{KL}(\Sigma_0||\Sigma_1) = \frac{1}{2} \left[
 \text{tr}(\Sigma_1^{-1} \Sigma_0)  - D  + \ln \frac{|\Sigma_1|}{|\Sigma_0|} \right]
 $$
 

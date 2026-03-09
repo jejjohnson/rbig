@@ -38,27 +38,27 @@ Essentially, RBIG is an algorithm that embodies the density destructor philosoph
 
 
 $$\begin{aligned}
-z &\sim \mathcal P_z \sim \text{Base Distribution}\\
-\hat x &= \mathbf G_\phi(x) \sim \text{Approximate Data Distribution}
+z &\sim \mathcal{P}_z \sim \text{Base Distribution}\\
+\hat x &= \mathcal{G}_\theta(x) \sim \text{Approximate Data Distribution}
 \end{aligned}$$
 
 ---
 ## Algorithm
 
-> Gaussianization - Given a random variable $\mathbf x \in \mathbb R^d$, a Gaussianization transform is an invertible and differentiable transform $\mathcal \Psi(\mathbf{x})$ s.t. $\mathcal \Psi( \mathbf x) \sim \mathcal N(0, \mathbf I)$.
+> Gaussianization - Given a random variable $\mathbf{x} \in \mathbb{R}^d$, a Gaussianization transform is an invertible and differentiable transform $\mathcal{G}(\mathbf{x})$ s.t. $\mathcal{G}(\mathbf{x}) \sim \mathcal{N}(0, \mathbf{I})$.
 
-$$\mathcal G:\mathbf x^{(k+1)}=\mathbf R_{(k)}\cdot \mathbf \Psi_{(k)}\left( \mathbf x^{(k)} \right)$$
+$$\mathcal{G}:\mathbf{x}^{(k+1)}=\mathbf{R}_{(k)}\cdot \mathbf{\Psi}_{(k)}\left( \mathbf{x}^{(k)} \right)$$
 
 where:
-* $\mathbf \Psi_{(k)}$ is the marginal Gaussianization of each dimension of $\mathbf x_{(k)}$ for the corresponding iteration.
-* $\mathbf R_{(k)}$ is the rotation matrix for the marginally Gaussianized variable $\mathbf \Psi_{(k)}\left( \mathbf x_{(k)} \right)$
+* $\mathbf{\Psi}_{(k)}$ is the marginal Gaussianization of each dimension of $\mathbf{x}^{(k)}$ for the corresponding iteration.
+* $\mathbf{R}_{(k)}$ is the rotation matrix for the marginally Gaussianized variable $\mathbf{\Psi}_{(k)}\left( \mathbf{x}^{(k)} \right)$
 
 
 
 ---
 ### Marginal (Univariate) Gaussianization
 
-This transformation is the $\mathcal \Psi_\theta$ step for the RBIG algorithm.
+This transformation is the $\mathbf{\Psi}_\theta$ step for the RBIG algorithm.
 
 In theory, to go from any distribution to a Gaussian distribution, we need to apply the following steps.
 
@@ -104,7 +104,7 @@ So a few options that have been implemented include:
 * Principal Components Analysis (PCA)
 * Random Rotations (random)
 
-We would like to extend this framework to include more options, e.g. 
+We would like to extend this framework to include more options, e.g.
 
 * Convolutions (conv)
 * Orthogonally Initialized Components (dct)
@@ -152,9 +152,9 @@ The entropy of the data decreases at each RBIG iteration as the distribution app
 
 $$
 \begin{aligned}
-I(\mathbf{x,y}) 
+I(\mathbf{x,y})
 &=
-T\left( \left[ 
+T\left( \left[
     \mathcal{G}_\theta (\mathbf{X}), \mathcal{G}_\phi (\mathbf{Y})
     \right] \right)
 \end{aligned}

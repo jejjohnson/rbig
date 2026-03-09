@@ -157,16 +157,20 @@ This is the area of the most research within the community. There are many diffe
 
 ## Survey of Literature
 
----
-
 ### Neural Density Estimators
 
+Neural density estimators use neural networks to directly parameterize the transformations in a normalizing flow. Key approaches include Masked Autoregressive Flows (MAF) and Inverse Autoregressive Flows (IAF), which exploit autoregressive structure for efficient density evaluation or sampling, respectively.
+
 ### Deep Density Destructors
+
+Density destructors take a complementary view: instead of transforming a simple distribution into a complex one, they iteratively transform a complex distribution toward uniformity. See the [Deep Density Destructors](deep_density_destructors.md) notes for details.
+
+---
 
 ## Code Tutorials
 
 * Building Prob Dist with TF Probability Bijector API - [Blog](https://tiao.io/post/building-probability-distributions-with-tensorflow-probability-bijector-api/)
-* https://www.ritchievink.com/blog/2019/10/11/sculpting-distributions-with-normalizing-flows/
+* Sculpting Distributions with Normalizing Flows - [Blog](https://www.ritchievink.com/blog/2019/10/11/sculpting-distributions-with-normalizing-flows/)
 
 
 

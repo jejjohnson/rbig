@@ -2,9 +2,8 @@
 
 - [Theory](#theory)
   - [Gaussianization](#gaussianization)
-  - [Journal Articles](#journal-articles)
   - [RBIG](#rbig)
-    - [Generalized Divisive Normalization](#generalized-divisive-normalization)
+  - [Generalized Divisive Normalization](#generalized-divisive-normalization)
 
 ---
 
@@ -28,19 +27,11 @@
 * Information theory measures and RBIG for Spatial-Temporal Data analysis - Johnson et. al. - In progress
 
 
-### Journal Articles
-
-* Iterative Gaussianization: from ICA to Random Rotations - Laparra et. al. (2011) - IEEE Transactions on Neural Networks
-
-
-
 ### RBIG
 
 > The most updated Gaussianization algorithm which generalizes the original algorithms. It is more computationally efficient and still very simple to implement.
 
-* Iterative Gaussianization: from ICA to Random Rotations - Laparra et. al. - IEEE TNNs - [Paper](https://arxiv.org/abs/1602.00229)
-
-**Applications**
+* Iterative Gaussianization: from ICA to Random Rotations - Laparra et. al. (2011) - IEEE Transactions on Neural Networks - [Paper](https://arxiv.org/abs/1602.00229)
 
 
 
@@ -51,5 +42,5 @@
 This can be thought of as an approximation to the Gaussianization
 
 * Density Modeling of Images Using a Generalized Normalized Transformation - Balle et al. - ICLR (2016) - [arxiv](https://arxiv.org/abs/1511.06281) | [Lecture](http://videolectures.net/iclr2016_balle_density_modeling/) | [PyTorch](https://github.com/jorge-pessoa/pytorch-gdn) | [TensorFlow](https://github.com/tensorflow/compression/blob/master/tensorflow_compression/python/layers/gdn.py)
-* End-to-end Optimized Image Compression - Balle et. al. - CVPR (2017) - [axriv](https://arxiv.org/abs/1611.01704)
+* End-to-end Optimized Image Compression - Balle et. al. - CVPR (2017) - [arxiv](https://arxiv.org/abs/1611.01704)
 * Learning Divisive Normalization in Primary Visual Cortex - Gunthner et. al. - [bioarxiv](https://www.biorxiv.org/content/10.1101/767285v1)
