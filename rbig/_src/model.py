@@ -316,7 +316,7 @@ class AnnealedRBIG:
         # Validate and resolve tolerance
         if self.tol == "auto":
             tol = self._get_information_tolerance(n_samples)
-        elif isinstance(self.tol, (int, float)):
+        elif isinstance(self.tol, int | float):
             tol = float(self.tol)
         else:
             raise ValueError(f"tol must be a float or 'auto', got {self.tol!r}")
@@ -731,7 +731,7 @@ class AnnealedRBIG:
             # cycle through the strategy list to select rotation for this layer
             idx = layer_index % len(self.strategy)
             entry = self.strategy[idx]
-            rotation_name = entry[0] if isinstance(entry, (list, tuple)) else entry
+            rotation_name = entry[0] if isinstance(entry, list | tuple) else entry
             return self._get_component(rotation_name, "rotation", layer_index)
         if self.rotation == "pca":
             return PCARotation(whiten=True)
@@ -768,7 +768,7 @@ class AnnealedRBIG:
             idx = layer_index % len(self.strategy)
             entry = self.strategy[idx]
             marginal_name = (
-                entry[1] if isinstance(entry, (list, tuple)) else "gaussianize"
+                entry[1] if isinstance(entry, list | tuple) else "gaussianize"
             )
             return self._get_component(marginal_name, "marginal", layer_index)
         return MarginalGaussianize()
