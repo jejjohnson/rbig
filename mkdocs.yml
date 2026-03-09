@@ -71,6 +71,8 @@ nav:
       - Exponential Distribution: notes/exponential_distribution.md
       - Uniform Distribution: notes/uniform_distribution.md
       - Mixture Models: notes/mixture_models.md
+      - Literature Review: notes/literature.md
+      - Refactoring RBIG: notes/refactor.md
   - Notebooks:
       - Marginal Uniformization: notebooks/01_marginal_uniformization.py
       - Marginal Gaussianization: notebooks/02_marginal_gaussianization.py
