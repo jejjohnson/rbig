@@ -60,8 +60,13 @@ However, this doesn't really work for high-dimensional datasets. To sample, we p
 
 ## Histogram Method
 
+The simplest non-parametric density estimator. We partition the domain into bins and estimate the density by counting samples in each bin:
 
-## Gotchas
+$$\hat{p}(x) = \frac{\text{count in bin containing } x}{N \cdot \Delta}$$
+
+where $N$ is the total number of samples and $\Delta$ is the bin width. The main trade-off is bin width: too wide and we lose detail, too narrow and the estimate becomes noisy. See [Kernel Density Estimation](kernel_density_estimation.md) for a smoother alternative.
+
+## Implementation Notes
 
 ### Search Sorted
 

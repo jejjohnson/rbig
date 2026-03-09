@@ -78,7 +78,7 @@ $$
 F(b)-F(a)=\int_a^b f(t) dt
 $$
 
-So $$F(x)=F(x) - \lim_{a \rightarrow - \infty}F(a)$$
+Since $\lim_{a \rightarrow -\infty} F(a) = 0$, we have $F(x) = \int_{-\infty}^{x} f(t) \, dt$.
 
 So the derivative of $F(x)$ is:
 
@@ -92,11 +92,11 @@ $$
 
 ### Log Abs Determinant Jacobian
 
-This is a nice trick to use for later. It allows us to decompose composite functions. In addition, it makes it a lot easier to optimize the negative log likelihood when working with optimization algorithms.
+Since the Jacobian of the uniformization transform $u = F_\theta(x)$ is just $f_\theta(x)$ (the PDF), the log absolute determinant Jacobian is:
 
-$$\log f_\theta(x)$$
+$$\log \left| \frac{du}{dx} \right| = \log f_\theta(x)$$
 
-There is a small problem due to the zero values. Technically, there should be no such thing as zero probability, so we will add some regularization $\alpha$ to ensure that there always is a little bit of probabilistic values.
+This decomposition is useful for computing composite transformations and optimizing the negative log-likelihood. In practice, we add a small regularization constant $\alpha$ to avoid $\log(0)$ when estimated probabilities are exactly zero.
 
 
 ## Probability (Computing the Density)

@@ -34,18 +34,18 @@ We want to fit a density model $p_\theta(x)$ with continuous data $x \in \mathbb
 
 Let's assume that we can find some probability distribution for $\mathcal{X}$ but it's very difficult to do. So, instead of $p_\theta(x)$, we want to find some parameterized function $f_\theta(x)$ that we can learn.
 
-$$x = f_\theta(x)$$
+$$z = f_\theta(x)$$
 
-We'll define this as $z=f_\theta(x)$. So we also want $z$ to have certain properties. 
+We want $z$ to have certain properties:
 
-1. We want this $z$ to be defined by a probabilistic function and have a valid distribution $z \sim p_\mathcal{Z}(z)$
-2. We also would prefer this distribution to be simply. We typically pick a normal distribution, $z \sim \mathcal{N}(0,1)$
-
-
+1. We want $z$ to be defined by a probabilistic function and have a valid distribution $z \sim p_\mathcal{Z}(z)$.
+2. We also prefer this distribution to be simple. We typically pick a normal distribution, $z \sim \mathcal{N}(0,1)$.
 
 
 
- We begin with in initial distribution and then we apply a sequence of $L$ invertible transformations in hopes that we obtain something that is more expressive. This originally came from the context of Variational AutoEncoders (VAE) where the posterior was approximated by a neural network. The authors wanted to 
+
+
+We begin with an initial distribution and then apply a sequence of $L$ invertible transformations to obtain something more expressive. This originally came from the context of Variational AutoEncoders (VAE) where the posterior was approximated by a neural network, and the authors wanted to enrich the approximate posterior beyond a simple Gaussian.
 
 $$
 \begin{aligned}
@@ -116,8 +116,6 @@ So now, our original expression with $p_\theta(x)$ can be written in terms of $z
 
 
 
-TODO: Diagram with plots of the Normalizing Flow distributions which show the direction for the idea.
-
 In order to train this, we need to take expectations of the transformations.
 
 $$
@@ -151,7 +149,7 @@ This is the area of the most research within the community. There are many diffe
 
 * [Flow-Based Deep Generative Models](https://lilianweng.github.io/lil-log/2018/10/13/flow-based-deep-generative-models.html) - Lilian Weng
   > An excellent blog post for Normalizing Flows. Probably the most thorough introduction available.
-* [Flow Models](https://docs.google.com/presentation/d/1WqEy-b8x-PhvXB_IeA6EoOfSTuhfgUYDVXlYP8Jh_n0/edit#slide=id.g7d4f9f0446_0_43) - [Deep Unsupervised Learning Class](https://sites.google.com/view/berkeley-cs294-158-sp20/home), Spring 2010 
+* [Flow Models](https://docs.google.com/presentation/d/1WqEy-b8x-PhvXB_IeA6EoOfSTuhfgUYDVXlYP8Jh_n0/edit#slide=id.g7d4f9f0446_0_43) - [Deep Unsupervised Learning Class](https://sites.google.com/view/berkeley-cs294-158-sp20/home), Spring 2020
 * [Normalizing Flows: A Tutorial](https://docs.google.com/presentation/d/1wHJz9Awhlp-PWLZGWJKzF66gzvqdSrhknb-iLFJ1Owo/edit#slide=id.p) - Eric Jang
 
 
@@ -179,11 +177,6 @@ This is the area of the most research within the community. There are many diffe
 
 * RealNVP - [code I](https://github.com/bayesgroup/deepbayes-2019/blob/master/seminars/day3/nf/nf-solution.ipynb)
 * [Normalizing Flows: Intro and Ideas](https://arxiv.org/pdf/1908.09257.pdf) - Kobyev et. al. (2019)
-
-
-### Algorithms
-
-*
 
 
 ### RBIG Upgrades

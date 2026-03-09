@@ -32,7 +32,7 @@ p_{z}\left( \mathcal{G}_{\theta}(x) \right)
  p_{z}\left( \mathcal{G}_{\theta}(x) \right) \left| \nabla_x \mathcal{G}(x) \right|
 $$
 
-If you are familiar with normalizing flows, you'll find some similarities between the formulations. Inherently, they are the same. However most (if not all) of the major methods of normalizing flows, they focus on the log-likelihood estimation of data $\mathcal{X}$. They seek to minimize this log-determinant of the Jacobian as a cost function. RBIG is different in this regard as it has a different objective. RBIG seeks to maximize the negentropy or minimize the total correlation.
+If you are familiar with normalizing flows, you'll find some similarities between the formulations. Inherently, they are the same. However, most (if not all) major normalizing flow methods focus on log-likelihood estimation of data $\mathcal{X}$ by minimizing the log-determinant of the Jacobian as a cost function. RBIG is different in this regard as it has a different objective: to maximize the negentropy or equivalently minimize the total correlation.
 
 Essentially, RBIG is an algorithm that embodies the density destructor philosophy. By destroying the density, we maximize the entropy and remove all redundancies within the marginals of the variables in question. This formulation allows us to utilize RBIG to calculate many other IT measures which we highlight below.
 
@@ -140,6 +140,7 @@ See [Information Theory Measures](information_theory_measures.md) for details.
 
 ### Entropy
 
+The entropy of the data decreases at each RBIG iteration as the distribution approaches a multivariate Gaussian. The total entropy can be estimated by summing the entropy reductions across all iterations. See [Information Theory Measures](information_theory_measures.md) for the general definition.
 
 ### Mutual Information
 

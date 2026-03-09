@@ -24,7 +24,6 @@
 - [Quantile Transform](#quantile-transform)
 - [KDE Transform](#kde-transform)
 - [Spline Functions](#spline-functions)
-- [Gaussian Transform](#gaussian-transform)
 
 
 ## Idea
@@ -35,21 +34,13 @@ The idea is to transform each dimension/feature into a Gaussian distribution, i.
 
 ## High-Level Instructions
 
-1. Estimate the cumulative distribution function for each feature independently.
-2. Obtain the CDF and ICDF
-3. Mapped to desired output distribution.
+1. Estimate the cumulative distribution function (CDF) for each feature independently.
+2. Apply the CDF to obtain a uniform variable $u \in [0,1]$.
+3. Apply the inverse Gaussian CDF $\Phi^{-1}$ to map to the desired Gaussian output.
 
-**Demo: TODO**
-* Marginal PDF
-  * $x_d$ vs $p(x_d)$
-* Uniform Transformation
-  * $x_d$ vs $u=U(x_d)$
-* PDF of the uniformized variable
-  * $u$ vs $p(u)$
-* Gaussianization transform
-  * $u$ vs $G(u)$
-* PDF of the Gaussianized variable
-  * $G(u)=\Psi(x_d)$ vs $p_d(\Psi(x_d))$
+The pipeline for a single dimension $d$ is:
+
+$$x_d \xrightarrow{F_d} u_d \xrightarrow{\Phi^{-1}} z_d$$
 
 ---
 
@@ -171,13 +162,15 @@ An alternative approach to marginal Gaussianization uses the quantile transform,
 
 ## KDE Transform
 
+An alternative to histogram-based CDF estimation is to use Kernel Density Estimation (KDE) for a smoother estimate of the marginal PDF. See [Kernel Density Estimation](kernel_density_estimation.md) for resources.
 
 ## Spline Functions
 
-* Rational Quadratic Trigonometric Interpolation Spline for Data Visualization - Lui et al - [PDF](https://www.hindawi.com/journals/mpe/2015/983120/)
+Spline-based transforms provide smooth, flexible parameterizations of the CDF. They can be made differentiable and invertible, making them suitable for normalizing flow architectures.
+
+**Resources**:
+* Rational Quadratic Trigonometric Interpolation Spline for Data Visualization - Liu et al - [PDF](https://www.hindawi.com/journals/mpe/2015/983120/)
 * [TensorFlow](https://github.com/tensorflow/probability/blob/master/tensorflow_probability/python/bijectors/rational_quadratic_spline.py)
 * PyTorch Implementations
-  * Neural Spline Flows - [Paper](https://github.com/bayesiains/nsf)
-  * Tony Duan Implementation - [Paper](https://github.com/tonyduan/normalizing-flows)
-
-## Gaussian Transform
+  * Neural Spline Flows - [Code](https://github.com/bayesiains/nsf)
+  * Tony Duan Implementation - [Code](https://github.com/tonyduan/normalizing-flows)

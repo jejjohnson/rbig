@@ -16,11 +16,31 @@
 
 ## Information
 
+The information content (or surprisal) of an event $x$ with probability $p(x)$ is:
+
+$$I(x) = -\log p(x)$$
+
+Rare events carry more information than common ones.
 
 ## Entropy
 
+The entropy of a random variable $X$ with PDF $p(x)$ is the expected information content:
+
+$$H(X) = -\int p(x) \log p(x) \, dx$$
+
+Entropy measures the uncertainty or randomness of a distribution. A Gaussian distribution has the maximum entropy among all distributions with a given mean and variance. See [Gaussian Distribution](gaussian_distribution.md#entropy) for the closed-form expression.
 
 ## Mutual Information
+
+The mutual information between two random variables $X$ and $Y$ measures the amount of information shared between them:
+
+$$I(X; Y) = H(X) + H(Y) - H(X, Y)$$
+
+Equivalently:
+
+$$I(X; Y) = D_\text{KL}\left[ p(x, y) \| p(x)p(y) \right]$$
+
+Mutual information is zero if and only if $X$ and $Y$ are independent.
 
 
 ## Total Correlation (Mutual Information)
