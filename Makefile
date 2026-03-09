@@ -1,4 +1,4 @@
-.PHONY: help install_mamba install_macos install_linux update_macos update_linux
+.PHONY: help install_mamba install_macos install_linux update_macos update_linux docs-serve docs-build docs-clean
 .DEFAULT_GOAL = help
 
 # ANSI Color Codes for pretty terminal output
@@ -61,3 +61,21 @@ uv-test: ## Run pytest with coverage using uv
 	@printf "$(YELLOW)>>> Launching test suite with verbosity...$(RESET)\n"
 	@uv run pytest tests -v
 	@printf "$(GREEN)>>> All tests passed.$(RESET)\n"
+
+##@ Documentation
+.PHONY: docs-serve
+docs-serve: ## Serve docs locally with live reload (http://127.0.0.1:8000)
+	@printf "$(YELLOW)>>> Starting MkDocs dev server...$(RESET)\n"
+	@uv run mkdocs serve
+
+.PHONY: docs-build
+docs-build: ## Build static docs site into site/ directory
+	@printf "$(YELLOW)>>> Building documentation site...$(RESET)\n"
+	@uv run mkdocs build --strict
+	@printf "$(GREEN)>>> Documentation built successfully in site/.$(RESET)\n"
+
+.PHONY: docs-clean
+docs-clean: ## Remove built docs
+	@printf "$(YELLOW)>>> Cleaning built documentation...$(RESET)\n"
+	@rm -rf site/
+	@printf "$(GREEN)>>> Documentation cleaned.$(RESET)\n"
