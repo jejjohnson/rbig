@@ -64,10 +64,13 @@ dev = [
     "rbig[dev,test]",
 ]
 docs = [
-    "mkdocs>=1.6",
+    "rbig[all]",
+    "mkdocs>=1.6,<2",
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.24",
     "mkdocs-jupyter>=0.25",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
 ]
 
 [tool.pytest.ini_options]

@@ -7,12 +7,17 @@
 
 ## Main Idea
 
-### Rotation Matrix
-
+A rotation matrix $\mathbf{R}$ is an orthogonal matrix used to perform a linear transformation that preserves lengths and angles. In the context of RBIG, rotations are applied after marginal Gaussianization to mix dimensions before the next iteration.
 
 ## Forward Transformation
 
+$$\mathbf{z} = \mathbf{R} \cdot \mathbf{x}$$
+
 ## Reverse Transformation
+
+Since $\mathbf{R}$ is orthogonal, $\mathbf{R}^{-1} = \mathbf{R}^\top$, so:
+
+$$\mathbf{x} = \mathbf{R}^\top \cdot \mathbf{z}$$
 
 ## Jacobian
 
@@ -49,7 +54,7 @@ $$
 
 $$A=QR$$
 
-where 
+where
 * $A \in \mathbb{R}^{N \times M}$
 * $Q \in \mathbb{R}^{N \times N}$ is orthogonal
 * $R \in \mathbb{R}^{N \times M}$ is upper triangular
@@ -68,31 +73,30 @@ where:
 
 #### Eigendecomposition
 
-Finds the singular values of a symmetric matrix
+Finds the eigenvalues of a symmetric matrix.
 
 $$A_S=Q\Lambda Q^\top$$
 
 where:
 * $A_S \in \mathbb{R}^{N \times N}$
 * $Q \in \mathbb{R}^{N \times K}$ is unitary
-* $\Lambda \in \mathbb{R}^{K \times K}$ are the singular values
+* $\Lambda \in \mathbb{R}^{K \times K}$ are the eigenvalues
 * $Q^\top \in \mathbb{R}^{K \times N}$ is unitary
 
 #### Polar Decomposition
 
-$$A_S=QS$$
+$$A=QS$$
 
 where:
-* $A_S \in \mathbb{R}^{N \times N}$
-* $Q \in \mathbb{R}^{N \times K}$ is unitary
-* $\Lambda \in \mathbb{R}^{K \times K}$ are the singular values
-* $Q^\top \in \mathbb{R}^{K \times N}$ is unitary
+* $A \in \mathbb{R}^{N \times N}$
+* $Q \in \mathbb{R}^{N \times N}$ is unitary (orthogonal)
+* $S \in \mathbb{R}^{N \times N}$ is symmetric positive semi-definite
 
 
 ---
 #### Initializing
 
-We have a intialization step where we compute $\mathbf W$ (the transformation matrix). This will be in the fit method. We will need the data because some transformations depend on $\mathbf x$ like the PCA and the ICA.
+We have an initialization step where we compute $\mathbf W$ (the transformation matrix). This will be in the fit method. We will need the data because some transformations depend on $\mathbf x$ like the PCA and the ICA.
 
 ```python
 class LinearTransform(BaseEstimator, TransformMixing):
@@ -100,7 +104,7 @@ class LinearTransform(BaseEstimator, TransformMixing):
     Parameters
     ----------
 
-    basis : 
+    basis :
     """
     def __init__(self, basis='PCA', conv=16):
         self.basis = basis
@@ -108,7 +112,7 @@ class LinearTransform(BaseEstimator, TransformMixing):
 
     def fit(self, data):
         """
-        Computes the inverse transformation of 
+        Computes the inverse transformation of
                 z = W x
 
         Parameters
@@ -131,7 +135,7 @@ class LinearTransform(BaseEstimator, TransformMixing):
             ...
         else:
             raise ValueError('...')
-        
+
         # Save the transformation matrix
         self.W = ...
 
@@ -147,12 +151,12 @@ $$\mathbf{z=W\cdot x}$$
 where:
 * $\mathbf W$ is the transformation
 * $\mathbf x$ is the input data
-* $\mathbf y$ is the final transformation
+* $\mathbf z$ is the transformed output
 
 ```python
 def transform(self, data):
     """
-    Computes the inverse transformation of 
+    Computes the inverse transformation of
             z = W x
 
     Parameters
@@ -169,7 +173,7 @@ We also can apply an inverse transform.
 ```python
 def inverse(self, data):
     """
-    Computes the inverse transformation of 
+    Computes the inverse transformation of
     z = W^-1 x
 
     Parameters
@@ -178,25 +182,22 @@ def inverse(self, data):
 
     Returns
     -------
-    
+
     """
     return data @ np.linalg.inv(self.W)
 ```
 
 #### Jacobian
 
-Lastly, we can calculate the Jacobian of that function. The Jacobian of a linear transformation is
-just 
+Lastly, we can calculate the Jacobian of that function. The Jacobian of a linear transformation is simply $\det(\mathbf{W})$.
 
-````python
+```python
 def logjacobian(self, data=None):
     """
 
     """
     if data is None:
         return np.linalg.slogdet(self.W)[1]
-    
-    return np.linalg.slogdet(self.W)[1] + np.zeros([1, data.shape[1]])
-````
 
-#### Log Likelihood (?)
+    return np.linalg.slogdet(self.W)[1] + np.zeros([1, data.shape[1]])
+```

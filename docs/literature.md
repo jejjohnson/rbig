@@ -54,7 +54,7 @@ source: literature.md
 
 #### Generalized Divisive Normalization
 
-This can be thought of as an approximation to the Gaussianization 
+This can be thought of as an approximation to the Gaussianization
 
 * Density Modeling of Images Using a Generalized Normalized Transformation - Balle et al. - ICLR (2016) - [arxiv](https://arxiv.org/abs/1511.06281) | [Lecture](http://videolectures.net/iclr2016_balle_density_modeling/) | [PyTorch](https://github.com/jorge-pessoa/pytorch-gdn) | [TensorFlow](https://github.com/tensorflow/compression/blob/master/tensorflow_compression/python/layers/gdn.py)
 * End-to-end Optimized Image Compression - Balle et. al. - CVPR (2017) - [axriv](https://arxiv.org/abs/1611.01704)

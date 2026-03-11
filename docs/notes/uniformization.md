@@ -16,13 +16,13 @@ $$
 
 where $F_\theta(\cdot)$ is the empirical Cumulative distribution function (CDF) for $\mathcal{X}$, and $u$ is drawn from a uniform distribution, $u\sim \mathcal{U}([0,1])$.
 
-<center>
-<p float="left">
-  <img src="pics/uniform/mu_data.png" width="200" />
-  <img src="pics/uniform/mu_cdf.png" width="200" />
-  <img src="pics/uniform/mu_uni.png" width="200" />
-</p>
-</center>
+<!-- NOTE: pics/uniform/ images are missing from the repository -->
+<figure align="center">
+<img src="pics/uniform/mu_data.png" width="200">
+<img src="pics/uniform/mu_cdf.png" width="200">
+<img src="pics/uniform/mu_uni.png" width="200">
+<figcaption><b>Fig 1</b>: (Left) Data distribution. (Center) Empirical CDF. (Right) Uniform distribution.</figcaption>
+</figure>
 
 
 
@@ -30,19 +30,15 @@ where $F_\theta(\cdot)$ is the empirical Cumulative distribution function (CDF) 
 
 The bounds for $\mathcal{U}$ are $[0,1]$ and the bounds for $\mathcal{X}$ are `X.min()` and `X.max()`. So function $F_\theta$ will be between 0 and 1 and the support $F_\theta$ will be between the limits for $\mathcal{X}$. We have two options for dealing with this:
 
-**Map Outlines to Boundaries**
+**Map Outliers to Boundaries**
 
-This is the easiest method as we can map all points outside to limits to the boundaries. This is the simplest method that would allow us deal with points that are outside of the distribution.
+The simplest method is to map all points outside the limits to the boundaries. This allows us to deal with points that lie outside the support of the estimated distribution.
 
 
-<center>
-
-<p align="center">
-<img src="pics/uniform/cdf_extend.png" width="300"/>
-
-<b>Fig 2</b>: CDF with the extension near the boundaries.
-</p>
-</center>
+<figure align="center">
+<img src="pics/uniform/cdf_extend.png" width="300">
+<figcaption><b>Fig 2</b>: CDF with the extension near the boundaries.</figcaption>
+</figure>
 
 **Widen the Limits of the Support**
 
@@ -51,37 +47,30 @@ This is the harder option. This will essentially squish the CDF function near th
 
 ## Reverse Transformation
 
-This isn't really useful because we don't really want to draw samples from our distribution $x \sim \mathcal{X}$ only to project them to a uniform distribution $\mathcal{U}$. What we really want to draw samples from the uniform distribution $u \sim \mathcal{U}$ and then project them into our data distribution $\mathcal{X}$. 
+This isn't really useful because we don't really want to draw samples from our distribution $x \sim \mathcal{X}$ only to project them to a uniform distribution $\mathcal{U}$. What we really want to draw samples from the uniform distribution $u \sim \mathcal{U}$ and then project them into our data distribution $\mathcal{X}$.
 
-We can simply take the inverse of our function $P(\cdot)$ to go from $\mathcal{U}$ to $\mathcal{X}$.
-
-$$
-x = F^{-1}(u)
-$$
-
-where $u \sim \mathcal{U}[0,1]$. Now we should be able to sample from a uniform distribution $\mathcal{U}$ and have the data represent the data distribution $\mathcal{X}$. This is the inverse of the CDF which, in probability terms, this is known as the inverse distribution function or the empirical distribution function (EDF). 
-
-
-Assuming that this function is differentiable and invertible, we can define the inverse as:
+We can simply take the inverse of our function $F(\cdot)$ to go from $\mathcal{U}$ to $\mathcal{X}$.
 
 $$
 x = F^{-1}(u)
 $$
 
-So in principal, we should be able to generate datapoints for our data distribution from a uniform distribution. We need to be careful of the bounds as we are mapping the data from $[0,1]$ to whatever the [`X.min(), X.max()`] is. This can cause problems.
+where $u \sim \mathcal{U}[0,1]$. This is the inverse of the CDF, known in probability theory as the quantile function or inverse distribution function.
+
+Assuming that $F$ is differentiable and invertible, we should be able to generate data points for our data distribution from a uniform distribution. We need to be careful of the bounds as we are mapping data from $[0,1]$ to the support $[x_\text{min}, x_\text{max}]$, which can cause issues at the boundaries.
 
 
 ## Derivative
 
-In this section, we will see how one can compute the derivative. Fortunately, the derivative of the CDF function $F$ is the PDF function $f$. For this part, we are going to be using the relationship that the derivative of the CDF of a function is simply the PDF. For uniformization, let's define the following relationship:
+The key property we exploit is that the derivative of the CDF $F$ is the PDF $f$. Recall the uniformization relationship:
 
 $$
 u = F_\theta(x)
 $$
 
-where $F_\theta(\cdot)$ is the empirical cumulative density function (ECDF) of $\mathcal{X}$. 
+where $F_\theta(\cdot)$ is the empirical cumulative distribution function (ECDF) of $\mathcal{X}$.
 
-<b> <font color='red'> Proof </font></b>:
+**Proof**:
 
 Let $F(x) = \int_{-\infty}^{x}f(t) \, dt$ from the fundamental theorem of calculus. The derivative is $f(x)=\frac{d F(x)}{dx}$. Then that means
 
@@ -89,26 +78,25 @@ $$
 F(b)-F(a)=\int_a^b f(t) dt
 $$
 
-So $$F(x)=F(x) - \lim_{a \rightarrow - \infty}F(a)$$
+Since $\lim_{a \rightarrow -\infty} F(a) = 0$, we have $F(x) = \int_{-\infty}^{x} f(t) \, dt$.
 
-So the derivative of the full function
+So the derivative of $F(x)$ is:
 
 $$
 \begin{aligned}
-\frac{d f(x)}{dx} 
+\frac{d F(x)}{dx}
 &= \frac{d}{dx} \left[ F(x) - \lim_{a \rightarrow - \infty} F(a)  \right] \\
-&= \frac{d F(x)}{dx} \\
 &= f(x)
 \end{aligned}
 $$
 
 ### Log Abs Determinant Jacobian
 
-This is a nice trick to use for later. It allows us to decompose composite functions. In addition, it makes it a lot easier to optimize the negative log likelihood when working with optimization algorithms.
+Since the Jacobian of the uniformization transform $u = F_\theta(x)$ is just $f_\theta(x)$ (the PDF), the log absolute determinant Jacobian is:
 
-$$\log f_\theta(x)$$
+$$\log \left| \frac{du}{dx} \right| = \log f_\theta(x)$$
 
-There is a small problem due to the zero values. Technically, there should be no such thing as zero probability, so we will add some regularization $\alpha$ to ensure that there always is a little bit of probabilistic values.
+This decomposition is useful for computing composite transformations and optimizing the negative log-likelihood. In practice, we add a small regularization constant $\alpha$ to avoid $\log(0)$ when estimated probabilities are exactly zero.
 
 
 ## Probability (Computing the Density)

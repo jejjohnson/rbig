@@ -99,7 +99,7 @@ So a few options that have been implemented include:
 * Principal Components Analysis (PCA)
 * Random Rotations (random)
 
-We would like to extend this framework to include more options, e.g. 
+We would like to extend this framework to include more options, e.g.
 
 * Convolutions (conv)
 * Orthogonally Initialized Components (dct)
@@ -115,5 +115,3 @@ Where we have the following spaces:
 * $\mathbf W \cdot \mathcal P$ - The transformed space.
 * $\mathcal U$ - The Uniform space.
 * $\mathcal G$ - The Gaussian space.
-
-

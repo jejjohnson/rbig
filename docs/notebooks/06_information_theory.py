@@ -26,7 +26,6 @@
 # | KL Divergence | `kl_divergence_rbig(model_P, X_Q)` |
 
 # %%
-import matplotlib
 import numpy as np
 from sklearn.utils import check_random_state
 
@@ -38,7 +37,6 @@ from rbig import (
     total_correlation_rbig,
 )
 
-matplotlib.use("Agg")
 
 # %% [markdown]
 # ---
@@ -95,7 +93,7 @@ print(f"TC (RBIG/direct): {tc_rbig:.4f} nats")
 
 # %%
 rbig_tc_model = AnnealedRBIG(
-    n_layers=10_000,
+    n_layers=500,
     rotation="pca",
     zero_tolerance=60,
     random_state=seed,
@@ -141,7 +139,7 @@ print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")
 
 # %%
 ent_rbig_model = AnnealedRBIG(
-    n_layers=10_000,
+    n_layers=500,
     rotation="pca",
     zero_tolerance=60,
     random_state=seed,
@@ -198,7 +196,7 @@ print(f"MI (analytical): {mi_analytical:.4f} nats")
 
 # %%
 rbig_kwargs = dict(
-    n_layers=10_000, rotation="pca", zero_tolerance=60, random_state=seed
+    n_layers=500, rotation="pca", zero_tolerance=60, random_state=seed
 )
 
 model_X = AnnealedRBIG(**rbig_kwargs).fit(X)
@@ -256,7 +254,7 @@ print(f"KLD (analytical): {kld_analytical:.4f} nats")
 
 # %%
 kld_rbig_model = AnnealedRBIG(
-    n_layers=10_000,
+    n_layers=500,
     rotation="pca",
     zero_tolerance=60,
     random_state=seed,

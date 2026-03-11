@@ -27,9 +27,6 @@
 # standard multivariate Gaussian.
 
 # %%
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -145,7 +142,7 @@ print(f"Mean absolute reconstruction error: {residual:.4e}")
 
 # %%
 rbig_model = AnnealedRBIG(
-    n_layers=500,
+    n_layers=100,
     rotation="pca",
     zero_tolerance=20,
     random_state=seed,

@@ -1,16 +1,14 @@
 # Density Destructors
 
-
 ## Main Idea
 
+A density destructor is a model that transforms a complex data distribution into a simple base distribution (typically uniform or Gaussian) through a sequence of invertible transformations. By "destroying" the structure in the data, we can compute exact likelihoods via the change of variables formula.
 
 ## Forward Approach
 
 We can view the approach of modeling from two perspectives: constructive or destructive. A constructive process tries to learn how to build an exact sequence of transformations to go from $z$ to $x$. The destructive process does the complete opposite and decides to create a sequence of transforms from $x$ to $z$ while also remembering the exact transforms; enabling it to reverse that sequence of transforms.
 
-We can write some equations to illustrate exactly what we mean by these two terms. Let's define two spaces: one is our data space $\mathcal X$ and the other is the base space $\mathcal Z$. We want to learn a transformation $f_\theta$ that maps us from $\mathcal X$ to $\mathcal Z$, $f : \mathcal X \rightarrow \mathcal Z$. We also want a function $G_\theta$ that maps us from $\mathcal Z$ to $\mathcal X$, $f : \mathcal Z \rightarrow \mathcal X$.
-
-**TODO: Plot**
+We can write some equations to illustrate exactly what we mean by these two terms. Let's define two spaces: one is our data space $\mathcal X$ and the other is the base space $\mathcal Z$. We want to learn a transformation $f_\theta$ that maps us from $\mathcal X$ to $\mathcal Z$, $f : \mathcal X \rightarrow \mathcal Z$. We also want a function $\mathcal{G}_\theta$ that maps us from $\mathcal Z$ to $\mathcal X$, $\mathcal{G} : \mathcal Z \rightarrow \mathcal X$.
 
 More concretely, let's define the following pair of equations:
 
