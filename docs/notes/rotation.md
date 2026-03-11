@@ -54,7 +54,7 @@ $$
 
 $$A=QR$$
 
-where 
+where
 * $A \in \mathbb{R}^{N \times M}$
 * $Q \in \mathbb{R}^{N \times N}$ is orthogonal
 * $R \in \mathbb{R}^{N \times M}$ is upper triangular
@@ -104,7 +104,7 @@ class LinearTransform(BaseEstimator, TransformMixing):
     Parameters
     ----------
 
-    basis : 
+    basis :
     """
     def __init__(self, basis='PCA', conv=16):
         self.basis = basis
@@ -112,7 +112,7 @@ class LinearTransform(BaseEstimator, TransformMixing):
 
     def fit(self, data):
         """
-        Computes the inverse transformation of 
+        Computes the inverse transformation of
                 z = W x
 
         Parameters
@@ -135,7 +135,7 @@ class LinearTransform(BaseEstimator, TransformMixing):
             ...
         else:
             raise ValueError('...')
-        
+
         # Save the transformation matrix
         self.W = ...
 
@@ -156,7 +156,7 @@ where:
 ```python
 def transform(self, data):
     """
-    Computes the inverse transformation of 
+    Computes the inverse transformation of
             z = W x
 
     Parameters
@@ -173,7 +173,7 @@ We also can apply an inverse transform.
 ```python
 def inverse(self, data):
     """
-    Computes the inverse transformation of 
+    Computes the inverse transformation of
     z = W^-1 x
 
     Parameters
@@ -182,7 +182,7 @@ def inverse(self, data):
 
     Returns
     -------
-    
+
     """
     return data @ np.linalg.inv(self.W)
 ```
@@ -198,6 +198,6 @@ def logjacobian(self, data=None):
     """
     if data is None:
         return np.linalg.slogdet(self.W)[1]
-    
+
     return np.linalg.slogdet(self.W)[1] + np.zeros([1, data.shape[1]])
 ```

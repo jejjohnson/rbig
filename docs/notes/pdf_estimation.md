@@ -24,8 +24,8 @@ $$\underset{\theta}{\text{min }} \mathbb{E}_x \left[ - \log p_\theta(x) \right]$
 This is equivalent to minimizing the KL-Divergence between the empirical data distribution $\tilde{p}_\text{data}(x)$ and the model $p_\theta$.
 
 $$
-D_\text{KL}(\hat{p}(\text{data}) || p_\theta) 
-= \mathbb{E}_{x \sim \hat{p}_\text{data}} 
+D_\text{KL}(\hat{p}(\text{data}) || p_\theta)
+= \mathbb{E}_{x \sim \hat{p}_\text{data}}
 \left[ - \log p_\theta(x) \right] - H(\hat{p}_\text{data})
 $$
 

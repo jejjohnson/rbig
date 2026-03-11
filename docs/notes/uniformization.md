@@ -47,7 +47,7 @@ This is the harder option. This will essentially squish the CDF function near th
 
 ## Reverse Transformation
 
-This isn't really useful because we don't really want to draw samples from our distribution $x \sim \mathcal{X}$ only to project them to a uniform distribution $\mathcal{U}$. What we really want to draw samples from the uniform distribution $u \sim \mathcal{U}$ and then project them into our data distribution $\mathcal{X}$. 
+This isn't really useful because we don't really want to draw samples from our distribution $x \sim \mathcal{X}$ only to project them to a uniform distribution $\mathcal{U}$. What we really want to draw samples from the uniform distribution $u \sim \mathcal{U}$ and then project them into our data distribution $\mathcal{X}$.
 
 We can simply take the inverse of our function $F(\cdot)$ to go from $\mathcal{U}$ to $\mathcal{X}$.
 

@@ -69,7 +69,7 @@ This distribution is very skewed so through-out this tutorial, we will transform
 
 ## Marginal Uniformization
 
-The first step, we map $x_d$ to the uniform domain $U_d$. This is based on the cumulative distribution of the PDF. 
+The first step, we map $x_d$ to the uniform domain $U_d$. This is based on the cumulative distribution of the PDF.
 
 $$u = U_d (x_d) = \int_{-\infty}^{x_d} p_d (x_d') \, d x_d'$$
 
@@ -100,7 +100,7 @@ quantiles = np.percentile(X_samples, references * 100)
 
 **Extending the Support**
 
-We need to extend the support of the distribution because it may be the case that we have data that lies outside of the distribution. In this case, we want to be able to map those datapoints with the CDF function as well. This is a very simple operation because we need to just squash the CDF function such that we have more values between the end points of the support and the original data distribution. Below, we showcase an example where we extend the CDF function near the tails. 
+We need to extend the support of the distribution because it may be the case that we have data that lies outside of the distribution. In this case, we want to be able to map those datapoints with the CDF function as well. This is a very simple operation because we need to just squash the CDF function such that we have more values between the end points of the support and the original data distribution. Below, we showcase an example where we extend the CDF function near the tails.
 
 <figure align="center">
 <img src="pics/demo/u_cdf_ext.png" width="400">

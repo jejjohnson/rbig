@@ -50,7 +50,7 @@ This is a term that measures the statistical dependency of multi-variate sources
 $$
 \begin{aligned}
 I(\mathbf{x})
-&= 
+&=
 D_\text{KL} \left[ p(\mathbf{x}) || \prod_d p(\mathbf{x}_d) \right] \\
 &= \sum_{d=1}^D H(x_d) - H(\mathbf{x})
 \end{aligned}
@@ -64,12 +64,12 @@ We can decompose this measure into two parts representing second order and highe
 
 $$
 \begin{aligned}
-I(\mathbf{x}) 
+I(\mathbf{x})
 &=
 \underbrace{\sum_{d=1}^D \log{\Sigma_{dd}} - \log{|\Sigma|}}_{\text{2nd Order Dependencies}} \\
 &-
-\underbrace{D_\text{KL} \left[ p(\mathbf{x}) || \mathcal{G}_\theta (\mathbf{x}) \right] 
-- 
+\underbrace{D_\text{KL} \left[ p(\mathbf{x}) || \mathcal{G}_\theta (\mathbf{x}) \right]
+-
 \sum_{d=1}^D D_\text{KL} \left[ p(x_d) || \mathcal{G}_\theta (x_d) \right]}_{\text{high-order dependencies}}
 \end{aligned}
 $$
