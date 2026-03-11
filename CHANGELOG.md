@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.1.7](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.6...rbig-v0.1.7) (2026-03-11)
+
+
+### Bug Fixes
+
+* **build:** use --group docs for mkdocs and --all-groups for install ([026c095](https://github.com/jejjohnson/rbig/commit/026c095102bf092f1c65d0c9aa18425166b84996))
+
+
+### Documentation
+
+* clean up notebooks, remove matplotlib.use("Agg") and reduce n_layers ([61c5be0](https://github.com/jejjohnson/rbig/commit/61c5be0d28a6f9dab4412e64fddae4a841ac4b10))
+* clean up notes formatting, fix typos, and improve coherence ([94b87b0](https://github.com/jejjohnson/rbig/commit/94b87b0c7eea2d578a394fa9a1ed99572fdad2c0))
+* clean up notes, notebooks, and build config ([e94aa17](https://github.com/jejjohnson/rbig/commit/e94aa17a2305a2c7414231adda516eb99e753b69))
+* fix duplicates, notation consistency, and fill stub sections ([68bd1b6](https://github.com/jejjohnson/rbig/commit/68bd1b6cf9e69f778fcea56383e90e676d121fc2))
+* fix text coherence, notation consistency, and fill empty sections ([e0fbac8](https://github.com/jejjohnson/rbig/commit/e0fbac8c9549a33f9aa89bf5ba53fcc4f0baf223))
+* fix trailing whitespace and missing EOF newlines in notes ([2ab8267](https://github.com/jejjohnson/rbig/commit/2ab826795fb81c2ef9fe13c522b6d14627d41f32))
+* port literature review and refactoring notes from Unsorted ([24da85d](https://github.com/jejjohnson/rbig/commit/24da85d36967ea9e16f9e030f68e0069258e4303))
+* remove broken #algorithms anchor from normalizing_flows TOC ([2c0c123](https://github.com/jejjohnson/rbig/commit/2c0c123d9e09d5887e123e0e8b80241124dfc4ab))
+* remove legacy .ipynb notebooks superseded by .py versions ([84bf255](https://github.com/jejjohnson/rbig/commit/84bf2554e3fc05a61133f3d993efaeed23038e8a))
+* remove legacy Notes/Unsorted directory ([095e42c](https://github.com/jejjohnson/rbig/commit/095e42c46c7a11a6c6bd30a10bcc1bd6890708cd))
+
 ## [0.1.6](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.5...rbig-v0.1.6) (2026-03-07)
 
 
