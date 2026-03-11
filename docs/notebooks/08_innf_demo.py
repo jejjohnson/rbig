@@ -26,9 +26,6 @@
 # - `AnnealedRBIG` — the full iterative model
 
 # %%
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -143,7 +140,7 @@ plt.show()
 
 # %%
 rbig_full = AnnealedRBIG(
-    n_layers=1000,
+    n_layers=200,
     rotation="pca",
     zero_tolerance=30,
     random_state=seed,

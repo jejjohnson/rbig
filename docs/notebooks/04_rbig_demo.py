@@ -26,9 +26,6 @@
 # %%
 from time import time
 
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -61,7 +58,7 @@ plt.show()
 # ## RBIG Fitting
 
 # %%
-n_layers = 500
+n_layers = 100
 rotation_type = "pca"
 random_state = 123
 zero_tolerance = 20

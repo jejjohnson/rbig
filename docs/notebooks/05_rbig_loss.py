@@ -28,9 +28,6 @@
 # and utility functions `entropy_reduction` and `total_correlation`.
 
 # %%
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -90,7 +87,7 @@ for n in [5, 10, 30, 50]:
 
 # %%
 rbig_tc = AnnealedRBIG(
-    n_layers=1000,
+    n_layers=200,
     rotation="pca",
     zero_tolerance=20,  # stop after 20 layers with negligible TC change
     tol=1e-5,
