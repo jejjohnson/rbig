@@ -973,6 +973,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1414,10 +1470,10 @@
 
 <h1 id="density-destructors">Density Destructors</h1>
 <h2 id="main-idea">Main Idea</h2>
+<p>A density destructor is a model that transforms a complex data distribution into a simple base distribution (typically uniform or Gaussian) through a sequence of invertible transformations. By "destroying" the structure in the data, we can compute exact likelihoods via the change of variables formula.</p>
 <h2 id="forward-approach">Forward Approach</h2>
 <p>We can view the approach of modeling from two perspectives: constructive or destructive. A constructive process tries to learn how to build an exact sequence of transformations to go from <span class="arithmatex">\(z\)</span> to <span class="arithmatex">\(x\)</span>. The destructive process does the complete opposite and decides to create a sequence of transforms from <span class="arithmatex">\(x\)</span> to <span class="arithmatex">\(z\)</span> while also remembering the exact transforms; enabling it to reverse that sequence of transforms.</p>
-<p>We can write some equations to illustrate exactly what we mean by these two terms. Let's define two spaces: one is our data space <span class="arithmatex">\(\mathcal X\)</span> and the other is the base space <span class="arithmatex">\(\mathcal Z\)</span>. We want to learn a transformation <span class="arithmatex">\(f_\theta\)</span> that maps us from <span class="arithmatex">\(\mathcal X\)</span> to <span class="arithmatex">\(\mathcal Z\)</span>, <span class="arithmatex">\(f : \mathcal X \rightarrow \mathcal Z\)</span>. We also want a function <span class="arithmatex">\(G_\theta\)</span> that maps us from <span class="arithmatex">\(\mathcal Z\)</span> to <span class="arithmatex">\(\mathcal X\)</span>, <span class="arithmatex">\(f : \mathcal Z \rightarrow \mathcal X\)</span>.</p>
-<p><strong>TODO: Plot</strong></p>
+<p>We can write some equations to illustrate exactly what we mean by these two terms. Let's define two spaces: one is our data space <span class="arithmatex">\(\mathcal X\)</span> and the other is the base space <span class="arithmatex">\(\mathcal Z\)</span>. We want to learn a transformation <span class="arithmatex">\(f_\theta\)</span> that maps us from <span class="arithmatex">\(\mathcal X\)</span> to <span class="arithmatex">\(\mathcal Z\)</span>, <span class="arithmatex">\(f : \mathcal X \rightarrow \mathcal Z\)</span>. We also want a function <span class="arithmatex">\(\mathcal{G}_\theta\)</span> that maps us from <span class="arithmatex">\(\mathcal Z\)</span> to <span class="arithmatex">\(\mathcal X\)</span>, <span class="arithmatex">\(\mathcal{G} : \mathcal Z \rightarrow \mathcal X\)</span>.</p>
 <p>More concretely, let's define the following pair of equations:</p>
 <div class="arithmatex">\[
 z \sim \mathcal{P}_\mathcal{Z}

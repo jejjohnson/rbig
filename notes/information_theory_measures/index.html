@@ -1017,6 +1017,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1510,43 +1566,48 @@
 <li><a href="#kullback-leibler-divergence-kld">Kullback-Leibler Divergence (KLD)</a></li>
 </ul>
 <h2 id="summary">Summary</h2>
-<!-- <img src="pics/rbig_it/Fig_1.png" alt="IT measures" width="300"> -->
-
-<!-- <figure> -->
-<center>
-<img src="pics/rbig_it/Fig_1.png" width="500">
-</center>
-<center>
-<figurecaption>
-<b>Caption</b>: Information Theory measures in a nutshell.
-</figurecaption>
-</center>
-<!-- </figure> -->
+<figure align="center">
+<img src="pics/rbig_it/Fig_1.png" alt="IT measures" width="500">
+<figcaption><b>Fig 1</b>: Information Theory measures in a nutshell.</figcaption>
+</figure>
 
 <h2 id="information">Information</h2>
+<p>The information content (or surprisal) of an event <span class="arithmatex">\(x\)</span> with probability <span class="arithmatex">\(p(x)\)</span> is:</p>
+<div class="arithmatex">\[I(x) = -\log p(x)\]</div>
+<p>Rare events carry more information than common ones.</p>
 <h2 id="entropy">Entropy</h2>
+<p>The entropy of a random variable <span class="arithmatex">\(X\)</span> with PDF <span class="arithmatex">\(p(x)\)</span> is the expected information content:</p>
+<div class="arithmatex">\[H(X) = -\int p(x) \log p(x) \, dx\]</div>
+<p>Entropy measures the uncertainty or randomness of a distribution. A Gaussian distribution has the maximum entropy among all distributions with a given mean and variance. See <a href="../gaussian_distribution/#entropy">Gaussian Distribution</a> for the closed-form expression.</p>
 <h2 id="mutual-information">Mutual Information</h2>
+<p>The mutual information between two random variables <span class="arithmatex">\(X\)</span> and <span class="arithmatex">\(Y\)</span> measures the amount of information shared between them:</p>
+<div class="arithmatex">\[I(X; Y) = H(X) + H(Y) - H(X, Y)\]</div>
+<p>Equivalently:</p>
+<div class="arithmatex">\[I(X; Y) = D_\text{KL}\left[ p(x, y) \| p(x)p(y) \right]\]</div>
+<p>Mutual information is zero if and only if <span class="arithmatex">\(X\)</span> and <span class="arithmatex">\(Y\)</span> are independent.</p>
 <h2 id="total-correlation-mutual-information">Total Correlation (Mutual Information)</h2>
 <p>This is a term that measures the statistical dependency of multi-variate sources using the common mutual-information measure.</p>
 <div class="arithmatex">\[
 \begin{aligned}
 I(\mathbf{x})
-&amp;= 
+&amp;=
 D_\text{KL} \left[ p(\mathbf{x}) || \prod_d p(\mathbf{x}_d) \right] \\
 &amp;= \sum_{d=1}^D H(x_d) - H(\mathbf{x})
 \end{aligned}
 \]</div>
-<p>where <span class="arithmatex">\(H(\mathbf{x})\)</span> is the differential entropy of <span class="arithmatex">\(\mathbf{x}\)</span> and <span class="arithmatex">\(H(x_d)\)</span> represents the differential entropy of the <span class="arithmatex">\(d^\text{th}\)</span> component of <span class="arithmatex">\(\mathbf{x}\)</span>. This is nicely summaries in equation 1 from (<a href="https://www.cns.nyu.edu/pub/lcv/lyu08a.pdf" title="Nonlinear Extraction of 'Independent Components' of elliptically symmetric densities using radial Gaussianization - Lyu &amp; Simoncelli - (2008)">Lyu &amp; Simoncelli, 2008</a>).</p>
-<p>?&gt; Note: We find that <span class="arithmatex">\(I\)</span> in 2 dimensions is the same as mutual information.</p>
+<p>where <span class="arithmatex">\(H(\mathbf{x})\)</span> is the differential entropy of <span class="arithmatex">\(\mathbf{x}\)</span> and <span class="arithmatex">\(H(x_d)\)</span> represents the differential entropy of the <span class="arithmatex">\(d^\text{th}\)</span> component of <span class="arithmatex">\(\mathbf{x}\)</span>. This is nicely summarized in equation 1 from (<a href="https://www.cns.nyu.edu/pub/lcv/lyu08a.pdf" title="Nonlinear Extraction of 'Independent Components' of elliptically symmetric densities using radial Gaussianization - Lyu &amp; Simoncelli - (2008)">Lyu &amp; Simoncelli, 2008</a>).</p>
+<blockquote>
+<p><strong>Note</strong>: In 2 dimensions, the total correlation <span class="arithmatex">\(I\)</span> is equivalent to the mutual information.</p>
+</blockquote>
 <p>We can decompose this measure into two parts representing second order and higher-order dependencies:</p>
 <div class="arithmatex">\[
 \begin{aligned}
-I(\mathbf{x}) 
+I(\mathbf{x})
 &amp;=
 \underbrace{\sum_{d=1}^D \log{\Sigma_{dd}} - \log{|\Sigma|}}_{\text{2nd Order Dependencies}} \\
 &amp;-
-\underbrace{D_\text{KL} \left[ p(\mathbf{x}) || \mathcal{G}_\theta (\mathbf{x}) \right] 
-- 
+\underbrace{D_\text{KL} \left[ p(\mathbf{x}) || \mathcal{G}_\theta (\mathbf{x}) \right]
+-
 \sum_{d=1}^D D_\text{KL} \left[ p(x_d) || \mathcal{G}_\theta (x_d) \right]}_{\text{high-order dependencies}}
 \end{aligned}
 \]</div>
@@ -1554,6 +1615,9 @@ I(\mathbf{x})
 <p><strong>Sources</strong>:
 * Nonlinear Extraction of "Independent Components" of elliptically symmetric densities using radial Gaussianization - Lyu &amp; Simoncelli - <a href="https://www.cns.nyu.edu/pub/lcv/lyu08a.pdf">PDF</a></p>
 <h2 id="kullback-leibler-divergence-kld">Kullback-Leibler Divergence (KLD)</h2>
+<p>The KL-Divergence measures the difference between two probability distributions <span class="arithmatex">\(p\)</span> and <span class="arithmatex">\(q\)</span>:</p>
+<div class="arithmatex">\[D_\text{KL}(p || q) = \int p(x) \log \frac{p(x)}{q(x)} \, dx\]</div>
+<p>See <a href="../rbig/#kl-divergence">RBIG</a> for how RBIG can be used to estimate the KLD.</p>
 
 
 

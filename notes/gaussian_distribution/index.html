@@ -1023,6 +1023,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1559,22 +1615,21 @@
 $<span class="arithmatex">\(H(X) = \frac{D}{2} + \frac{D}{2} \ln(2\pi) + \frac{1}{2}\ln|\Sigma|\)</span>$</p>
 <h3 id="kl-divergence-relative-entropy"><strong>KL-Divergence (Relative Entropy)</strong></h3>
 <div class="arithmatex">\[
-KLD(\mathcal{N}_0||\mathcal{N}_1) = \frac{1}{2}
- \left[ 
- \text{tr}(\Sigma_1^{-1}\Sigma_0) + 
+D_\text{KL}(\mathcal{N}_0||\mathcal{N}_1) = \frac{1}{2}
+ \left[
+ \text{tr}(\Sigma_1^{-1}\Sigma_0) +
  (\mu_1 - \mu_0)^\top \Sigma_1^{-1} (\mu_1 - \mu_0) -
-D + \ln \frac{|\Sigma_1|}{\Sigma_0|}
+D + \ln \frac{|\Sigma_1|}{|\Sigma_0|}
 \right]
 \]</div>
 <p>if <span class="arithmatex">\(\mu_1=\mu_0\)</span> then:</p>
 <div class="arithmatex">\[
-KLD(\Sigma_0||\Sigma_1) = \frac{1}{2} \left[ 
+D_\text{KL}(\Sigma_0||\Sigma_1) = \frac{1}{2} \left[
 \text{tr}(\Sigma_1^{-1} \Sigma_0)  - D  + \ln \frac{|\Sigma_1|}{|\Sigma_0|} \right]
 \]</div>
 <p><strong>Mutual Information</strong></p>
 <div class="arithmatex">\[I(X)= - \frac{1}{2} \ln | \rho_0 |\]</div>
-<p>where <span class="arithmatex">\(\rho_0\)</span> is the correlation matrix from <span class="arithmatex">\(\Sigma_0\)</span>.</p>
-<div class="arithmatex">\[I(X)\]</div>
+<p>where <span class="arithmatex">\(\rho_0\)</span> is the correlation matrix derived from <span class="arithmatex">\(\Sigma_0\)</span>.</p>
 
 
 

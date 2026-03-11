@@ -750,17 +750,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#gaussian-transform" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gaussian Transform
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1093,6 +1082,62 @@
     
   
     Mixture Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
   
 
     
@@ -1647,17 +1692,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#gaussian-transform" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gaussian Transform
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1704,28 +1738,18 @@
 <li><a href="#quantile-transform">Quantile Transform</a></li>
 <li><a href="#kde-transform">KDE Transform</a></li>
 <li><a href="#spline-functions">Spline Functions</a></li>
-<li><a href="#gaussian-transform">Gaussian Transform</a></li>
 </ul>
 <h2 id="idea">Idea</h2>
 <p>The idea is to transform each dimension/feature into a Gaussian distribution, i.e. Marginal Gaussianization. We will convert each of the marginal distributions to a Gaussian distribution of mean 0 and variance 1. You can follow along in this <a href="https://colab.research.google.com/drive/1Zk1UnfN573yOIdtHUI-tbzks8MMLtuy-">colab notebook</a> for a high-level demonstration.</p>
 <hr />
 <h2 id="high-level-instructions">High-Level Instructions</h2>
 <ol>
-<li>Estimate the cumulative distribution function for each feature independently.</li>
-<li>Obtain the CDF and ICDF</li>
-<li>Mapped to desired output distribution.</li>
+<li>Estimate the cumulative distribution function (CDF) for each feature independently.</li>
+<li>Apply the CDF to obtain a uniform variable <span class="arithmatex">\(u \in [0,1]\)</span>.</li>
+<li>Apply the inverse Gaussian CDF <span class="arithmatex">\(\Phi^{-1}\)</span> to map to the desired Gaussian output.</li>
 </ol>
-<p><strong>Demo: TODO</strong>
-* Marginal PDF
-  * <span class="arithmatex">\(x_d\)</span> vs <span class="arithmatex">\(p(x_d)\)</span>
-* Uniform Transformation
-  * <span class="arithmatex">\(x_d\)</span> vs <span class="arithmatex">\(u=U(x_d)\)</span>
-* PDF of the uniformized variable
-  * <span class="arithmatex">\(u\)</span> vs <span class="arithmatex">\(p(u)\)</span>
-* Gaussianization transform
-  * <span class="arithmatex">\(u\)</span> vs <span class="arithmatex">\(G(u)\)</span>
-* PDF of the Gaussianized variable
-  * <span class="arithmatex">\(G(u)=\Psi(x_d)\)</span> vs <span class="arithmatex">\(p_d(\Psi(x_d))\)</span></p>
+<p>The pipeline for a single dimension <span class="arithmatex">\(d\)</span> is:</p>
+<div class="arithmatex">\[x_d \xrightarrow{F_d} u_d \xrightarrow{\Phi^{-1}} z_d\]</div>
 <hr />
 <h2 id="mathematical-details">Mathematical Details</h2>
 <p>For all instructions in the following, we will assume we are looking at a univariate distribution to make the concepts and notation easier. Overall, we can essentially break these pieces up into two steps: 1) we make the marginal distribution uniform and 2) we make the marginal distribution Gaussian.</p>
@@ -1733,24 +1757,20 @@
 <h3 id="data">Data</h3>
 <p>In this example, let's assume <span class="arithmatex">\(x\)</span> comes from a univariate distribution. To make it interesting, we will be using the <span class="arithmatex">\(\Gamma\)</span> PDF:</p>
 <div class="arithmatex">\[f(x,a) = \frac{x^{a-1}\exp{(-x)}}{\Gamma(a)}\]</div>
-<p>where <span class="arithmatex">\(x \leq 0, a &gt; 0\)</span> where <span class="arithmatex">\(\Gamma(a)\)</span> is the gamma function with the parameter <span class="arithmatex">\(a\)</span>.</p>
-<center>
+<p>where <span class="arithmatex">\(x \geq 0, a &gt; 0\)</span> and <span class="arithmatex">\(\Gamma(a)\)</span> is the gamma function with the parameter <span class="arithmatex">\(a\)</span>.</p>
+<figure align="center">
+<img src="pics/demo/input_dist.png" width="400">
+<figcaption><b>Fig 1</b>: Input Distribution.</figcaption>
+</figure>
 
-<p align="center">
-<img src="pics/demo/input_dist.png" />
-
-<b>Fig I</b>: Input Distribution.
-</center>
-</p>
 <p>This distribution is very skewed so through-out this tutorial, we will transform this distribution to a normal distribution.</p>
 <hr />
 <h2 id="marginal-uniformization">Marginal Uniformization</h2>
-<p>The first step, we map <span class="arithmatex">\(x_d\)</span> to the uniform domain <span class="arithmatex">\(U_d\)</span>. This is based on the cumulative distribution of the PDF. </p>
+<p>The first step, we map <span class="arithmatex">\(x_d\)</span> to the uniform domain <span class="arithmatex">\(U_d\)</span>. This is based on the cumulative distribution of the PDF.</p>
 <div class="arithmatex">\[u = U_d (x_d) = \int_{-\infty}^{x_d} p_d (x_d') \, d x_d'\]</div>
 <hr />
 <h3 id="histogram-estimation">Histogram Estimation</h3>
-<hr />
-<p>Below we use the <code>np.percentile</code> function which essentially calculates q-th percentile for an element in an array.</p>
+<p>We estimate the CDF by computing empirical quantiles from the data samples. Below we use the <code>np.percentile</code> function which essentially calculates q-th percentile for an element in an array.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># number of quantiles</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">n_quantiles</span> <span class="o">=</span> <span class="mi">100</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">n_quantiles</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_quantiles</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">))</span>  <span class="c1"># check to ensure the quantiles make sense</span>
@@ -1761,28 +1781,25 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># calculate kth percentile of the data along the axis</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">quantiles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">X_samples</span><span class="p">,</span> <span class="n">references</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
 </code></pre></div>
-<center>
+<figure align="center">
+<img src="pics/demo/u_cdf.png" width="400">
+<figcaption><b>Fig 2</b>: CDF.</figcaption>
+</figure>
 
-<p align="center">
-<img src="pics/demo/u_cdf.png" />
-
-<b>Fig 2</b>: CDF.
-</center>
-</p>
 <p><strong>Extending the Support</strong></p>
-<p>We need to extend the support of the distribution because it may be the case that we have data that lies outside of the distribution. In this case, we want to be able to map those datapoints with the CDF function as well. This is a very simple operation because we need to just squash the CDF function such that we have more values between the end points of the support and the original data distribution. Below, we showcase an example where we extend the CDF function near the tails. </p>
-<center>
+<p>We need to extend the support of the distribution because it may be the case that we have data that lies outside of the distribution. In this case, we want to be able to map those datapoints with the CDF function as well. This is a very simple operation because we need to just squash the CDF function such that we have more values between the end points of the support and the original data distribution. Below, we showcase an example where we extend the CDF function near the tails.</p>
+<figure align="center">
+<img src="pics/demo/u_cdf_ext.png" width="400">
+<figcaption><b>Fig 3</b>: CDF with extended support. We used approximately 1% extra on either tail.</figcaption>
+</figure>
 
-<p align="center">
-<img src="pics/demo/u_cdf_ext.png" />
-
-<b>Fig 3</b>: CDF with extended support. We used approximately 1% extra on either tail.
-</center>
-</p>
 <p>Looking at figure 3, we see that the new function has the same support but the tail is extended near the higher values. This corresponds to the region near the right side of the equation in figure 1.</p>
 <h2 id="gaussianization-of-uniform-variable">Gaussianization of Uniform Variable</h2>
-<p>In this section, we need to perform some Gaussianization of the uniform variable that we have transformed in the above section. </p>
-<div class="arithmatex">\[G^{-1}(x_d) = \int_{-\infty}^{x_d} g(x_d') \, d x_d'\]</div>
+<p>Once we have the uniform variable <span class="arithmatex">\(u \in [0,1]\)</span>, we apply the inverse CDF of the standard Gaussian distribution to obtain a Gaussian variable:</p>
+<div class="arithmatex">\[z_d = \Phi^{-1}(u_d)\]</div>
+<p>where <span class="arithmatex">\(\Phi^{-1}\)</span> is the quantile function (inverse CDF) of <span class="arithmatex">\(\mathcal{N}(0,1)\)</span>. More generally, the Gaussian CDF is defined as:</p>
+<div class="arithmatex">\[G(x_d) = \int_{-\infty}^{x_d} g(x_d') \, d x_d'\]</div>
+<p>where <span class="arithmatex">\(g(\cdot)\)</span> is the standard Gaussian PDF.</p>
 <hr />
 <h2 id="log-determinant-jacobian">Log Determinant Jacobian</h2>
 <div class="arithmatex">\[\frac{d F^{-1}}{d x} = \frac{1}{f(F^{-1}(x))}\]</div>
@@ -1792,9 +1809,9 @@
 <div class="arithmatex">\[\log{\left|\frac{d F^{-1}}{d x}\right|} = -\log{f(F^{-1}(x))}\]</div>
 <hr />
 <h2 id="log-likelihood-of-the-data">Log-Likelihood of the Data</h2>
-<div class="arithmatex">\[\text{nll} = \frac{1}{N} \sum_{n=1}^N \log p(\mathcal{X}|\mathcal{N})\]</div>
+<div class="arithmatex">\[\log \mathcal{L} = \frac{1}{N} \sum_{n=1}^N \log p(x_n)\]</div>
 <h2 id="quantile-transform">Quantile Transform</h2>
-<hr />
+<p>An alternative approach to marginal Gaussianization uses the quantile transform, which maps the empirical distribution to the desired output distribution via rank-based estimation.</p>
 <ol>
 <li>Calculate the empirical ranks <code>numpy.percentile</code></li>
 <li>Modify ranking through interpolation, <code>numpy.interp</code></li>
@@ -1805,15 +1822,15 @@
 * Quantile Transformation with Gaussian Distribution - Sklearn Implementation - <a href="https://stats.stackexchange.com/questions/325570/quantile-transformation-with-gaussian-distribution-sklearn-implementation">StackOverFlow</a>
 * Differentiable Quantile Transformation - Miles Cranmer - <a href="https://github.com/MilesCranmer/differentiable_quantile_transform">PyTorch</a></p>
 <h2 id="kde-transform">KDE Transform</h2>
+<p>An alternative to histogram-based CDF estimation is to use Kernel Density Estimation (KDE) for a smoother estimate of the marginal PDF. See <a href="../kernel_density_estimation/">Kernel Density Estimation</a> for resources.</p>
 <h2 id="spline-functions">Spline Functions</h2>
-<ul>
-<li>Rational Quadratic Trigonometric Interpolation Spline for Data Visualization - Lui et al - <a href="https://www.hindawi.com/journals/mpe/2015/983120/">PDF</a></li>
-<li><a href="https://github.com/tensorflow/probability/blob/master/tensorflow_probability/python/bijectors/rational_quadratic_spline.py">TensorFlow</a></li>
-<li>PyTorch Implementations</li>
-<li>Neural Spline Flows - <a href="https://github.com/bayesiains/nsf">Paper</a></li>
-<li>Tony Duan Implementation - <a href="https://github.com/tonyduan/normalizing-flows">Paper</a></li>
-</ul>
-<h2 id="gaussian-transform">Gaussian Transform</h2>
+<p>Spline-based transforms provide smooth, flexible parameterizations of the CDF. They can be made differentiable and invertible, making them suitable for normalizing flow architectures.</p>
+<p><strong>Resources</strong>:
+* Rational Quadratic Trigonometric Interpolation Spline for Data Visualization - Liu et al - <a href="https://www.hindawi.com/journals/mpe/2015/983120/">PDF</a>
+* <a href="https://github.com/tensorflow/probability/blob/master/tensorflow_probability/python/bijectors/rational_quadratic_spline.py">TensorFlow</a>
+* PyTorch Implementations
+  * Neural Spline Flows - <a href="https://github.com/bayesiains/nsf">Code</a>
+  * Tony Duan Implementation - <a href="https://github.com/tonyduan/normalizing-flows">Code</a></p>
 
 
 

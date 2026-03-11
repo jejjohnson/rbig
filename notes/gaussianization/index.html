@@ -1068,6 +1068,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1608,7 +1664,6 @@
 <li>Email: jemanjohnson34@gmail.com</li>
 <li>Notebooks:</li>
 <li><a href="https://colab.research.google.com/drive/1C-hP2XCii-DLwLmK1wyvET095ZLQTdON">1D Gaussianization</a></li>
-<li></li>
 </ul>
 <hr />
 <ul>
@@ -1630,14 +1685,14 @@
 <blockquote>
 <p><strong>Gaussianization</strong>: Transforms multidimensional data into multivariate Gaussian data.</p>
 </blockquote>
-<p>It is notorious that we say "assume our data is Gaussian". We do this all of the time in practice. It's because Gaussian data typically has nice properties, e.g. close-form solutions, dependence, etc(<strong>???</strong>). But as sensors get better, data gets bigger and algorithms get better, this assumption does not always hold. </p>
+<p>It is notorious that we say "assume our data is Gaussian". We do this all of the time in practice. It's because Gaussian data typically has nice properties, e.g. closed-form solutions, linear dependence structure, and analytical expressions for entropy and KL-divergence. But as sensors get better, data gets bigger and algorithms get better, this assumption does not always hold.</p>
 <p>However, what if we could make our data Gaussian? If it were possible, then all of the nice properties of Gaussians can be used as our data is actually Gaussian. How is this possible? Well, we use a series of invertible transformations to transform our data <span class="arithmatex">\(\mathcal X\)</span> to the Gaussian domain <span class="arithmatex">\(\mathcal Z\)</span>. The logic is that by independently transforming each dimension of the data followed by some rotation will eventually converge to a multivariate dataset that is completely Gaussian.</p>
 <p>We can achieve statistical independence of data components. This is useful for the following reasons:</p>
 <ul>
 <li>We can process dimensions independently</li>
 <li>We can alleviate the curse of dimensionality</li>
 <li>We can tackle the PDF estimation problem directly</li>
-<li>With PDF estimation, we can sample and assign probabilities. It really is the hole grail of ML models.</li>
+<li>With PDF estimation, we can sample and assign probabilities. It really is the holy grail of ML models.</li>
 <li>We can apply and design methods that assume Gaussianity of the data</li>
 <li>Get insight into the data characteristics</li>
 </ul>
@@ -1646,14 +1701,14 @@
 <p>The idea of the Gaussianization frameworks is to transform some data distribution <span class="arithmatex">\(\mathcal{D}\)</span> to an approximate Gaussian distribution <span class="arithmatex">\(\mathcal{N}\)</span>. Let <span class="arithmatex">\(x\)</span> be some data from our original distribution, <span class="arithmatex">\(x\sim \mathcal{D}\)</span> and <span class="arithmatex">\(\mathcal{G}_{\theta}(\cdot)\)</span> be the transformation to the Normal distribution <span class="arithmatex">\(\mathcal{N}(0, \mathbf{I})\)</span>.
 $<span class="arithmatex">\(z=\mathcal{G}_{\theta}(x)\)</span>$</p>
 <p>where:
-* <span class="arithmatex">\(x\sim\)</span>Data Distribtuion
-* <span class="arithmatex">\(\theta\)</span> - Parameters of transformation 
+* <span class="arithmatex">\(x\sim\)</span>Data Distribution
+* <span class="arithmatex">\(\theta\)</span> - Parameters of transformation
 * <span class="arithmatex">\(\mathcal{G}\)</span> - family of transformations from Data Distribution to Normal Distribution, <span class="arithmatex">\(\mathcal{N}\)</span>.
 * <span class="arithmatex">\(z\sim\mathcal{N}(0, \mathbf{I})\)</span></p>
 <p>If the transformation is differentiable, we have a clear relationship between the input and output variables by means of the <strong>change of variables transformation</strong>:</p>
 <div class="arithmatex">\[
 \begin{aligned}
-p_\mathbf{x}(\mathbf{x}) 
+p_\mathbf{x}(\mathbf{x})
 &amp;= p_\mathbf{y} \left[ \mathcal{G}_\theta(\mathbf{x})  \right] \left| \nabla_\mathbf{x} \mathcal{G}_\theta(\mathbf{x}) \right|
 \end{aligned}
 \]</div>
@@ -1665,21 +1720,22 @@ p_\mathbf{x}(\mathbf{x})
 </ul>
 <p>We can say that <span class="arithmatex">\(\mathcal{G}_{\theta}\)</span> provides an implicit density model on <span class="arithmatex">\(x\)</span> given the parameters <span class="arithmatex">\(\theta\)</span>.</p>
 <hr />
-<hr />
 <h3 id="loss-function">Loss Function</h3>
-<p>as shown in the equation from the original <a href="https://www.uv.es/lapeva/papers/Laparra11.pdf" title="Iterative Gaussianization: From ICA toRandom Rotations - Laparra et. al. - IEEE TNNs (2011)">paper</a>.</p>
-<hr />
+<p>The objective is to minimize the total correlation (or equivalently maximize the negentropy), as described in the original <a href="https://www.uv.es/lapeva/papers/Laparra11.pdf" title="Iterative Gaussianization: From ICA to Random Rotations - Laparra et al. - IEEE TNNs (2011)">paper</a>.</p>
 <h4 id="negentropy">Negentropy</h4>
-<hr />
+<p>Negentropy measures the departure of a distribution from Gaussianity. It is defined as <span class="arithmatex">\(J(\mathbf{x}) = H(\mathbf{x}_\text{gauss}) - H(\mathbf{x})\)</span> where <span class="arithmatex">\(H(\mathbf{x}_\text{gauss})\)</span> is the entropy of a Gaussian with the same covariance as <span class="arithmatex">\(\mathbf{x}\)</span>.</p>
 <h3 id="methods">Methods</h3>
-<hr />
 <h4 id="projection-pursuit">Projection Pursuit</h4>
-<hr />
+<p>Projection pursuit seeks low-dimensional projections of multivariate data that reveal interesting structure by iteratively finding directions that maximize non-Gaussianity.</p>
 <h4 id="gaussianization_1">Gaussianization</h4>
-<hr />
+<p>See <a href="../marginal_gaussianization/">Marginal Gaussianization</a> for the dimension-wise Gaussianization transform.</p>
 <h4 id="rbig">RBIG</h4>
+<p>See <a href="../rbig/">RBIG</a> for the full Rotation-Based Iterative Gaussianization algorithm.</p>
 <hr />
 <h2 id="references">References</h2>
+<ul>
+<li>Iterative Gaussianization: From ICA to Random Rotations - Laparra et al. - <a href="https://www.uv.es/lapeva/papers/Laparra11.pdf" title="Iterative Gaussianization: From ICA to Random Rotations - Laparra et al. - IEEE TNNs (2011)">Paper</a></li>
+</ul>
 
 
 

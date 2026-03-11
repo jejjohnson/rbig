@@ -864,6 +864,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uniform Distribution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -880,6 +898,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#role-in-rbig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role in RBIG
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -901,6 +949,62 @@
     
   
     Mixture Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
   
 
     
@@ -1305,6 +1409,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#role-in-rbig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role in RBIG
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1324,8 +1447,17 @@
 
 
 <h1 id="uniform-distribution">Uniform Distribution</h1>
+<p>The continuous uniform distribution on <span class="arithmatex">\([a, b]\)</span> is defined by:</p>
+<p><strong>PDF</strong></p>
+<div class="arithmatex">\[p(x) = \frac{1}{b - a}, \quad a \leq x \leq b\]</div>
+<p><strong>CDF</strong></p>
+<div class="arithmatex">\[F(x) = \frac{x - a}{b - a}, \quad a \leq x \leq b\]</div>
 <p><strong>Entropy</strong></p>
-<div class="arithmatex">\[H(x) = \log \left[ \prod_{i=1}^{D}(b_d - a_d) \right]\]</div>
+<p>For the multivariate case with independent marginals on <span class="arithmatex">\([a_d, b_d]\)</span>:</p>
+<div class="arithmatex">\[H(x) = \log \left[ \prod_{d=1}^{D}(b_d - a_d) \right]\]</div>
+<p>For the standard uniform on <span class="arithmatex">\([0, 1]^D\)</span>, this simplifies to <span class="arithmatex">\(H(x) = 0\)</span>.</p>
+<h3 id="role-in-rbig">Role in RBIG</h3>
+<p>The uniform distribution is the intermediate target in the <a href="../uniformization/">uniformization</a> step of RBIG. Applying the marginal CDF <span class="arithmatex">\(F_d\)</span> to each dimension maps the data to <span class="arithmatex">\([0, 1]\)</span>, producing a uniform marginal distribution before the subsequent <a href="../marginal_gaussianization/">Gaussianization</a> step.</p>
 
 
 

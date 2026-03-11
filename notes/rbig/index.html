@@ -1090,6 +1090,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1675,43 +1731,43 @@ p_{z}\left( \mathcal{G}_{\theta}(x) \right)
 \left| \frac{\partial \mathcal{G}_{\theta}(x)}{\partial x} \right| =
  p_{z}\left( \mathcal{G}_{\theta}(x) \right) \left| \nabla_x \mathcal{G}(x) \right|
 \]</div>
-<p>If you are familiar with normalizing flows, you'll find some similarities between the formulations. Inherently, they are the same. However most (if not all) of the major methods of normalizing flows, they focus on the log-likelihood estimation of data <span class="arithmatex">\(\mathcal{X}\)</span>. They seek to minimize this log-determinant of the Jacobian as a cost function. RBIG is different in this regard as it has a different objective. RBIG seeks to maximize the negentropy or minimize the total correlation.</p>
-<p>Essentialy, RBIG is an algorithm that respects the name density destructor fundamental. We argue that by destroying the density, we maximize the entropy and destroy all redundancies within the marginals of the variables in question. From this formulation, this allows us to utilize RBIG to calculate many other IT measures which we highlight below.</p>
+<p>If you are familiar with normalizing flows, you'll find some similarities between the formulations. Inherently, they are the same. However, most (if not all) major normalizing flow methods focus on log-likelihood estimation of data <span class="arithmatex">\(\mathcal{X}\)</span> by minimizing the log-determinant of the Jacobian as a cost function. RBIG is different in this regard as it has a different objective: to maximize the negentropy or equivalently minimize the total correlation.</p>
+<p>Essentially, RBIG is an algorithm that embodies the density destructor philosophy. By destroying the density, we maximize the entropy and remove all redundancies within the marginals of the variables in question. This formulation allows us to utilize RBIG to calculate many other IT measures which we highlight below.</p>
 <div class="arithmatex">\[\begin{aligned}
-z &amp;\sim \mathcal P_z \sim \text{Base Distribution}\\
-\hat x &amp;= \mathbf G_\phi(x) \sim \text{Approximate Data Distribution}
+z &amp;\sim \mathcal{P}_z \sim \text{Base Distribution}\\
+\hat x &amp;= \mathcal{G}_\theta(x) \sim \text{Approximate Data Distribution}
 \end{aligned}\]</div>
 <hr />
 <h2 id="algorithm">Algorithm</h2>
 <blockquote>
-<p>Gaussianization - Given a random variance <span class="arithmatex">\(\mathbf x \in \mathbb R^d\)</span>, a Gaussianization transform is an invertible and differentiable transform <span class="arithmatex">\(\mathcal \Psi(\mathbf)\)</span> s.t. <span class="arithmatex">\(\mathcal \Psi( \mathbf x) \sim \mathcal N(0, \mathbf I)\)</span>.</p>
+<p>Gaussianization - Given a random variable <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^d\)</span>, a Gaussianization transform is an invertible and differentiable transform <span class="arithmatex">\(\mathcal{G}(\mathbf{x})\)</span> s.t. <span class="arithmatex">\(\mathcal{G}(\mathbf{x}) \sim \mathcal{N}(0, \mathbf{I})\)</span>.</p>
 </blockquote>
-<div class="arithmatex">\[\mathcal G:\mathbf x^{(k+1)}=\mathbf R_{(k)}\cdot \mathbf \Psi_{(k)}\left( \mathbf x^{(k)} \right)\]</div>
+<div class="arithmatex">\[\mathcal{G}:\mathbf{x}^{(k+1)}=\mathbf{R}_{(k)}\cdot \mathbf{\Psi}_{(k)}\left( \mathbf{x}^{(k)} \right)\]</div>
 <p>where:
-* <span class="arithmatex">\(\mathbf \Psi_{(k)}\)</span> is the marginal Gaussianization of each dimension of <span class="arithmatex">\(\mathbf x_{(k)}\)</span> for the corresponding iteration.
-* <span class="arithmatex">\(\mathbf R_{(k)}\)</span> is the rotation matrix for the marginally Gaussianized variable <span class="arithmatex">\(\mathbf \Psi_{(k)}\left( \mathbf x_{(k)} \right)\)</span></p>
+* <span class="arithmatex">\(\mathbf{\Psi}_{(k)}\)</span> is the marginal Gaussianization of each dimension of <span class="arithmatex">\(\mathbf{x}^{(k)}\)</span> for the corresponding iteration.
+* <span class="arithmatex">\(\mathbf{R}_{(k)}\)</span> is the rotation matrix for the marginally Gaussianized variable <span class="arithmatex">\(\mathbf{\Psi}_{(k)}\left( \mathbf{x}^{(k)} \right)\)</span></p>
 <hr />
 <h3 id="marginal-univariate-gaussianization">Marginal (Univariate) Gaussianization</h3>
-<p>This transformation is the <span class="arithmatex">\(\mathcal \Psi_\theta\)</span> step for the RBIG algorithm.</p>
-<p>In theory, to go from any distribution to a Gaussian distribution, we just need to</p>
-<p>To go from <span class="arithmatex">\(\mathcal P \rightarrow \mathcal G\)</span></p>
+<p>This transformation is the <span class="arithmatex">\(\mathbf{\Psi}_\theta\)</span> step for the RBIG algorithm.</p>
+<p>In theory, to go from any distribution to a Gaussian distribution, we need to apply the following steps.</p>
+<p>To go from <span class="arithmatex">\(\mathcal P \rightarrow \mathcal G\)</span>:</p>
 <ol>
-<li>Convert the Data to a Normal distribution <span class="arithmatex">\(\mathcal U\)</span></li>
-<li>Apply the CDF of the Gaussian distribution <span class="arithmatex">\(\mathcal G\)</span></li>
-<li>Apply the inverse Gaussian CDF</li>
+<li>Convert the data to a Uniform distribution <span class="arithmatex">\(\mathcal U\)</span> using the empirical CDF.</li>
+<li>Apply the inverse Gaussian CDF to map from <span class="arithmatex">\(\mathcal U\)</span> to <span class="arithmatex">\(\mathcal G\)</span>.</li>
 </ol>
-<p>So to break this down even further we need two key components</p>
+<p>So to break this down even further, we need two key components:</p>
 <h4 id="marginal-uniformization">Marginal Uniformization</h4>
 <p>We have to estimate the PDF of the marginal distribution of <span class="arithmatex">\(\mathbf x\)</span>. Then using the CDF of that estimated distribution, we can compute the uniform</p>
-<p><span class="arithmatex">\(u=U_k(x^k)=\int_{-\infty}^{x^k}\mathcal p(x^k)dx^k\)</span></p>
+<div class="arithmatex">\[u=U_k(x^k)=\int_{-\infty}^{x^k} p(x^k) \, dx^k\]</div>
 <p>This boils down to estimating the histogram of the data distribution in order to get some probability distribution. I can think of a few ways to do this but the simplest is using the histogram function. Then convert it to a <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_histogram.html">scipy stats rv</a> where we will have access to functions like pdf and cdf. One nice trick is to add something to make the transformation smooth to ensure all samples are within the boundaries.</p>
 <ul>
-<li>Example Implementation - <a href="">https://github.com/davidinouye/destructive-deep-learning/blob/master/ddl/univariate.py</a></li>
+<li>Example Implementation - <a href="https://github.com/davidinouye/destructive-deep-learning/blob/master/ddl/univariate.py">ddl/univariate.py</a></li>
 </ul>
-<p>From there, we just need the CDF of the univariate function <span class="arithmatex">\(u(\mathbf x)\)</span>. We can just used the ppf function (the inverse CDF / erf) in scipy</p>
+<p>From there, we just need the CDF of the univariate function <span class="arithmatex">\(u(\mathbf x)\)</span>. We can use the <code>ppf</code> function (the inverse CDF) in scipy.</p>
 <h4 id="gaussianization-of-a-uniform-variable">Gaussianization of a Uniform Variable</h4>
-<p>Let's look at the first step: Marginal Uniformization. There are a number of ways that we can do this.</p>
-<p>To go from <span class="arithmatex">\(\mathcal G \rightarrow \mathcal U\)</span></p>
+<p>Once we have a uniform variable <span class="arithmatex">\(u\)</span>, we apply the inverse CDF of the Gaussian distribution to obtain a Gaussian variable:</p>
+<div class="arithmatex">\[z = \Phi^{-1}(u)\]</div>
+<p>where <span class="arithmatex">\(\Phi^{-1}\)</span> is the inverse CDF (quantile function) of the standard normal distribution <span class="arithmatex">\(\mathcal{N}(0,1)\)</span>.</p>
 <hr />
 <h3 id="linear-transformation">Linear Transformation</h3>
 <p>This is the <span class="arithmatex">\(\mathcal R_\theta\)</span> step in the RBIG algorithm. We take some data <span class="arithmatex">\(\mathbf x_i\)</span> and apply some rotation to that data <span class="arithmatex">\(\mathcal R_\theta (\mathbf x_i)\)</span>. This rotation is somewhat flexible provided that it follows a few criteria:</p>
@@ -1722,11 +1778,11 @@ z &amp;\sim \mathcal P_z \sim \text{Base Distribution}\\
 </ul>
 <p>So a few options that have been implemented include:</p>
 <ul>
-<li>Independence Components Analysis (ICA)</li>
+<li>Independent Components Analysis (ICA)</li>
 <li>Principal Components Analysis (PCA)</li>
 <li>Random Rotations (random)</li>
 </ul>
-<p>We would like to extend this framework to include more options, e.g. </p>
+<p>We would like to extend this framework to include more options, e.g.</p>
 <ul>
 <li>Convolutions (conv)</li>
 <li>Orthogonally Initialized Components (dct)</li>
@@ -1742,51 +1798,35 @@ z &amp;\sim \mathcal P_z \sim \text{Base Distribution}\\
 </ul>
 <hr />
 <h2 id="information-theory-measures">Information Theory Measures</h2>
-<figure>
-<center>
+<figure align="center">
 <img src="pics/rbig_it/Fig_1.png" width="500">
-</center>
-<center>
-<figcaption>
-<b>Caption</b>: Information Theory measures in a nutshell.
-</figcaption>
-</center>
+<figcaption><b>Fig 1</b>: Information Theory measures in a nutshell.</figcaption>
 </figure>
 
 <h3 id="information">Information</h3>
+<p>See <a href="../information_theory_measures/">Information Theory Measures</a> for details.</p>
 <h3 id="entropy">Entropy</h3>
+<p>The entropy of the data decreases at each RBIG iteration as the distribution approaches a multivariate Gaussian. The total entropy can be estimated by summing the entropy reductions across all iterations. See <a href="../information_theory_measures/">Information Theory Measures</a> for the general definition.</p>
 <h3 id="mutual-information">Mutual Information</h3>
-<figure>
-<center>
-<img src="pics/rbig_it/mi.png" alt="MI using RBIG" style="width:60%">
-</center>
-<center>
-<figurecaption>
-<b>Caption</b>: Schematic for finding the Mutual Information using using RBIG.
-</figurecaption>
-</center>
+<figure align="center">
+<img src="pics/rbig_it/mi.png" alt="MI using RBIG" width="500">
+<figcaption><b>Fig 2</b>: Schematic for finding the Mutual Information using RBIG.</figcaption>
 </figure>
 
 <div class="arithmatex">\[
 \begin{aligned}
-I(\mathbf{x,y}) 
+I(\mathbf{x,y})
 &amp;=
-T\left( \left[ 
+T\left( \left[
     \mathcal{G}_\theta (\mathbf{X}), \mathcal{G}_\phi (\mathbf{Y})
     \right] \right)
 \end{aligned}
 \]</div>
 <hr />
 <h3 id="kl-divergence">KL-Divergence</h3>
-<figure>
-<center>
+<figure align="center">
 <img src="pics/rbig_it/kld.png" width="500">
-</center>
-<center>
-<figurecaption>
-<b>Caption</b>: Schematic for finding the KL-Divergence using using RBIG.
-</figurecaption>
-</center>
+<figcaption><b>Fig 3</b>: Schematic for finding the KL-Divergence using RBIG.</figcaption>
 </figure>
 
 <p>Let <span class="arithmatex">\(\mathcal{G}_\theta (\mathbf{X})\)</span> be the Gaussianization of the variable <span class="arithmatex">\(\mathbf{X}\)</span> which is parameterized by <span class="arithmatex">\(\theta\)</span>.</p>

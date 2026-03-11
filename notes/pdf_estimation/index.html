@@ -909,15 +909,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gotchas" class="md-nav__link">
+  <a href="#implementation-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gotchas
+        Implementation Notes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Gotchas">
+    <nav class="md-nav" aria-label="Implementation Notes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1044,6 +1044,62 @@
     
   
     Mixture Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
   
 
     
@@ -1533,15 +1589,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gotchas" class="md-nav__link">
+  <a href="#implementation-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gotchas
+        Implementation Notes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Gotchas">
+    <nav class="md-nav" aria-label="Implementation Notes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1582,25 +1638,21 @@
 
 <h1 id="pdf-estimation">PDF Estimation</h1>
 <h2 id="main-idea">Main Idea</h2>
-<center>
-
-<p align="center">
-<img src="pics/demo/input_dist.png" />
-
-<b>Fig I</b>: Input Distribution.
-</p>
-</center>
+<figure align="center">
+<img src="pics/demo/input_dist.png" width="400">
+<figcaption><b>Fig 1</b>: Input Distribution.</figcaption>
+</figure>
 
 <div class="arithmatex">\[P(x \in [a,b]) = \int_a^b p(x)dx\]</div>
 <h4 id="likelihood">Likelihood</h4>
-<p>Given a dataset <span class="arithmatex">\(\mathcal{D} = \{x^{1}, x^{2}, \ldots, x^{n}\}\)</span>, we can find the some parameters <span class="arithmatex">\(\theta\)</span> by solving this optimization function: the likelihood</p>
+<p>Given a dataset <span class="arithmatex">\(\mathcal{D} = \{x^{1}, x^{2}, \ldots, x^{n}\}\)</span>, we can find some parameters <span class="arithmatex">\(\theta\)</span> by solving this optimization function: the likelihood</p>
 <div class="arithmatex">\[\underset{\theta}{\text{max}} \sum_i \log p_\theta(x^{(i)})\]</div>
 <p>or equivalently:</p>
 <div class="arithmatex">\[\underset{\theta}{\text{min }} \mathbb{E}_x \left[ - \log p_\theta(x) \right]\]</div>
 <p>This is equivalent to minimizing the KL-Divergence between the empirical data distribution <span class="arithmatex">\(\tilde{p}_\text{data}(x)\)</span> and the model <span class="arithmatex">\(p_\theta\)</span>.</p>
 <div class="arithmatex">\[
-D_\text{KL}(\hat{p}(\text{data}) || p_\theta) 
-= \mathbb{E}_{x \sim \hat{p}_\text{data}} 
+D_\text{KL}(\hat{p}(\text{data}) || p_\theta)
+= \mathbb{E}_{x \sim \hat{p}_\text{data}}
 \left[ - \log p_\theta(x) \right] - H(\hat{p}_\text{data})
 \]</div>
 <p>where <span class="arithmatex">\(\hat{p}_\text{data}(x) = \frac{1}{n} \sum_{i=1}^N \mathbf{1}[x = x^{(i)}]\)</span></p>
@@ -1618,18 +1670,18 @@ D_\text{KL}(\hat{p}(\text{data}) || p_\theta)
 <div class="arithmatex">\[\theta = (\pi_1, \cdots, \pi_k, \mu_1, \cdots, \mu_k, \sigma_1, \cdots, \sigma_k)\]</div>
 <p>However, this doesn't really work for high-dimensional datasets. To sample, we pick a cluster center and then add some Gaussian noise.</p>
 <h2 id="histogram-method">Histogram Method</h2>
-<h2 id="gotchas">Gotchas</h2>
+<p>The simplest non-parametric density estimator. We partition the domain into bins and estimate the density by counting samples in each bin:</p>
+<div class="arithmatex">\[\hat{p}(x) = \frac{\text{count in bin containing } x}{N \cdot \Delta}\]</div>
+<p>where <span class="arithmatex">\(N\)</span> is the total number of samples and <span class="arithmatex">\(\Delta\)</span> is the bin width. The main trade-off is bin width: too wide and we lose detail, too narrow and the estimate becomes noisy. See <a href="../kernel_density_estimation/">Kernel Density Estimation</a> for a smoother alternative.</p>
+<h2 id="implementation-notes">Implementation Notes</h2>
 <h3 id="search-sorted">Search Sorted</h3>
-<p><strong>Numpy</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
+<p><strong>NumPy</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">bin_locations</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>PyTorch</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">searchsorted</span><span class="p">(</span><span class="n">bin_locations</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">bin_locations</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">eps</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">h_sorted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">bin_locations</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">return</span> <span class="n">h_sorted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">bin_locations</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
 </code></pre></div>
-<p>This is an unofficial implementation. There is still some talks in the PyTorch community to implement this. See github issue <a href="https://github.com/pytorch/pytorch/issues/1552">here</a>. For now, we just use the implementation found in various <a href="https://github.com/karpathy/pytorch-normalizing-flows/blob/master/nflib/spline_flows.py#L20">implementations</a>.</p>
+<p>Both NumPy and PyTorch provide built-in <code>searchsorted</code> functions that efficiently find insertion points in sorted arrays.</p>
 
 
 

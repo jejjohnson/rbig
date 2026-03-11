@@ -899,6 +899,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notes/refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2511,7 +2567,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=95fda7c1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0671475a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2549,7 +2605,7 @@ quantities using the new <code>rbig</code> functional API:</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6be7911b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=77141d7d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2567,8 +2623,7 @@ quantities using the new <code>rbig</code> functional API:</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_random_state</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -2578,11 +2633,8 @@ quantities using the new <code>rbig</code> functional API:</p>
     <span class="n">mutual_information_rbig</span><span class="p">,</span>
     <span class="n">total_correlation_rbig</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"Agg"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import matplotlib
-import numpy as np
+<div class="clipboard-copy-txt" id="cell-1">import numpy as np
 from sklearn.utils import check_random_state
 
 from rbig import (
@@ -2591,16 +2643,14 @@ from rbig import (
     marginal_entropy,
     mutual_information_rbig,
     total_correlation_rbig,
-)
-
-matplotlib.use("Agg")</div>
+)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=20129ca3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6f93491c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2614,7 +2664,7 @@ dependence among all variables:</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=26d91212">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3db62068">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2625,7 +2675,7 @@ dependence among all variables:</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ff01dddb">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=bfb9d5ad">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2678,7 +2728,7 @@ vv = np.diag(C)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=aa95eb24">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ec03000d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2690,7 +2740,7 @@ vv = np.diag(C)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3fee30e9">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2d5e30b6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2719,7 +2769,7 @@ print(f"TC (analytical): {tc_analytical:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8ac2ce4b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d7239fae">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2731,7 +2781,7 @@ a full RBIG model.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3794cc2a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1979e7f4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2760,7 +2810,7 @@ print(f"TC (RBIG/direct): {tc_rbig:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e2aa2488">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b538afb1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2772,7 +2822,7 @@ After convergence the sum of per-layer TC reductions approximates the initial TC
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4af5f5f5">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8a91ee91">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2791,7 +2841,7 @@ After convergence the sum of per-layer TC reductions approximates the initial TC
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">rbig_tc_model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
     <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
     <span class="n">zero_tolerance</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
@@ -2804,7 +2854,7 @@ After convergence the sum of per-layer TC reductions approximates the initial TC
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"TC (AnnealedRBIG estimate from raw data): </span><span class="si">{</span><span class="n">tc_rbig_model</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-5">rbig_tc_model = AnnealedRBIG(
-    n_layers=10_000,
+    n_layers=500,
     rotation="pca",
     zero_tolerance=60,
     random_state=seed,
@@ -2821,7 +2871,7 @@ print(f"TC (AnnealedRBIG estimate from raw data): {tc_rbig_model:.4f} nats")</di
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=82e0b533">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=30e575f8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2833,7 +2883,7 @@ print(f"TC (AnnealedRBIG estimate from raw data): {tc_rbig_model:.4f} nats")</di
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e35793c9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=22aaa7a4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2844,7 +2894,7 @@ print(f"TC (AnnealedRBIG estimate from raw data): {tc_rbig_model:.4f} nats")</di
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c81a2a25">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=53797a32">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2881,7 +2931,7 @@ data = data_original @ A</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8a3001c1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f5eb52c7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2894,7 +2944,7 @@ but the value below is a plug-in / estimated quantity based on sampled data.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cd6f2443">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=014b8173">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2925,7 +2975,7 @@ print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6bd1740d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8d506148">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2936,7 +2986,7 @@ print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e5337936">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=04282e9c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2955,7 +3005,7 @@ print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">ent_rbig_model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
     <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
     <span class="n">zero_tolerance</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
@@ -2965,7 +3015,7 @@ print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")</div>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"H (RBIG):        </span><span class="si">{</span><span class="n">H_rbig</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-8">ent_rbig_model = AnnealedRBIG(
-    n_layers=10_000,
+    n_layers=500,
     rotation="pca",
     zero_tolerance=60,
     random_state=seed,
@@ -2979,7 +3029,7 @@ print(f"H (RBIG):        {H_rbig:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=796e3042">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=711a3891">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2993,7 +3043,7 @@ print(f"H (RBIG):        {H_rbig:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d3c7056c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=00afd08e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3004,7 +3054,7 @@ print(f"H (RBIG):        {H_rbig:.4f} nats")</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a038c0f2">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=db12c38f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3057,7 +3107,7 @@ Y = dat_all[:, d_dimensions:]</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8a6053d2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a6fc203b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3068,7 +3118,7 @@ Y = dat_all[:, d_dimensions:]</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8c8d9477">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=605ecfc8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3105,7 +3155,7 @@ print(f"MI (analytical): {mi_analytical:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e60a8986">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=11c3b8bc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3117,7 +3167,7 @@ MI = H(X) + H(Y) - H(X,Y) using fitted <code>AnnealedRBIG</code> models.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8429e985">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=129d9b06">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3136,7 +3186,7 @@ MI = H(X) + H(Y) - H(X,Y) using fitted <code>AnnealedRBIG</code> models.</p>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">rbig_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span> <span class="n">zero_tolerance</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span> <span class="n">zero_tolerance</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span>
 <span class="p">)</span>
 
 <span class="n">model_X</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">rbig_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -3147,7 +3197,7 @@ MI = H(X) + H(Y) - H(X,Y) using fitted <code>AnnealedRBIG</code> models.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MI (RBIG):       </span><span class="si">{</span><span class="n">mi_rbig</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-11">rbig_kwargs = dict(
-    n_layers=10_000, rotation="pca", zero_tolerance=60, random_state=seed
+    n_layers=500, rotation="pca", zero_tolerance=60, random_state=seed
 )
 
 model_X = AnnealedRBIG(**rbig_kwargs).fit(X)
@@ -3162,7 +3212,7 @@ print(f"MI (RBIG):       {mi_rbig:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a7b36546">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=76130cb4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3180,7 +3230,7 @@ print(f"MI (RBIG):       {mi_rbig:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=997e02f4">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a783d44e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3191,7 +3241,7 @@ print(f"MI (RBIG):       {mi_rbig:.4f} nats")</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2597ee7a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=455a83f6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3242,7 +3292,7 @@ X_q = rng.multivariate_normal(mu_y, cov, n_samples)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e115ab7e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=70917c64">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3255,7 +3305,7 @@ X_q = rng.multivariate_normal(mu_y, cov, n_samples)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6cd2ff8c">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5176e5a2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3286,7 +3336,7 @@ print(f"KLD (analytical): {kld_analytical:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b84b30f9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5d570699">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3297,7 +3347,7 @@ print(f"KLD (analytical): {kld_analytical:.4f} nats")</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2b32497d">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=170194eb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3316,7 +3366,7 @@ print(f"KLD (analytical): {kld_analytical:.4f} nats")</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">kld_rbig_model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
     <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
     <span class="n">zero_tolerance</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
@@ -3327,7 +3377,7 @@ print(f"KLD (analytical): {kld_analytical:.4f} nats")</div>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"KLD (RBIG):       </span><span class="si">{</span><span class="n">kld_rbig</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-14">kld_rbig_model = AnnealedRBIG(
-    n_layers=10_000,
+    n_layers=500,
     rotation="pca",
     zero_tolerance=60,
     random_state=seed,
@@ -3342,7 +3392,7 @@ print(f"KLD (RBIG):       {kld_rbig:.4f} nats")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=60c2815a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=44a8bd04">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

@@ -887,17 +887,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#algorithms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Algorithms
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#rbig-upgrades" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1155,6 +1144,62 @@
     
   
     Mixture Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
   
 
     
@@ -1734,17 +1779,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#algorithms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Algorithms
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#rbig-upgrades" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1819,7 +1853,6 @@
 <li><a href="#deep-density-destructors">Deep Density Destructors</a></li>
 <li><a href="#code-tutorials">Code Tutorials</a></li>
 <li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#algorithms">Algorithms</a></li>
 <li><a href="#rbig-upgrades">RBIG Upgrades</a></li>
 <li><a href="#cutting-edge">Cutting Edge</a></li>
 <li><a href="#github-implementations">Github Implementations</a></li>
@@ -1836,22 +1869,22 @@
 <li><strong>Latent Representation</strong>: Ideally we want this representation to be meaningful.</li>
 </ul>
 <p>Let's assume that we can find some probability distribution for <span class="arithmatex">\(\mathcal{X}\)</span> but it's very difficult to do. So, instead of <span class="arithmatex">\(p_\theta(x)\)</span>, we want to find some parameterized function <span class="arithmatex">\(f_\theta(x)\)</span> that we can learn.</p>
-<div class="arithmatex">\[x = f_\theta(x)\]</div>
-<p>We'll define this as <span class="arithmatex">\(z=f_\theta(x)\)</span>. So we also want <span class="arithmatex">\(z\)</span> to have certain properties. </p>
+<div class="arithmatex">\[z = f_\theta(x)\]</div>
+<p>We want <span class="arithmatex">\(z\)</span> to have certain properties:</p>
 <ol>
-<li>We want this <span class="arithmatex">\(z\)</span> to be defined by a probabilistic function and have a valid distribution <span class="arithmatex">\(z \sim p_\mathcal{Z}(z)\)</span></li>
-<li>We also would prefer this distribution to be simply. We typically pick a normal distribution, <span class="arithmatex">\(z \sim \mathcal{N}(0,1)\)</span></li>
+<li>We want <span class="arithmatex">\(z\)</span> to be defined by a probabilistic function and have a valid distribution <span class="arithmatex">\(z \sim p_\mathcal{Z}(z)\)</span>.</li>
+<li>We also prefer this distribution to be simple. We typically pick a normal distribution, <span class="arithmatex">\(z \sim \mathcal{N}(0,1)\)</span>.</li>
 </ol>
-<p>We begin with in initial distribution and then we apply a sequence of <span class="arithmatex">\(L\)</span> invertible transformations in hopes that we obtain something that is more expressive. This originally came from the context of Variational AutoEncoders (VAE) where the posterior was approximated by a neural network. The authors wanted to </p>
+<p>We begin with an initial distribution and then apply a sequence of <span class="arithmatex">\(L\)</span> invertible transformations to obtain something more expressive. This originally came from the context of Variational AutoEncoders (VAE) where the posterior was approximated by a neural network, and the authors wanted to enrich the approximate posterior beyond a simple Gaussian.</p>
 <div class="arithmatex">\[
 \begin{aligned}
 \mathbf{z}_L = f_L \circ f_{L-1} \circ \ldots \circ f_2 \circ f_1 (\mathbf{z}_0)
 \end{aligned}
 \]</div>
 <h3 id="loss-function">Loss Function</h3>
-<p>We can do a simple maximum-likelihood of our distribution <span class="arithmatex">\(p_\theta(x)\)</span>. </p>
+<p>We can do a simple maximum-likelihood of our distribution <span class="arithmatex">\(p_\theta(x)\)</span>.</p>
 <div class="arithmatex">\[\underset{\theta}{\text{max}} \sum_i \log p_\theta(x^{(i)})\]</div>
-<p>However, this expression needs to be transformed in terms of the invertible functions <span class="arithmatex">\(f_\theta(x)\)</span>. This is where we exploit the rule for the change of variables. From here, we can come up with an expression for the likelihood by simply calculating the maximum likelihood of the initial distribution <span class="arithmatex">\(\mathbf{z}_0\)</span> given the transformations <span class="arithmatex">\(f_L\)</span>. </p>
+<p>However, this expression needs to be transformed in terms of the invertible functions <span class="arithmatex">\(f_\theta(x)\)</span>. This is where we exploit the rule for the change of variables. From here, we can come up with an expression for the likelihood by simply calculating the maximum likelihood of the initial distribution <span class="arithmatex">\(\mathbf{z}_0\)</span> given the transformations <span class="arithmatex">\(f_L\)</span>.</p>
 <div class="arithmatex">\[
 \begin{aligned}
 p_\theta(x) = p_\mathcal{Z}(f_\theta(x)) \left| \frac{\partial f_\theta(x)}{\partial x} \right|
@@ -1860,14 +1893,14 @@ p_\theta(x) = p_\mathcal{Z}(f_\theta(x)) \left| \frac{\partial f_\theta(x)}{\par
 <p>So now, we can do the same maximization function but with our change of variables formulation:</p>
 <div class="arithmatex">\[
 \begin{aligned}
-\underset{\theta}{\text{max}} \sum_i \log p_\theta(x^{(i)}) &amp;= 
+\underset{\theta}{\text{max}} \sum_i \log p_\theta(x^{(i)}) &amp;=
 \underset{\theta}{\text{max}} \sum_i \log p_\mathcal{Z}\left(f_\theta(x^{(i)})\right) +
 \log \left| \frac{\partial f_\theta (x^{(i)})}{\partial x} \right|
 \end{aligned}
 \]</div>
 <p>And we can optimize this using stochastic gradient descent (SGD) which means we can use all of the autogradient and deep learning libraries available to make this procedure relatively painless.</p>
 <h3 id="sampling">Sampling</h3>
-<p>If we want to sample from our base distribution <span class="arithmatex">\(z\)</span>, then we just need to use the inverse of our function. </p>
+<p>If we want to sample from our base distribution <span class="arithmatex">\(z\)</span>, then we just need to use the inverse of our function.</p>
 <div class="arithmatex">\[x = f_\theta^{-1}(z)\]</div>
 <p>where <span class="arithmatex">\(z \sim p_\mathcal{Z}(z)\)</span>. Remember, our <span class="arithmatex">\(f_\theta(\cdot)\)</span> is invertible and differentiable so this should be no problem.</p>
 <hr />
@@ -1884,19 +1917,18 @@ q(z') = q(z) \left| \frac{\partial f}{\partial z} \right|^{-1}
 \end{aligned}
 \]</div>
 <p>So now, our original expression with <span class="arithmatex">\(p_\theta(x)\)</span> can be written in terms of <span class="arithmatex">\(z\)</span>.</p>
-<p>TODO: Diagram with plots of the Normalizing Flow distributions which show the direction for the idea.</p>
 <p>In order to train this, we need to take expectations of the transformations.</p>
 <div class="arithmatex">\[
 \begin{aligned}
-\mathcal{L}(\theta) &amp;= 
+\mathcal{L}(\theta) &amp;=
 \mathbb{E}_{q_0(\mathbf{z}_0)} \left[ \log p(\mathbf{x,z}_L)\right] -
 \mathbb{E}_{q_0(\mathbf{z}_0)} \left[ \log q_0(\mathbf{z}_0) \right] -
-\mathbb{E}_{q_0(\mathbf{z}_0)} 
+\mathbb{E}_{q_0(\mathbf{z}_0)}
 \left[ \sum_{l=1}^L \log \text{det}\left| \frac{\partial f_l}{\partial \mathbf{z}_k} \right| \right]
 \end{aligned}
 \]</div>
 <h2 id="choice-of-transformations">Choice of Transformations</h2>
-<p>The main thing that many of the communities have been looking into is how one chooses the aspects of the normalizing flow: the prior distribution and the Jacobian. </p>
+<p>The main thing that many of the communities have been looking into is how one chooses the aspects of the normalizing flow: the prior distribution and the Jacobian.</p>
 <h3 id="prior-distribution">Prior Distribution</h3>
 <p>This is very consistent across the literature: most people use a fully-factorized Gaussian distribution. Very simple.</p>
 <h3 id="jacobian">Jacobian</h3>
@@ -1908,26 +1940,26 @@ q(z') = q(z) \left| \frac{\partial f}{\partial z} \right|^{-1}
 <p>An excellent blog post for Normalizing Flows. Probably the most thorough introduction available.</p>
 </blockquote>
 </li>
-<li><a href="https://docs.google.com/presentation/d/1WqEy-b8x-PhvXB_IeA6EoOfSTuhfgUYDVXlYP8Jh_n0/edit#slide=id.g7d4f9f0446_0_43">Flow Models</a> - <a href="https://sites.google.com/view/berkeley-cs294-158-sp20/home">Deep Unsupervised Learning Class</a>, Spring 2010 </li>
+<li><a href="https://docs.google.com/presentation/d/1WqEy-b8x-PhvXB_IeA6EoOfSTuhfgUYDVXlYP8Jh_n0/edit#slide=id.g7d4f9f0446_0_43">Flow Models</a> - <a href="https://sites.google.com/view/berkeley-cs294-158-sp20/home">Deep Unsupervised Learning Class</a>, Spring 2020</li>
 <li><a href="https://docs.google.com/presentation/d/1wHJz9Awhlp-PWLZGWJKzF66gzvqdSrhknb-iLFJ1Owo/edit#slide=id.p">Normalizing Flows: A Tutorial</a> - Eric Jang</li>
 </ul>
 <hr />
 <h2 id="survey-of-literature">Survey of Literature</h2>
-<hr />
 <h3 id="neural-density-estimators">Neural Density Estimators</h3>
+<p>Neural density estimators use neural networks to directly parameterize the transformations in a normalizing flow. Key approaches include Masked Autoregressive Flows (MAF) and Inverse Autoregressive Flows (IAF), which exploit autoregressive structure for efficient density evaluation or sampling, respectively.</p>
 <h3 id="deep-density-destructors">Deep Density Destructors</h3>
+<p>Density destructors take a complementary view: instead of transforming a simple distribution into a complex one, they iteratively transform a complex distribution toward uniformity. See the <a href="../deep_density_destructors/">Deep Density Destructors</a> notes for details.</p>
+<hr />
 <h2 id="code-tutorials">Code Tutorials</h2>
 <ul>
 <li>Building Prob Dist with TF Probability Bijector API - <a href="https://tiao.io/post/building-probability-distributions-with-tensorflow-probability-bijector-api/">Blog</a></li>
-<li>https://www.ritchievink.com/blog/2019/10/11/sculpting-distributions-with-normalizing-flows/</li>
+<li>Sculpting Distributions with Normalizing Flows - <a href="https://www.ritchievink.com/blog/2019/10/11/sculpting-distributions-with-normalizing-flows/">Blog</a></li>
 </ul>
 <h3 id="tutorials">Tutorials</h3>
 <ul>
 <li>RealNVP - <a href="https://github.com/bayesgroup/deepbayes-2019/blob/master/seminars/day3/nf/nf-solution.ipynb">code I</a></li>
 <li><a href="https://arxiv.org/pdf/1908.09257.pdf">Normalizing Flows: Intro and Ideas</a> - Kobyev et. al. (2019)</li>
 </ul>
-<h3 id="algorithms">Algorithms</h3>
-<p>*</p>
 <h3 id="rbig-upgrades">RBIG Upgrades</h3>
 <ul>
 <li>Modularization</li>

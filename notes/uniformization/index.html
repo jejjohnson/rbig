@@ -1029,6 +1029,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refactor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring RBIG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1536,66 +1592,57 @@
 u = F_\theta(x)
 \]</div>
 <p>where <span class="arithmatex">\(F_\theta(\cdot)\)</span> is the empirical Cumulative distribution function (CDF) for <span class="arithmatex">\(\mathcal{X}\)</span>, and <span class="arithmatex">\(u\)</span> is drawn from a uniform distribution, <span class="arithmatex">\(u\sim \mathcal{U}([0,1])\)</span>.</p>
-<center>
-<p float="left">
-  <img src="pics/uniform/mu_data.png" width="200" />
-  <img src="pics/uniform/mu_cdf.png" width="200" />
-  <img src="pics/uniform/mu_uni.png" width="200" />
-</p>
-</center>
+<!-- NOTE: pics/uniform/ images are missing from the repository -->
+<figure align="center">
+<img src="pics/uniform/mu_data.png" width="200">
+<img src="pics/uniform/mu_cdf.png" width="200">
+<img src="pics/uniform/mu_uni.png" width="200">
+<figcaption><b>Fig 1</b>: (Left) Data distribution. (Center) Empirical CDF. (Right) Uniform distribution.</figcaption>
+</figure>
 
 <h3 id="boundary-issues">Boundary Issues</h3>
 <p>The bounds for <span class="arithmatex">\(\mathcal{U}\)</span> are <span class="arithmatex">\([0,1]\)</span> and the bounds for <span class="arithmatex">\(\mathcal{X}\)</span> are <code>X.min()</code> and <code>X.max()</code>. So function <span class="arithmatex">\(F_\theta\)</span> will be between 0 and 1 and the support <span class="arithmatex">\(F_\theta\)</span> will be between the limits for <span class="arithmatex">\(\mathcal{X}\)</span>. We have two options for dealing with this:</p>
-<p><strong>Map Outlines to Boundaries</strong></p>
-<p>This is the easiest method as we can map all points outside to limits to the boundaries. This is the simplest method that would allow us deal with points that are outside of the distribution.</p>
-<center>
-
-<p align="center">
-<img src="pics/uniform/cdf_extend.png" width="300"/>
-
-<b>Fig 2</b>: CDF with the extension near the boundaries.
-</p>
-</center>
+<p><strong>Map Outliers to Boundaries</strong></p>
+<p>The simplest method is to map all points outside the limits to the boundaries. This allows us to deal with points that lie outside the support of the estimated distribution.</p>
+<figure align="center">
+<img src="pics/uniform/cdf_extend.png" width="300">
+<figcaption><b>Fig 2</b>: CDF with the extension near the boundaries.</figcaption>
+</figure>
 
 <p><strong>Widen the Limits of the Support</strong></p>
 <p>This is the harder option. This will essentially squish the CDF function near the middle and widen the tails.</p>
 <h2 id="reverse-transformation">Reverse Transformation</h2>
-<p>This isn't really useful because we don't really want to draw samples from our distribution <span class="arithmatex">\(x \sim \mathcal{X}\)</span> only to project them to a uniform distribution <span class="arithmatex">\(\mathcal{U}\)</span>. What we really want to draw samples from the uniform distribution <span class="arithmatex">\(u \sim \mathcal{U}\)</span> and then project them into our data distribution <span class="arithmatex">\(\mathcal{X}\)</span>. </p>
-<p>We can simply take the inverse of our function <span class="arithmatex">\(P(\cdot)\)</span> to go from <span class="arithmatex">\(\mathcal{U}\)</span> to <span class="arithmatex">\(\mathcal{X}\)</span>.</p>
+<p>This isn't really useful because we don't really want to draw samples from our distribution <span class="arithmatex">\(x \sim \mathcal{X}\)</span> only to project them to a uniform distribution <span class="arithmatex">\(\mathcal{U}\)</span>. What we really want to draw samples from the uniform distribution <span class="arithmatex">\(u \sim \mathcal{U}\)</span> and then project them into our data distribution <span class="arithmatex">\(\mathcal{X}\)</span>.</p>
+<p>We can simply take the inverse of our function <span class="arithmatex">\(F(\cdot)\)</span> to go from <span class="arithmatex">\(\mathcal{U}\)</span> to <span class="arithmatex">\(\mathcal{X}\)</span>.</p>
 <div class="arithmatex">\[
 x = F^{-1}(u)
 \]</div>
-<p>where <span class="arithmatex">\(u \sim \mathcal{U}[0,1]\)</span>. Now we should be able to sample from a uniform distribution <span class="arithmatex">\(\mathcal{U}\)</span> and have the data represent the data distribution <span class="arithmatex">\(\mathcal{X}\)</span>. This is the inverse of the CDF which, in probability terms, this is known as the inverse distribution function or the empirical distribution function (EDF). </p>
-<p>Assuming that this function is differentiable and invertible, we can define the inverse as:</p>
-<div class="arithmatex">\[
-x = F^{-1}(u)
-\]</div>
-<p>So in principal, we should be able to generate datapoints for our data distribution from a uniform distribution. We need to be careful of the bounds as we are mapping the data from <span class="arithmatex">\([0,1]\)</span> to whatever the [<code>X.min(), X.max()</code>] is. This can cause problems.</p>
+<p>where <span class="arithmatex">\(u \sim \mathcal{U}[0,1]\)</span>. This is the inverse of the CDF, known in probability theory as the quantile function or inverse distribution function.</p>
+<p>Assuming that <span class="arithmatex">\(F\)</span> is differentiable and invertible, we should be able to generate data points for our data distribution from a uniform distribution. We need to be careful of the bounds as we are mapping data from <span class="arithmatex">\([0,1]\)</span> to the support <span class="arithmatex">\([x_\text{min}, x_\text{max}]\)</span>, which can cause issues at the boundaries.</p>
 <h2 id="derivative">Derivative</h2>
-<p>In this section, we will see how one can compute the derivative. Fortunately, the derivative of the CDF function <span class="arithmatex">\(F\)</span> is the PDF function <span class="arithmatex">\(f\)</span>. For this part, we are going to be using the relationship that the derivative of the CDF of a function is simply the PDF. For uniformization, let's define the following relationship:</p>
+<p>The key property we exploit is that the derivative of the CDF <span class="arithmatex">\(F\)</span> is the PDF <span class="arithmatex">\(f\)</span>. Recall the uniformization relationship:</p>
 <div class="arithmatex">\[
 u = F_\theta(x)
 \]</div>
-<p>where <span class="arithmatex">\(F_\theta(\cdot)\)</span> is the empirical cumulative density function (ECDF) of <span class="arithmatex">\(\mathcal{X}\)</span>. </p>
-<p><b> <font color='red'> Proof </font></b>:</p>
+<p>where <span class="arithmatex">\(F_\theta(\cdot)\)</span> is the empirical cumulative distribution function (ECDF) of <span class="arithmatex">\(\mathcal{X}\)</span>.</p>
+<p><strong>Proof</strong>:</p>
 <p>Let <span class="arithmatex">\(F(x) = \int_{-\infty}^{x}f(t) \, dt\)</span> from the fundamental theorem of calculus. The derivative is <span class="arithmatex">\(f(x)=\frac{d F(x)}{dx}\)</span>. Then that means</p>
 <div class="arithmatex">\[
 F(b)-F(a)=\int_a^b f(t) dt
 \]</div>
-<p>So $<span class="arithmatex">\(F(x)=F(x) - \lim_{a \rightarrow - \infty}F(a)\)</span>$</p>
-<p>So the derivative of the full function</p>
+<p>Since <span class="arithmatex">\(\lim_{a \rightarrow -\infty} F(a) = 0\)</span>, we have <span class="arithmatex">\(F(x) = \int_{-\infty}^{x} f(t) \, dt\)</span>.</p>
+<p>So the derivative of <span class="arithmatex">\(F(x)\)</span> is:</p>
 <div class="arithmatex">\[
 \begin{aligned}
-\frac{d f(x)}{dx} 
+\frac{d F(x)}{dx}
 &amp;= \frac{d}{dx} \left[ F(x) - \lim_{a \rightarrow - \infty} F(a)  \right] \\
-&amp;= \frac{d F(x)}{dx} \\
 &amp;= f(x)
 \end{aligned}
 \]</div>
 <h3 id="log-abs-determinant-jacobian">Log Abs Determinant Jacobian</h3>
-<p>This is a nice trick to use for later. It allows us to decompose composite functions. In addition, it makes it a lot easier to optimize the negative log likelihood when working with optimization algorithms.</p>
-<div class="arithmatex">\[\log f_\theta(x)\]</div>
-<p>There is a small problem due to the zero values. Technically, there should be no such thing as zero probability, so we will add some regularization <span class="arithmatex">\(\alpha\)</span> to ensure that there always is a little bit of probabilistic values.</p>
+<p>Since the Jacobian of the uniformization transform <span class="arithmatex">\(u = F_\theta(x)\)</span> is just <span class="arithmatex">\(f_\theta(x)\)</span> (the PDF), the log absolute determinant Jacobian is:</p>
+<div class="arithmatex">\[\log \left| \frac{du}{dx} \right| = \log f_\theta(x)\]</div>
+<p>This decomposition is useful for computing composite transformations and optimizing the negative log-likelihood. In practice, we add a small regularization constant <span class="arithmatex">\(\alpha\)</span> to avoid <span class="arithmatex">\(\log(0)\)</span> when estimated probabilities are exactly zero.</p>
 <h2 id="probability-computing-the-density">Probability (Computing the Density)</h2>
 <p>So now, we can take it a step further and estimate densities. We don't inherently know the density of our dataset <span class="arithmatex">\(\mathcal{X}\)</span> but we do know the density of <span class="arithmatex">\(\mathcal{U}\)</span>. So we can use this information by means of the <strong>change of variables</strong> formula.</p>
 <div class="arithmatex">\[
