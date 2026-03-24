@@ -41,7 +41,7 @@ plt.style.use("seaborn-v0_8-paper")
 # %%
 def plot_2d_joint(data, color="steelblue", title="Data"):
     _fig, ax = plt.subplots(figsize=(5, 5))
-    ax.scatter(data[:, 0], data[:, 1], s=1, alpha=0.3, color=color)
+    ax.scatter(data[:, 0], data[:, 1], s=5, alpha=0.5, color=color)
     ax.set_title(title)
     ax.set_xticks([])
     ax.set_yticks([])
@@ -189,7 +189,7 @@ for ax, (n, label) in zip(axes, configs, strict=False):
             n_layers=n, rotation="pca", patience=n + 1, random_state=seed
         )
         Z_plot = m.fit_transform(data)
-    ax.scatter(Z_plot[:, 0], Z_plot[:, 1], s=1, alpha=0.3)
+    ax.scatter(Z_plot[:, 0], Z_plot[:, 1], s=5, alpha=0.5)
     ax.set_title(label)
     ax.set_xticks([])
     ax.set_yticks([])

@@ -63,7 +63,7 @@ fig, axes = plt.subplots(2, 2, figsize=(8, 7))
 labels = [("$x_0$", "$y_0$"), ("$x_1$", "$y_0$"), ("$x_0$", "$y_1$"), ("$x_1$", "$y_1$")]
 pairs = [(0, 0), (1, 0), (0, 1), (1, 1)]
 for ax, (xi, yi), (xl, yl) in zip(axes.ravel(), pairs, labels):
-    ax.scatter(x1[:, xi], y1[:, yi], alpha=0.3, s=10)
+    ax.scatter(x1[:, xi], y1[:, yi], alpha=0.5, s=10)
     ax.set(xlabel=xl, ylabel=yl)
 fig.suptitle("Dataset 1: Asymmetric nonlinearity", fontsize=13)
 fig.tight_layout()
@@ -128,7 +128,7 @@ y2 = np.column_stack([
 
 fig, axes = plt.subplots(2, 2, figsize=(8, 7))
 for ax, (xi, yi), (xl, yl) in zip(axes.ravel(), pairs, labels):
-    ax.scatter(x2[:, xi], y2[:, yi], alpha=0.3, s=10)
+    ax.scatter(x2[:, xi], y2[:, yi], alpha=0.5, s=10)
     ax.set(xlabel=xl, ylabel=yl)
 fig.suptitle("Dataset 2: Symmetric quadratic (high noise)", fontsize=13)
 fig.tight_layout()
