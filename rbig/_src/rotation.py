@@ -104,7 +104,7 @@ class PCARotation(BaseTransform):
         self.n_components = n_components
         self.whiten = whiten
 
-    def fit(self, X: np.ndarray) -> PCARotation:
+    def fit(self, X: np.ndarray, y=None) -> PCARotation:
         """Fit PCA to the training data.
 
         Parameters
@@ -260,7 +260,7 @@ class ICARotation(BaseTransform):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> ICARotation:
+    def fit(self, X: np.ndarray, y=None) -> ICARotation:
         """Fit the ICA model (Picard if available, otherwise FastICA).
 
         Parameters
@@ -451,7 +451,7 @@ class RandomRotation(RotationBijector):
     def __init__(self, random_state: int | None = None):
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> RandomRotation:
+    def fit(self, X: np.ndarray, y=None) -> RandomRotation:
         """Sample a Haar-uniform orthogonal rotation matrix of size D x D.
 
         Parameters
@@ -569,7 +569,7 @@ class RandomOrthogonalProjection(RotationBijector):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> RandomOrthogonalProjection:
+    def fit(self, X: np.ndarray, y=None) -> RandomOrthogonalProjection:
         """Build the semi-orthogonal projection matrix P.
 
         Parameters
@@ -727,7 +727,7 @@ class GaussianRandomProjection(RotationBijector):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> GaussianRandomProjection:
+    def fit(self, X: np.ndarray, y=None) -> GaussianRandomProjection:
         """Build the Gaussian random projection matrix.
 
         Parameters
@@ -857,7 +857,7 @@ class OrthogonalDimensionalityReduction(RotationBijector):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> OrthogonalDimensionalityReduction:
+    def fit(self, X: np.ndarray, y=None) -> OrthogonalDimensionalityReduction:
         """Sample a Haar-uniform D x D rotation matrix.
 
         Parameters
@@ -1038,7 +1038,7 @@ class PicardRotation(RotationBijector):
         self.max_iter = max_iter
         self.tol = tol
 
-    def fit(self, X: np.ndarray) -> PicardRotation:
+    def fit(self, X: np.ndarray, y=None) -> PicardRotation:
         """Fit ICA (Picard if available, otherwise FastICA).
 
         Parameters

@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 
 import numpy as np
+from sklearn.base import BaseEstimator, TransformerMixin
 
 
-class BaseTransform(ABC):
+class BaseTransform(TransformerMixin, BaseEstimator, ABC):
     """Abstract base class for all RBIG transforms.
 
     Defines the common interface shared by every learnable data transformation
@@ -22,13 +23,15 @@ class BaseTransform(ABC):
     """
 
     @abstractmethod
-    def fit(self, X: np.ndarray) -> "BaseTransform":
+    def fit(self, X: np.ndarray, y=None) -> "BaseTransform":
         """Fit the transform to data X.
 
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_features)
             Training data used to estimate any internal parameters.
+        y : ignored
+            Not used, present for sklearn pipeline compatibility.
 
         Returns
         -------
@@ -68,24 +71,6 @@ class BaseTransform(ABC):
             Data recovered in the original input space.
         """
         ...
-
-    def fit_transform(self, X: np.ndarray) -> np.ndarray:
-        """Fit to data X, then return the transformed result.
-
-        Equivalent to calling ``self.fit(X).transform(X)`` but may be
-        overridden for efficiency when a single pass suffices.
-
-        Parameters
-        ----------
-        X : np.ndarray of shape (n_samples, n_features)
-            Data to fit and transform.
-
-        Returns
-        -------
-        Xt : np.ndarray of shape (n_samples, n_features)
-            Transformed data.
-        """
-        return self.fit(X).transform(X)
 
     def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
         """Log absolute determinant of the Jacobian evaluated at X.
@@ -159,7 +144,7 @@ class BaseITMeasure(ABC):
         ...
 
 
-class Bijector(ABC):
+class Bijector(TransformerMixin, BaseEstimator, ABC):
     """Abstract base class for invertible transformations (bijectors).
 
     A bijector implements a differentiable, invertible map ``f : ℝᵈ → ℝᵈ``
@@ -185,13 +170,15 @@ class Bijector(ABC):
     """
 
     @abstractmethod
-    def fit(self, X: np.ndarray) -> "Bijector":
+    def fit(self, X: np.ndarray, y=None) -> "Bijector":
         """Fit the bijector to data X.
 
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_features)
             Training data.
+        y : ignored
+            Not used, present for sklearn pipeline compatibility.
 
         Returns
         -------
@@ -247,21 +234,6 @@ class Bijector(ABC):
             Per-sample log absolute determinant of the forward Jacobian J_f.
         """
         ...
-
-    def fit_transform(self, X: np.ndarray) -> np.ndarray:
-        """Fit the bijector to X, then return f(X).
-
-        Parameters
-        ----------
-        X : np.ndarray of shape (n_samples, n_features)
-            Data to fit and transform.
-
-        Returns
-        -------
-        Z : np.ndarray of shape (n_samples, n_features)
-            Transformed data.
-        """
-        return self.fit(X).transform(X)
 
     def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
         """Alias for get_log_det_jacobian for compatibility with RBIGLayer.
@@ -388,13 +360,15 @@ class CompositeBijector(Bijector):
     def __init__(self, bijectors: list):
         self.bijectors = bijectors
 
-    def fit(self, X: np.ndarray) -> "CompositeBijector":
+    def fit(self, X: np.ndarray, y=None) -> "CompositeBijector":
         """Fit each bijector sequentially on the output of the previous one.
 
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_features)
             Training data.
+        y : ignored
+            Not used, present for sklearn pipeline compatibility.
 
         Returns
         -------

@@ -128,7 +128,7 @@ class MarginalUniformize(BaseTransform):
         self.pdf_extension = pdf_extension
         self.pdf_resolution = pdf_resolution
 
-    def fit(self, X: np.ndarray) -> MarginalUniformize:
+    def fit(self, X: np.ndarray, y=None) -> MarginalUniformize:
         """Fit the transform by storing sorted training values per feature.
 
         When ``pdf_extension > 0``, a histogram-based CDF pipeline is used
@@ -393,7 +393,7 @@ class MarginalGaussianize(BaseTransform):
         self.bound_correct = bound_correct
         self.eps = eps
 
-    def fit(self, X: np.ndarray) -> MarginalGaussianize:
+    def fit(self, X: np.ndarray, y=None) -> MarginalGaussianize:
         """Fit by storing the column-wise sorted training data.
 
         Parameters
@@ -601,7 +601,7 @@ class MarginalKDEGaussianize(BaseTransform):
         self.bw_method = bw_method
         self.eps = eps
 
-    def fit(self, X: np.ndarray) -> MarginalKDEGaussianize:
+    def fit(self, X: np.ndarray, y=None) -> MarginalKDEGaussianize:
         """Fit a Gaussian KDE to each feature dimension.
 
         Parameters
@@ -749,7 +749,7 @@ class QuantileGaussianizer(Bijector):
         self.n_quantiles = n_quantiles
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> QuantileGaussianizer:
+    def fit(self, X: np.ndarray, y=None) -> QuantileGaussianizer:
         """Fit the quantile transformer to the training data.
 
         Parameters
@@ -911,7 +911,7 @@ class KDEGaussianizer(Bijector):
         self.bw_method = bw_method
         self.eps = eps
 
-    def fit(self, X: np.ndarray) -> KDEGaussianizer:
+    def fit(self, X: np.ndarray, y=None) -> KDEGaussianizer:
         """Fit a Gaussian KDE to each feature dimension.
 
         Parameters
@@ -1102,7 +1102,7 @@ class GMMGaussianizer(Bijector):
         self.n_components = n_components
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> GMMGaussianizer:
+    def fit(self, X: np.ndarray, y=None) -> GMMGaussianizer:
         """Fit a univariate GMM to each feature dimension.
 
         Parameters
@@ -1362,7 +1362,7 @@ class SplineGaussianizer(Bijector):
         self.n_quantiles = n_quantiles
         self.eps = eps
 
-    def fit(self, X: np.ndarray) -> SplineGaussianizer:
+    def fit(self, X: np.ndarray, y=None) -> SplineGaussianizer:
         """Fit forward and inverse PCHIP splines for each feature.
 
         For each dimension, ``n_quantiles`` evenly-spaced probability levels
