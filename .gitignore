@@ -20,3 +20,9 @@ code_through/
 \.eggs/
 \site/
 *.md.tmp
+
+# Local environment (secrets/tokens)
+.env
+
+# Plans (tracked via GitHub issues, not committed)
+.plans/
