@@ -280,25 +280,36 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         tol: float | str = 1e-5,
         random_state: int | None = None,
         strategy: list | None = None,
-        *,
-        zero_tolerance: int | None = None,
     ):
-        if zero_tolerance is not None:
-            import warnings
-
-            warnings.warn(
-                "zero_tolerance is deprecated, use patience instead",
-                FutureWarning,
-                stacklevel=2,
-            )
-            patience = zero_tolerance
         self.n_layers = n_layers
         self.rotation = rotation
         self.patience = patience
-        self.zero_tolerance = zero_tolerance
         self.tol = tol
         self.random_state = random_state
         self.strategy = strategy
+
+    @property
+    def zero_tolerance(self):
+        """Deprecated alias for ``patience``."""
+        import warnings
+
+        warnings.warn(
+            "zero_tolerance is deprecated, use patience instead",
+            FutureWarning,
+            stacklevel=2,
+        )
+        return self.patience
+
+    @zero_tolerance.setter
+    def zero_tolerance(self, value):
+        import warnings
+
+        warnings.warn(
+            "zero_tolerance is deprecated, use patience instead",
+            FutureWarning,
+            stacklevel=2,
+        )
+        self.patience = value
 
     def fit(self, X: np.ndarray, y=None) -> AnnealedRBIG:
         """Fit the RBIG model by iteratively Gaussianizing X.

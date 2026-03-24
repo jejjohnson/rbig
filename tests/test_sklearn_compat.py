@@ -312,6 +312,4 @@ def test_sklearn_compatible_estimators(estimator, check):
     check_name = check.func.__name__ if hasattr(check, "func") else str(check)
     if "check_methods_subset_invariance" in check_name:
         pytest.skip("RBIG empirical CDF is sensitive on tiny (20-sample) data")
-    if "check_do_not_raise_errors_in_init_or_set_params" in check_name:
-        pytest.skip("Deprecated zero_tolerance kwarg emits FutureWarning by design")
     check(estimator)
