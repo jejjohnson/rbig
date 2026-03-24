@@ -2389,7 +2389,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7f1790b6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=20a2f430">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2409,7 +2409,7 @@ standard multivariate Gaussian.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9941e6ef">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d009505b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2446,7 +2446,7 @@ plt.style.use("seaborn-v0_8-paper")</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a6c85a12">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8856aa19">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2487,7 +2487,7 @@ plt.style.use("seaborn-v0_8-paper")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=32ec141f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=83e9cff3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2499,7 +2499,7 @@ visible nonlinear dependence.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=56f8f1b8">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a3519538">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2520,7 +2520,7 @@ visible nonlinear dependence.</p>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="mi">123</span>
 <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 
-<span class="n">num_samples</span> <span class="o">=</span> <span class="mi">10_000</span>
+<span class="n">num_samples</span> <span class="o">=</span> <span class="mi">5_000</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
@@ -2531,7 +2531,7 @@ visible nonlinear dependence.</p>
 <div class="clipboard-copy-txt" id="cell-3">seed = 123
 rng = np.random.RandomState(seed=seed)
 
-num_samples = 10_000
+num_samples = 5_000
 x = np.abs(2 * rng.randn(1, num_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
 data = np.vstack((x, y)).T
@@ -2544,7 +2544,7 @@ plot_2d_joint(data, title="Original Data")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a77e2566">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=416ff4c1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2556,7 +2556,7 @@ approximately standard Gaussian using the empirical CDF + probit.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f404de0b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=315d54de">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2591,7 +2591,7 @@ plot_2d_joint(data_mg, title="After Marginal Gaussianization", color="darkorange
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c2d5345e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4968b71e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2603,7 +2603,7 @@ distribution still shows dependence (the scatter plot is not circular).</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=89610e99">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=08f004bf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2614,7 +2614,7 @@ distribution still shows dependence (the scatter plot is not circular).</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=991ed998">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=aaa67429">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2649,7 +2649,7 @@ plot_2d_joint(data_rot, title="After PCA Rotation", color="seagreen")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8aa421f2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f3d6a72a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2662,7 +2662,7 @@ layers.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7ce43f36">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=66e649cf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2673,7 +2673,7 @@ layers.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=570bc546">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a219c147">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2734,7 +2734,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dff5a5b1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a2e90d28">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2746,7 +2746,7 @@ to the original space.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c9dc8a3e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7898bae1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2777,7 +2777,7 @@ print(f"Mean absolute reconstruction error: {residual:.4e}")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cd367b13">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fd5e2224">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2789,7 +2789,7 @@ correlation (TC) converges.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e1c39332">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8d7cc656">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2808,9 +2808,9 @@ correlation (TC) converges.</p>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">rbig_model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
     <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
-    <span class="n">zero_tolerance</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">zero_tolerance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">rbig_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -2818,9 +2818,9 @@ correlation (TC) converges.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Number of layers fitted: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rbig_model</span><span class="o">.</span><span class="n">layers_</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-8">rbig_model = AnnealedRBIG(
-    n_layers=100,
+    n_layers=50,
     rotation="pca",
-    zero_tolerance=20,
+    zero_tolerance=10,
     random_state=seed,
 )
 rbig_model.fit(data)
@@ -2832,7 +2832,7 @@ print(f"Number of layers fitted: {len(rbig_model.layers_)}")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d240c46f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bf396461">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2843,7 +2843,7 @@ print(f"Number of layers fitted: {len(rbig_model.layers_)}")</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1fc329f6">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=951ade67">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2872,7 +2872,7 @@ plot_2d_joint(data_gauss, title="After Full RBIG (should be ≈ N(0,1)²)", colo
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=06c992b2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c3a13dc7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2885,7 +2885,7 @@ towards a factorial Gaussian.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=547bfcdc">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0119189e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2924,7 +2924,7 @@ plt.show()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dd2dab66">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=46564bb6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2935,7 +2935,7 @@ plt.show()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0d77b75b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=86c90e56">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2966,7 +2966,7 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")</div
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1150148c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=597a0207">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
