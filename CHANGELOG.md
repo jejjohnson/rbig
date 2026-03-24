@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.1.7](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.6...rbig-v0.1.7) (2026-03-24)
+
+
+### Bug Fixes
+
+* address PR [#51](https://github.com/jejjohnson/rbig/issues/51) review comments ([cf6f9ab](https://github.com/jejjohnson/rbig/commit/cf6f9abbd18085b47bbe23818f8748474341ad4f))
+* address PR [#52](https://github.com/jejjohnson/rbig/issues/52) review comments ([bc287fe](https://github.com/jejjohnson/rbig/commit/bc287fe49ba80318d868febd4821c140cad5e539))
+* **build:** use --group docs for mkdocs and --all-groups for install ([026c095](https://github.com/jejjohnson/rbig/commit/026c095102bf092f1c65d0c9aa18425166b84996))
+
+
+### Documentation
+
+* add AI agent instructions and code review standards ([68527d2](https://github.com/jejjohnson/rbig/commit/68527d23cadd9c84bd5909b924bd8016c728ed97))
+* add AI agent instructions and code review standards ([40d36bd](https://github.com/jejjohnson/rbig/commit/40d36bd6edc36a92b766af625f211c53d5821f03)), closes [#39](https://github.com/jejjohnson/rbig/issues/39) [#40](https://github.com/jejjohnson/rbig/issues/40) [#41](https://github.com/jejjohnson/rbig/issues/41) [#42](https://github.com/jejjohnson/rbig/issues/42)
+* add plans policy to AGENTS.md and copilot-instructions ([4582d8b](https://github.com/jejjohnson/rbig/commit/4582d8b92fed8b3861061428ddf2dd1c75340e58))
+* add PR review comment resolution policy ([dafee04](https://github.com/jejjohnson/rbig/commit/dafee04c222f46acb62f73c54ef951ca22687770))
+* clean up notebooks, remove matplotlib.use("Agg") and reduce n_layers ([61c5be0](https://github.com/jejjohnson/rbig/commit/61c5be0d28a6f9dab4412e64fddae4a841ac4b10))
+* clean up notes formatting, fix typos, and improve coherence ([94b87b0](https://github.com/jejjohnson/rbig/commit/94b87b0c7eea2d578a394fa9a1ed99572fdad2c0))
+* clean up notes, notebooks, and build config ([e94aa17](https://github.com/jejjohnson/rbig/commit/e94aa17a2305a2c7414231adda516eb99e753b69))
+* fix duplicates, notation consistency, and fill stub sections ([68bd1b6](https://github.com/jejjohnson/rbig/commit/68bd1b6cf9e69f778fcea56383e90e676d121fc2))
+* fix text coherence, notation consistency, and fill empty sections ([e0fbac8](https://github.com/jejjohnson/rbig/commit/e0fbac8c9549a33f9aa89bf5ba53fcc4f0baf223))
+* fix trailing whitespace and missing EOF newlines in notes ([2ab8267](https://github.com/jejjohnson/rbig/commit/2ab826795fb81c2ef9fe13c522b6d14627d41f32))
+* port literature review and refactoring notes from Unsorted ([24da85d](https://github.com/jejjohnson/rbig/commit/24da85d36967ea9e16f9e030f68e0069258e4303))
+* remove broken #algorithms anchor from normalizing_flows TOC ([2c0c123](https://github.com/jejjohnson/rbig/commit/2c0c123d9e09d5887e123e0e8b80241124dfc4ab))
+* remove legacy .ipynb notebooks superseded by .py versions ([84bf255](https://github.com/jejjohnson/rbig/commit/84bf2554e3fc05a61133f3d993efaeed23038e8a))
+* remove legacy Notes/Unsorted directory ([095e42c](https://github.com/jejjohnson/rbig/commit/095e42c46c7a11a6c6bd30a10bcc1bd6890708cd))
+
 ## [0.1.6](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.5...rbig-v0.1.6) (2026-03-07)
 
 
