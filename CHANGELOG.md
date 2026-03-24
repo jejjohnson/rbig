@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.9](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.8...rbig-v0.1.9) (2026-03-24)
+
+
+### Features
+
+* add tqdm progress bars to iterative methods ([020efb0](https://github.com/jejjohnson/rbig/commit/020efb09ba9813270654a4b73a918bf88c300f88))
+* add tqdm progress bars to iterative methods ([5035934](https://github.com/jejjohnson/rbig/commit/5035934d87c0626b2ac20437196fa679befb2a6f))
+
+
+### Bug Fixes
+
+* address PR review comments for tqdm progress bars ([bd45e1f](https://github.com/jejjohnson/rbig/commit/bd45e1fcc44bfd01f410e61fb7881f76e9052230))
+* use property for zero_tolerance deprecation (sklearn-compatible) ([891ebf0](https://github.com/jejjohnson/rbig/commit/891ebf09dc7f0b40eb7628e3ad8ab9bc048fa1e2))
+
 ## [0.1.8](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.7...rbig-v0.1.8) (2026-03-24)
 
 
