@@ -200,13 +200,11 @@ print(
 )
 
 fig, ax = plt.subplots()
-probs = np.exp(log_probs)
-vmax = np.percentile(probs, 95)
-h = ax.scatter(X[:, 0], X[:, 1], s=8, c=probs, cmap="Reds", vmax=vmax)
-ax.set_title("Data coloured by estimated density p(x)")
+h = ax.scatter(X[:, 0], X[:, 1], s=8, c=log_probs, cmap="Reds")
+ax.set_title("Data coloured by log p(x)")
 ax.set_xticks([])
 ax.set_yticks([])
-plt.colorbar(h, ax=ax)
+plt.colorbar(h, ax=ax, label="log p(x)")
 plt.tight_layout()
 plt.show()
 

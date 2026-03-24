@@ -194,19 +194,15 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ### Visualise probabilities on the original data
+# ### Visualise log-probabilities on the original data
 
 # %%
-probs = np.exp(log_probs)
-# Clip to 95th percentile so outliers don't wash out the colormap
-vmax = np.percentile(probs, 95)
-
 fig, ax = plt.subplots()
-h = ax.scatter(data[:, 0], data[:, 1], s=8, c=probs, cmap="Reds", vmax=vmax)
+h = ax.scatter(data[:, 0], data[:, 1], s=8, c=log_probs, cmap="Reds")
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
-ax.set_title("Original Data coloured by p(x)")
-plt.colorbar(h, ax=ax)
+ax.set_title("Original Data coloured by log p(x)")
+plt.colorbar(h, ax=ax, label="log p(x)")
 plt.tight_layout()
 plt.show()
 
