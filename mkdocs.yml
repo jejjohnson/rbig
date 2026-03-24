@@ -72,9 +72,7 @@ nav:
       - Gaussian Distribution: notes/gaussian_distribution.md
       - Exponential Distribution: notes/exponential_distribution.md
       - Uniform Distribution: notes/uniform_distribution.md
-      - Mixture Models: notes/mixture_models.md
       - Literature Review: notes/literature.md
-      - Refactoring RBIG: notes/refactor.md
   - Notebooks:
       - Marginal Uniformization: notebooks/01_marginal_uniformization.ipynb
       - Marginal Gaussianization: notebooks/02_marginal_gaussianization.ipynb
@@ -84,6 +82,9 @@ nav:
       - Information Theory: notebooks/06_information_theory.ipynb
       - Boundary Issues: notebooks/07_boundary_issues.ipynb
       - INNF Demo: notebooks/08_innf_demo.ipynb
+      - "Dependence: 1D": notebooks/09_dependence_1d.ipynb
+      - "Dependence: 2D": notebooks/10_dependence_2d.ipynb
+      - Real-World IT: notebooks/11_real_world_it.ipynb
   - API Reference: api/reference.md
   - Literature: literature.md
   - Changelog: CHANGELOG.md

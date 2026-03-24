@@ -16,13 +16,8 @@ $$
 
 where $F_\theta(\cdot)$ is the empirical Cumulative distribution function (CDF) for $\mathcal{X}$, and $u$ is drawn from a uniform distribution, $u\sim \mathcal{U}([0,1])$.
 
-<!-- NOTE: pics/uniform/ images are missing from the repository -->
-<figure align="center">
-<img src="pics/uniform/mu_data.png" width="200">
-<img src="pics/uniform/mu_cdf.png" width="200">
-<img src="pics/uniform/mu_uni.png" width="200">
-<figcaption><b>Fig 1</b>: (Left) Data distribution. (Center) Empirical CDF. (Right) Uniform distribution.</figcaption>
-</figure>
+!!! note "Visual walkthrough"
+    See the [Marginal Uniformization notebook](../notebooks/01_marginal_uniformization.ipynb) for interactive plots of data distribution, empirical CDF, and resulting uniform samples.
 
 
 
@@ -35,10 +30,8 @@ The bounds for $\mathcal{U}$ are $[0,1]$ and the bounds for $\mathcal{X}$ are `X
 The simplest method is to map all points outside the limits to the boundaries. This allows us to deal with points that lie outside the support of the estimated distribution.
 
 
-<figure align="center">
-<img src="pics/uniform/cdf_extend.png" width="300">
-<figcaption><b>Fig 2</b>: CDF with the extension near the boundaries.</figcaption>
-</figure>
+!!! note "Boundary visualization"
+    See the [Boundary Issues notebook](../notebooks/07_boundary_issues.ipynb) for plots comparing boundary handling strategies.
 
 **Widen the Limits of the Support**
 
