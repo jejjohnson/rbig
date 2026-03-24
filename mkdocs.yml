@@ -35,6 +35,8 @@ plugins:
   - mkdocs-jupyter:
       execute: false
       ignore_h1_titles: true
+      include: ["*.ipynb"]
+      ignore: ["*.py"]
 
 markdown_extensions:
   - admonition
