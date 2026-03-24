@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.10](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.9...rbig-v0.1.10) (2026-03-24)
+
+
+### Bug Fixes
+
+* **docs:** render pre-executed ipynb notebooks instead of py sources ([cbf47ac](https://github.com/jejjohnson/rbig/commit/cbf47ac17f9ff5331b25ea9f1dc7b4a32d6a0923))
+* **docs:** render pre-executed ipynb notebooks with figures ([446c167](https://github.com/jejjohnson/rbig/commit/446c16707e33ced90cbb6b8ffd635b1d0123f5e1))
+* use np.linalg.solve instead of np.linalg.inv in KLD example ([bb05ab3](https://github.com/jejjohnson/rbig/commit/bb05ab37f676027cee4c6c1897be63c61c2a20f7))
+
+
+### Documentation
+
+* reduce example notebook runtimes ([34b2e27](https://github.com/jejjohnson/rbig/commit/34b2e277c2d65cd9866e7840923077a0015ab382))
+
 ## [0.1.9](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.8...rbig-v0.1.9) (2026-03-24)
 
 
