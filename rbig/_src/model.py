@@ -9,6 +9,7 @@ from scipy import stats
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_is_fitted, validate_data
 
+from rbig._src._progress import maybe_tqdm
 from rbig._src.marginal import MarginalGaussianize
 from rbig._src.rotation import PCARotation
 
@@ -204,14 +205,15 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
     ----------
     n_layers : int, default=100
         Maximum number of RBIG layers to apply.  Early stopping via
-        ``zero_tolerance`` may halt training before this limit.
+        ``patience`` may halt training before this limit.
     rotation : str, default="pca"
         Rotation method: ``"pca"`` (PCA with whitening), ``"ica"``
         (Independent Component Analysis), or ``"random"`` (Haar-distributed
         orthogonal rotation).
-    zero_tolerance : int, default=60
+    patience : int, default=10
         Number of consecutive layers showing a TC change smaller than
-        ``tol`` before training stops early.
+        ``tol`` before training stops early.  (Formerly ``zero_tolerance``,
+        which is still accepted but deprecated.)
     tol : float or "auto", default=1e-5
         Convergence threshold for the per-layer change in total correlation:
         ``|TC(k) − TC(k−1)| < tol``.  When set to ``"auto"``, the tolerance
@@ -224,6 +226,11 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         Optional per-layer override list.  Each entry may be a string
         (rotation name) or a ``(rotation_name, marginal_name)`` pair.
         Entries cycle if the list is shorter than ``n_layers``.
+    verbose : bool or int, default=False
+        Controls progress bar display.  ``False`` (or ``0``) disables all
+        progress bars.  ``True`` (or ``1``) shows a progress bar for the
+        ``fit`` loop.  ``2`` additionally shows progress bars for
+        ``transform``, ``inverse_transform``, and ``score_samples``.
 
     Attributes
     ----------
@@ -275,17 +282,31 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         self,
         n_layers: int = 100,
         rotation: str = "pca",
-        zero_tolerance: int = 60,
+        patience: int = 10,
         tol: float | str = 1e-5,
         random_state: int | None = None,
         strategy: list | None = None,
+        verbose: bool | int = False,
+        *,
+        zero_tolerance: int | None = None,
     ):
+        if zero_tolerance is not None:
+            import warnings
+
+            warnings.warn(
+                "zero_tolerance is deprecated, use patience instead",
+                FutureWarning,
+                stacklevel=2,
+            )
+            patience = zero_tolerance
         self.n_layers = n_layers
         self.rotation = rotation
+        self.patience = patience
         self.zero_tolerance = zero_tolerance
         self.tol = tol
         self.random_state = random_state
         self.strategy = strategy
+        self.verbose = verbose
 
     def fit(self, X: np.ndarray, y=None) -> AnnealedRBIG:
         """Fit the RBIG model by iteratively Gaussianizing X.
@@ -300,7 +321,7 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         4. Advances ``Xt`` through the layer: ``Xt = f_k(Xt)``.
         5. Measures residual total correlation: ``TC(Xt) = ∑ᵢ H(Xᵢ) − H(X)``.
         6. Stops early when TC has not changed by more than ``tol`` for
-           ``zero_tolerance`` consecutive layers.
+           ``patience`` consecutive layers.
 
         Parameters
         ----------
@@ -340,7 +361,14 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         )  # accumulated log|det J|; shape (n_samples,)
         zero_count = 0  # consecutive non-improving layer counter
 
-        for i in range(self.n_layers):
+        pbar = maybe_tqdm(
+            range(self.n_layers),
+            verbose=self.verbose,
+            level=1,
+            desc="Fitting RBIG",
+            total=self.n_layers,
+        )
+        for i in pbar:
             # Build layer i with the appropriate marginal and rotation components
             layer = RBIGLayer(
                 marginal=self._make_marginal(layer_index=i),
@@ -356,6 +384,13 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
             tc = self._total_correlation(Xt)
             self.tc_per_layer_.append(tc)
 
+            if hasattr(pbar, "set_postfix"):
+                postfix = {"TC": f"{tc:.4g}"}
+                if i > 0:
+                    delta = abs(self.tc_per_layer_[-2] - tc)
+                    postfix["δTC"] = f"{delta:.2e}"
+                pbar.set_postfix(postfix)
+
             if i > 0:
                 # Check convergence: how much did TC improve this layer?
                 delta = abs(self.tc_per_layer_[-2] - tc)
@@ -364,8 +399,11 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
                 else:
                     zero_count = 0  # reset on any significant improvement
 
-            # Stop early if TC has been flat for zero_tolerance consecutive layers
-            if zero_count >= self.zero_tolerance:
+            # Stop early if TC has been flat for patience consecutive layers
+            if zero_count >= self.patience:
+                if hasattr(pbar, "total"):
+                    pbar.total = i + 1
+                    pbar.refresh()
                 break
 
         # Store the fully transformed training data for efficient entropy estimation
@@ -390,7 +428,14 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         """
         check_is_fitted(self)
         Xt = validate_data(self, X, reset=False).copy()
-        for layer in self.layers_:
+        layers_iter = maybe_tqdm(
+            self.layers_,
+            verbose=self.verbose,
+            level=2,
+            desc="Transforming",
+            total=len(self.layers_),
+        )
+        for layer in layers_iter:
             Xt = layer.transform(Xt)
         return Xt
 
@@ -412,7 +457,14 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         """
         check_is_fitted(self)
         Xt = validate_data(self, X, reset=False).copy()
-        for layer in reversed(self.layers_):
+        layers_iter = maybe_tqdm(
+            list(reversed(self.layers_)),
+            verbose=self.verbose,
+            level=2,
+            desc="Inverse transforming",
+            total=len(self.layers_),
+        )
+        for layer in layers_iter:
             Xt = layer.inverse_transform(Xt)
         return Xt
 
@@ -463,7 +515,14 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         X = validate_data(self, X, reset=False)
         Xt = X.copy()  # shape (n_samples, n_features)
         log_det_jac = np.zeros(X.shape[0])  # accumulator; shape (n_samples,)
-        for layer in self.layers_:
+        layers_iter = maybe_tqdm(
+            self.layers_,
+            verbose=self.verbose,
+            level=2,
+            desc="Scoring",
+            total=len(self.layers_),
+        )
+        for layer in layers_iter:
             # Accumulate log|det Jₖ| before advancing through layer k
             log_det_jac += layer.log_det_jacobian(Xt)
             Xt = layer.transform(Xt)  # xₖ = fₖ(xₖ₋₁)
@@ -653,7 +712,14 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         rotmats_per_layer = []  # each: (n_features, n_features)
 
         Xt = X.copy()
-        for layer in self.layers_:
+        layers_iter = maybe_tqdm(
+            self.layers_,
+            verbose=self.verbose,
+            level=2,
+            desc="Jacobian (forward)",
+            total=len(self.layers_),
+        )
+        for layer in layers_iter:
             if not hasattr(layer.marginal, "_per_feature_log_deriv"):
                 raise NotImplementedError(
                     f"Jacobian computation requires a marginal with "
@@ -676,7 +742,14 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         # ── Seed-dimension loop: propagate unit vectors through the chain ──
         jac = np.zeros((n_samples, n_features, n_features))
 
-        for idim in range(n_features):
+        dims_iter = maybe_tqdm(
+            range(n_features),
+            verbose=self.verbose,
+            level=2,
+            desc="Jacobian (dims)",
+            total=n_features,
+        )
+        for idim in dims_iter:
             # Initialize seed: unit vector in dimension idim
             XX = np.zeros((n_samples, n_features))
             XX[:, idim] = 1.0
