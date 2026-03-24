@@ -81,7 +81,7 @@ axes[0].set(xlabel="Trading day", ylabel="Cumulative log-return", title="Cumulat
 axes[0].legend(fontsize=9)
 
 # Pairwise scatter
-axes[1].scatter(returns[:, 0], returns[:, 1], alpha=0.3, s=10)
+axes[1].scatter(returns[:, 0], returns[:, 1], alpha=0.5, s=10)
 axes[1].set(xlabel=stock_names[0], ylabel=stock_names[1], title="Pairwise returns")
 fig.tight_layout()
 plt.show()

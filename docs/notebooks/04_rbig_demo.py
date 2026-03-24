@@ -49,7 +49,7 @@ y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
 data = np.vstack((x, y)).T
 
 fig, ax = plt.subplots()
-ax.scatter(data[:, 0], data[:, 1], s=1, alpha=0.3)
+ax.scatter(data[:, 0], data[:, 1], s=5, alpha=0.5)
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
 ax.set_title("Original Data")
@@ -83,7 +83,7 @@ data_trans = rbig_model.transform(data)
 
 print(f"Transformed data shape: {data_trans.shape}")
 fig, ax = plt.subplots()
-ax.scatter(data_trans[:, 0], data_trans[:, 1], s=1, alpha=0.3)
+ax.scatter(data_trans[:, 0], data_trans[:, 1], s=5, alpha=0.5)
 ax.set_xlabel("Z₁")
 ax.set_ylabel("Z₂")
 ax.set_title("Data after RBIG Transformation (should be ≈ N(0,I))")
@@ -147,13 +147,13 @@ data_synthetic = rbig_model.inverse_transform(data_synthetic_latent)
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
-axes[0].scatter(data[:, 0], data[:, 1], s=1, alpha=0.3)
+axes[0].scatter(data[:, 0], data[:, 1], s=5, alpha=0.5)
 axes[0].set_title("Original Data")
 axes[0].set_xlabel("X")
 axes[0].set_ylabel("Y")
 
 axes[1].scatter(
-    data_synthetic[:, 0], data_synthetic[:, 1], s=1, alpha=0.3, color="darkorange"
+    data_synthetic[:, 0], data_synthetic[:, 1], s=5, alpha=0.5, color="darkorange"
 )
 axes[1].set_title("Synthesized Data (RBIG samples)")
 axes[1].set_xlabel("X")
@@ -198,9 +198,11 @@ plt.show()
 
 # %%
 probs = np.exp(log_probs)
+# Clip to 95th percentile so outliers don't wash out the colormap
+vmax = np.percentile(probs, 95)
 
 fig, ax = plt.subplots()
-h = ax.scatter(data[:, 0], data[:, 1], s=1, c=probs, cmap="Reds")
+h = ax.scatter(data[:, 0], data[:, 1], s=8, c=probs, cmap="Reds", vmax=vmax)
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
 ax.set_title("Original Data coloured by p(x)")

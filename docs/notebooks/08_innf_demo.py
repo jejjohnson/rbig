@@ -54,7 +54,7 @@ y = np.sin(x) + 0.25 * rng.randn(1, n_samples)
 X = np.vstack((x, y)).T
 
 fig, ax = plt.subplots(figsize=(5, 5))
-ax.scatter(X[:, 0], X[:, 1], s=1, c="red", alpha=0.4)
+ax.scatter(X[:, 0], X[:, 1], s=5, c="red", alpha=0.5)
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_title("Original sin-wave data")
@@ -126,7 +126,7 @@ for ax, n in zip(axes, n_layer_list, strict=False):
         random_state=seed,
     )
     Z = model.fit_transform(X)
-    ax.scatter(Z[:, 0], Z[:, 1], s=1, alpha=0.3, color="red")
+    ax.scatter(Z[:, 0], Z[:, 1], s=5, alpha=0.5, color="red")
     ax.set_title(f"{n} layer{'s' if n > 1 else ''}")
     ax.set_xticks([])
     ax.set_yticks([])
@@ -200,7 +200,9 @@ print(
 )
 
 fig, ax = plt.subplots()
-h = ax.scatter(X[:, 0], X[:, 1], s=1, c=np.exp(log_probs), cmap="Reds")
+probs = np.exp(log_probs)
+vmax = np.percentile(probs, 95)
+h = ax.scatter(X[:, 0], X[:, 1], s=8, c=probs, cmap="Reds", vmax=vmax)
 ax.set_title("Data coloured by estimated density p(x)")
 ax.set_xticks([])
 ax.set_yticks([])
@@ -218,12 +220,12 @@ plt.show()
 X_synth = rbig_full.sample(n_samples=n_samples, random_state=42)
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-axes[0].scatter(X[:, 0], X[:, 1], s=1, alpha=0.3, c="red")
+axes[0].scatter(X[:, 0], X[:, 1], s=5, alpha=0.5, c="red")
 axes[0].set_title("Original data")
 axes[0].set_xticks([])
 axes[0].set_yticks([])
 
-axes[1].scatter(X_synth[:, 0], X_synth[:, 1], s=1, alpha=0.3, c="blue")
+axes[1].scatter(X_synth[:, 0], X_synth[:, 1], s=5, alpha=0.5, c="blue")
 axes[1].set_title("Synthesized data (RBIG samples)")
 axes[1].set_xticks([])
 axes[1].set_yticks([])

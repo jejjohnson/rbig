@@ -40,7 +40,7 @@ plt.style.use("seaborn-v0_8-paper")
 # %%
 def plot_2d_joint(data, title="Data", color="steelblue"):
     _fig, ax = plt.subplots(figsize=(5, 5))
-    ax.scatter(data[:, 0], data[:, 1], s=1, alpha=0.3, color=color)
+    ax.scatter(data[:, 0], data[:, 1], s=5, alpha=0.5, color=color)
     ax.set_title(title)
     ax.set_xticks([])
     ax.set_yticks([])
