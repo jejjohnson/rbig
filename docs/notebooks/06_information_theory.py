@@ -51,8 +51,8 @@ from rbig import (
 # ### Sample Data
 
 # %%
-n_samples = 10_000
-d_dimensions = 10
+n_samples = 1_000
+d_dimensions = 3
 seed = 123
 
 rng = check_random_state(seed)
@@ -93,9 +93,9 @@ print(f"TC (RBIG/direct): {tc_rbig:.4f} nats")
 
 # %%
 rbig_tc_model = AnnealedRBIG(
-    n_layers=500,
+    n_layers=30,
     rotation="pca",
-    zero_tolerance=60,
+    zero_tolerance=10,
     random_state=seed,
 )
 rbig_tc_model.fit(data)
@@ -113,7 +113,7 @@ print(f"TC (AnnealedRBIG estimate from raw data): {tc_rbig_model:.4f} nats")
 # ### Sample Data
 
 # %%
-n_samples = 5_000
+n_samples = 1_000
 rng = check_random_state(seed)
 
 data_original = rng.randn(n_samples, d_dimensions)
@@ -139,9 +139,9 @@ print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")
 
 # %%
 ent_rbig_model = AnnealedRBIG(
-    n_layers=500,
+    n_layers=30,
     rotation="pca",
-    zero_tolerance=60,
+    zero_tolerance=10,
     random_state=seed,
 )
 ent_rbig_model.fit(data)
@@ -162,7 +162,7 @@ print(f"H (RBIG):        {H_rbig:.4f} nats")
 # ### Sample Data
 
 # %%
-n_samples = 10_000
+n_samples = 1_000
 rng = check_random_state(seed)
 
 A = rng.rand(2 * d_dimensions, 2 * d_dimensions)
@@ -196,7 +196,7 @@ print(f"MI (analytical): {mi_analytical:.4f} nats")
 
 # %%
 rbig_kwargs = dict(
-    n_layers=500, rotation="pca", zero_tolerance=60, random_state=seed
+    n_layers=30, rotation="pca", zero_tolerance=10, random_state=seed
 )
 
 model_X = AnnealedRBIG(**rbig_kwargs).fit(X)
@@ -222,7 +222,7 @@ print(f"MI (RBIG):       {mi_rbig:.4f} nats")
 # ### Sample Data
 
 # %%
-n_samples = 10_000
+n_samples = 1_000
 mu_offset = 0.4  # controls how different the two distributions are
 rng = check_random_state(seed)
 
@@ -254,9 +254,9 @@ print(f"KLD (analytical): {kld_analytical:.4f} nats")
 
 # %%
 kld_rbig_model = AnnealedRBIG(
-    n_layers=500,
+    n_layers=30,
     rotation="pca",
-    zero_tolerance=60,
+    zero_tolerance=10,
     random_state=seed,
 )
 kld_rbig_model.fit(X_p)
