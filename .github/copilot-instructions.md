@@ -14,8 +14,8 @@
 ```bash
 uv sync --all-extras --all-groups   # Install all dependencies
 uv run pytest tests -v              # Run tests
-uv run ruff check rbig/             # Lint code
-uv run ruff format rbig/            # Format code
+uv run ruff check .                 # Lint code
+uv run ruff format .                # Format code
 ```
 
 ## Before Every Commit — Mandatory Checklist

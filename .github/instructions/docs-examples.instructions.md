@@ -1,12 +1,12 @@
 ---
-applyTo: "docs/**/*.py,docs/**/*.ipynb,notebooks/**/*.py,notebooks/**/*.ipynb"
+applyTo: "docs/**/*.py,docs/**/*.ipynb"
 ---
 
 # Documentation Examples — Standards & Workflow
 
 ## Overview
 
-Example notebooks live in `docs/notebooks/` (or `notebooks/`) as **jupytext percent-format `.py` files**. They are the single source of truth for all figures, tables, and timing data shown in the documentation.
+Example notebooks live in `docs/notebooks/` as **jupytext percent-format `.py` files**. They are the single source of truth for all figures, tables, and timing data shown in the documentation.
 
 **Execution model**: `mkdocs-jupyter` renders notebooks with `execute: false`. Authors run notebooks locally, save artifacts to `docs/images/`, and commit both the `.py` source and the generated PNGs.
 

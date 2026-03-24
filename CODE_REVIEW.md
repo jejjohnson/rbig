@@ -16,6 +16,7 @@ git --no-pager diff --no-prefix --unified=100000 --minimal $(git merge-base --fo
 If that fails (e.g. detached HEAD, shallow clone), fall back to:
 
 ```bash
+BASE_BRANCH="$(git rev-parse --verify main >/dev/null 2>&1 && echo main || echo master)"
 git --no-pager diff --no-prefix --unified=100000 --minimal "$BASE_BRANCH"...HEAD
 ```
 
@@ -38,8 +39,8 @@ git --no-pager diff --no-prefix --unified=100000 --minimal "$BASE_BRANCH"...HEAD
 - Appropriate function/method length (single responsibility)
 - Logical code organization and flow
 - Avoidance of deeply nested structures
-- Linting via **ruff** (`uv run ruff check rbig/`)
-- Formatting via **ruff** (`uv run ruff format --check rbig/`)
+- Linting via **ruff** (`uv run ruff check .`)
+- Formatting via **ruff** (`uv run ruff format --check .`)
 
 > **Rule of thumb**: Sacrifice *cleverness* for *clarity*. Sacrifice *brevity* for *explicitness*.
 > Don't worry about formatting — our CI pipeline (ruff format, pre-commit) handles that automatically.

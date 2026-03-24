@@ -76,12 +76,12 @@ For multi-step tasks, state a brief plan:
 **All agents must** verify that every one of the following passes before creating a commit or reporting progress. No exceptions.
 
 1. **Tests** – `uv run pytest -q` must have 0 failures.
-2. **Lint** – `uv run ruff check rbig/` must report no issues.
-3. **Format** – `uv run ruff format --check rbig/` must report no files to reformat.
+2. **Lint** – `uv run ruff check .` must report no issues.
+3. **Format** – `uv run ruff format --check .` must report no files to reformat.
 
-> **Note**: Type checking (e.g., `ty`, `mypy`) is not yet configured for this project. It will be added in the future. Once enabled, agents must also pass the type checker before committing.
+> **Note**: Type checking (e.g., `mypy`) is not yet configured for this project. It will be added in the future. Once enabled, agents must also pass the type checker before committing.
 
-> **Common pitfall**: Running `ruff check rbig/` misses lint errors in `tests/` and `scripts/`. CI runs ruff on the entire repo — consider also running `ruff check .` (repo root) to catch issues outside `rbig/`.
+> **Reminder**: `ruff check .` lints the entire repo, including `tests/` and `scripts/`. CI runs this same command, so always run it from the repo root before committing.
 
 ## Development Environment
 
@@ -120,7 +120,7 @@ This repo uses **MkDocs + Material + mkdocstrings + mkdocs-jupyter** for documen
 - **Serve locally**: `uv run --group docs mkdocs serve`
 - **Build static site**: `uv run --group docs mkdocs build`
 - **Deploy to GitHub Pages**: `uv run --group docs mkdocs gh-deploy --force`
-- **Auto-deploy**: the `pages.yml` workflow deploys automatically on every push to `main`
+- **Auto-deploy**: the `.github/workflows/docs.yml` workflow deploys automatically on every push to `main`
 
 When writing docstrings, use **Google style** (enforced by `mkdocstrings` config).
 

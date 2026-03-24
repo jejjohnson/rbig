@@ -6,7 +6,7 @@ applyTo: "rbig/**/*.py,tests/**/*.py"
 
 ## Modern Python (3.10+)
 
-- `from __future__ import annotations` at the top of every module
+- `from __future__ import annotations` recommended (used in `rbig/` but not required in `tests/`)
 - Type hints on **all** public functions, methods, and module-level variables
 - Modern union syntax: `X | None` not `Optional[X]`, `X | Y` not `Union[X, Y]`
 - Built-in generics: `list[int]`, `dict[str, Any]` not `List[int]`, `Dict[str, Any]`
