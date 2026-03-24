@@ -1,11 +1,12 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: py:percent
+#     formats: py:percent,ipynb
 #     text_representation:
+#       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.19.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -24,6 +25,7 @@
 # map each feature to the uniform distribution using an empirical CDF.
 
 # %%
+# %matplotlib inline
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
