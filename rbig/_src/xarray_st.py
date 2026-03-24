@@ -280,6 +280,9 @@ class XarrayRBIG:
         :class:`~rbig._src.model.AnnealedRBIG` when ``None``.
     rbig_kwargs : dict or None, default None
         Additional keyword arguments forwarded to ``rbig_class``.
+    verbose : bool or int, default=False
+        Controls progress bar display.  Passed through to the underlying
+        RBIG model.
 
     Attributes
     ----------
@@ -311,6 +314,7 @@ class XarrayRBIG:
         random_state: int | None = None,
         rbig_class=None,
         rbig_kwargs: dict | None = None,
+        verbose: bool | int = False,
     ):
         self.n_layers = n_layers
         self.strategy = strategy
@@ -318,6 +322,7 @@ class XarrayRBIG:
         self.random_state = random_state
         self.rbig_class = rbig_class
         self.rbig_kwargs = rbig_kwargs or {}
+        self.verbose = verbose
 
     def fit(self, X) -> dict:
         """Fit the RBIG model to xarray data and return an information summary.
@@ -346,6 +351,7 @@ class XarrayRBIG:
         }
         if self.strategy is not None:
             kwargs["strategy"] = self.strategy
+        kwargs["verbose"] = self.verbose
         kwargs.update(self.rbig_kwargs)
 
         # Convert xarray → (n_samples, n_features) matrix and store metadata
