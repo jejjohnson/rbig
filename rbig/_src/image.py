@@ -1214,7 +1214,7 @@ class ImageRBIG:
         Xt = X.copy()
         # Reverse the layer list; apply inverse of each (rotation first, then marginal)
         layers_iter = maybe_tqdm(
-            list(reversed(self.layers_)),
+            reversed(self.layers_),
             verbose=self.verbose,
             level=2,
             desc="Inverse transforming",

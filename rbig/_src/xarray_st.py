@@ -351,8 +351,8 @@ class XarrayRBIG:
         }
         if self.strategy is not None:
             kwargs["strategy"] = self.strategy
-        kwargs["verbose"] = self.verbose
         kwargs.update(self.rbig_kwargs)
+        kwargs["verbose"] = self.verbose
 
         # Convert xarray → (n_samples, n_features) matrix and store metadata
         matrix, self.meta_ = xr_st_to_matrix(X)

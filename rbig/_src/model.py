@@ -230,7 +230,8 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         Controls progress bar display.  ``False`` (or ``0``) disables all
         progress bars.  ``True`` (or ``1``) shows a progress bar for the
         ``fit`` loop.  ``2`` additionally shows progress bars for
-        ``transform``, ``inverse_transform``, and ``score_samples``.
+        ``transform``, ``inverse_transform``, ``score_samples``, and
+        ``jacobian``.
 
     Attributes
     ----------
@@ -469,7 +470,7 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         check_is_fitted(self)
         Xt = validate_data(self, X, reset=False).copy()
         layers_iter = maybe_tqdm(
-            list(reversed(self.layers_)),
+            reversed(self.layers_),
             verbose=self.verbose,
             level=2,
             desc="Inverse transforming",
