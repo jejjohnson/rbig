@@ -84,17 +84,17 @@ print(f"Kendall:  τ = {kendall_tau:+.4f}  (p = {kendall_p:.3f})")
 # %%
 model_x = AnnealedRBIG(
     n_layers=50,
-    rotation_type="PCA",
+    rotation="pca",
     random_state=42,
 )
 model_y = AnnealedRBIG(
     n_layers=50,
-    rotation_type="PCA",
+    rotation="pca",
     random_state=42,
 )
 model_xy = AnnealedRBIG(
     n_layers=50,
-    rotation_type="PCA",
+    rotation="pca",
     random_state=42,
 )
 
@@ -122,8 +122,8 @@ pearson_weak, _ = stats.pearsonr(x.ravel(), y_weak.ravel())
 spearman_weak, _ = stats.spearmanr(x.ravel(), y_weak.ravel())
 
 # RBIG MI
-model_yw = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-model_xyw = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
+model_yw = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_xyw = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
 model_yw.fit(y_weak)
 model_xyw.fit(np.hstack([x, y_weak]))
 mi_weak = mutual_information_rbig(model_x, model_yw, model_xyw)

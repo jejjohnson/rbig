@@ -14,11 +14,11 @@
 # ---
 
 # %% [markdown]
-# # Real-World Information Theory: Stock Market Data
+# # Information Theory with Synthetic Stock-Market Data
 #
 # This notebook applies RBIG-based information-theoretic measures to
-# **real financial data** — daily log-returns of major tech stocks.
-# We estimate:
+# **synthetic stock-like financial data** — simulated daily log-returns
+# designed to mimic major tech stocks. We estimate:
 #
 # - **Total Correlation** — overall multivariate dependence
 # - **Mutual Information** — pairwise and group dependence between stocks
@@ -93,7 +93,7 @@ plt.show()
 # all stocks simultaneously: $\text{TC}(X) = \sum_i H(X_i) - H(X)$.
 
 # %%
-tc = total_correlation_rbig(returns, random_state=42)
+tc = total_correlation_rbig(returns)
 print(f"Total Correlation: {tc:.4f} nats")
 
 # %% [markdown]
@@ -113,9 +113,9 @@ for i in range(n_stocks):
         xi = returns[:, i : i + 1]
         xj = returns[:, j : j + 1]
 
-        model_i = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-        model_j = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-        model_ij = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
+        model_i = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+        model_j = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+        model_ij = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
 
         model_i.fit(xi)
         model_j.fit(xj)
@@ -163,9 +163,9 @@ plt.show()
 target = returns[:, 0:1]  # AAPL
 group = returns[:, 1:3]   # GOOG + AMZN
 
-model_t = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-model_g = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-model_tg = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
+model_t = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_g = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_tg = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
 
 model_t.fit(target)
 model_g.fit(group)

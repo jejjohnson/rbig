@@ -93,9 +93,9 @@ print(f"  Spearman cross-block Frobenius: {spearman_fro:.4f}")
 # ### Mutual Information via RBIG
 
 # %%
-model_x1 = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-model_y1 = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-model_xy1 = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
+model_x1 = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_y1 = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_xy1 = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
 
 model_x1.fit(x1)
 model_y1.fit(y1)
@@ -145,9 +145,9 @@ spearman2 = stats.spearmanr(np.hstack([x2, y2])).statistic
 spearman_xy2 = spearman2[:2, 2:]
 spearman_fro2 = np.linalg.norm(spearman_xy2, "fro")
 
-model_x2 = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-model_y2 = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
-model_xy2 = AnnealedRBIG(n_layers=50, rotation_type="PCA", random_state=42)
+model_x2 = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_y2 = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_xy2 = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
 model_x2.fit(x2)
 model_y2.fit(y2)
 model_xy2.fit(np.hstack([x2, y2]))
