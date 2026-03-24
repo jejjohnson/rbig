@@ -76,6 +76,10 @@ if value < 0:
 - Don't add docstrings/comments to code you didn't change
 - Remove only imports/functions that YOUR changes made unused
 
+## Plans
+
+Plans and design documents go in `.plans/` (gitignored, never committed). Track work via GitHub issues, not committed plan files.
+
 ## Code Review
 
 For all code review tasks, follow the guidance in `/CODE_REVIEW.md`.

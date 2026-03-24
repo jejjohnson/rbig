@@ -101,6 +101,10 @@ This is a common failure mode: an agent called to make a small follow-up change 
 
 Never rewrite the existing description; only add to it.
 
+## Plans
+
+Plans and design documents go in `.plans/` (gitignored, never committed). If a plan needs to be tracked long-term, create a GitHub issue with the same detail instead. **Never commit plan files to the repository.**
+
 ## GIT Safety Rules
 
 - **NEVER** push to `main` or merge into `main` unless the user explicitly says "push to main" or "merge to main".
