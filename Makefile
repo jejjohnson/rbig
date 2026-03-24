@@ -110,13 +110,13 @@ init: ## Bootstrap .env from .env.example (skip if .env already exists)
 
 lint: ## Lint code with ruff (no auto-fix) — entire repo
 	@printf "$(YELLOW)>>> Running ruff check...$(RESET)\n"
-	uv run --group lint ruff check .
+	uv run --group dev ruff check .
 	@printf "$(GREEN)>>> Lint passed!$(RESET)\n"
 
 format: ## Format code with ruff (format + auto-fix) — entire repo
 	@printf "$(YELLOW)>>> Running ruff format + fix...$(RESET)\n"
-	uv run --group lint ruff format .
-	uv run --group lint ruff check --fix .
+	uv run --group dev ruff format .
+	uv run --group dev ruff check --fix .
 	@printf "$(GREEN)>>> Format complete!$(RESET)\n"
 
 # ===========================================================================
@@ -125,12 +125,12 @@ format: ## Format code with ruff (format + auto-fix) — entire repo
 
 test: ## Run tests with pytest (no coverage)
 	@printf "$(YELLOW)>>> Running tests (no coverage)...$(RESET)\n"
-	uv run pytest -v -o addopts=
+	uv run pytest -v
 	@printf "$(GREEN)>>> Tests passed!$(RESET)\n"
 
 test-cov: ## Run tests with coverage report
 	@printf "$(YELLOW)>>> Running tests with coverage...$(RESET)\n"
-	uv run pytest -v
+	uv run pytest -v --cov=$(PKGROOT) --cov-report=term-missing --cov-report=xml
 	@printf "$(GREEN)>>> Coverage report generated!$(RESET)\n"
 
 # ===========================================================================

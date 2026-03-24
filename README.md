@@ -83,7 +83,7 @@ rbig/
 ├── rbig/                                 # Main package code (flat layout)
 ├── tests/                                # pytest test suite
 ├── docs/                                 # MkDocs documentation source
-├── notebooks/                            # Jupyter notebooks
+├── docs/notebooks/                       # Jupyter notebooks
 ├── .github/
 │   ├── workflows/                        # GitHub Actions CI/CD workflows
 │   ├── instructions/                     # Copilot custom instructions
@@ -141,7 +141,7 @@ All common tasks are available via `make`:
 
 | Workflow | File | Trigger | What it does |
 |----------|------|---------|-------------|
-| Tests | `ci.yml` | push / PR to main | pytest + Codecov upload |
+| Tests | `ci.yml` | push / PR to main | pytest (with coverage XML report) |
 | Lint | `lint.yml` | push / PR to main | `ruff check` + `ruff format --check` |
 | Deploy Docs | `docs.yml` | push to main | `mkdocs gh-deploy` |
 | Release Please | `release-please.yml` | push to main | automated release PR + changelog |
