@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.1.11](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.10...rbig-v0.1.11) (2026-03-24)
+
+
+### Bug Fixes
+
+* **docs:** correct AnnealedRBIG kwargs and misleading notebook title ([4b793fe](https://github.com/jejjohnson/rbig/commit/4b793fecb8295586957356414beaeb0104a6d51e))
+
+
+### Documentation
+
+* clean up stale notes, expand API reference, add 3 new notebooks ([749cc5e](https://github.com/jejjohnson/rbig/commit/749cc5e505e7f25d7754606a286b173d2bfc7608))
+* clean up stale notes, expand API reference, add dependence & IT notebooks ([fdb85db](https://github.com/jejjohnson/rbig/commit/fdb85db178731b6516ad11ccf3578d96cb93cb6a))
+* execute new notebooks to include cell outputs ([453c39f](https://github.com/jejjohnson/rbig/commit/453c39f063ec5bf2e7b497f6635fb273008816e3))
+* improve scatter plot visibility across all notebooks ([aa6a870](https://github.com/jejjohnson/rbig/commit/aa6a870e0f629e91b712f8f457b1ae531e6383c0))
+* improve scatter plot visibility across notebooks ([4d19040](https://github.com/jejjohnson/rbig/commit/4d19040f4e03ee026f177f2a0bc9d58c015ea83b))
+* use log p(x) instead of p(x) for density scatter plots ([4cf64b2](https://github.com/jejjohnson/rbig/commit/4cf64b233edb377bb9a75f78a9491d053e854176))
+
 ## [0.1.10](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.9...rbig-v0.1.10) (2026-03-24)
 
 
