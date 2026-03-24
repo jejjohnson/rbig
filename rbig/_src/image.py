@@ -1073,6 +1073,11 @@ class ImageRBIG:
     random_state : int or None, default None
         Base seed for rotation layers that use randomness (``random_channel``).
         Layer ``i`` uses seed ``random_state + i``.
+    verbose : bool or int, default=False
+        Controls progress bar display.  ``False`` (or ``0``) disables all
+        progress bars.  ``True`` (or ``1``) shows a progress bar for the
+        ``fit`` loop.  ``2`` additionally shows progress bars for
+        ``transform`` and ``inverse_transform``.
 
     Attributes
     ----------
@@ -1118,6 +1123,7 @@ class ImageRBIG:
         W: int = 8,
         strategy: str = "dct",
         random_state: int | None = None,
+        verbose: bool | int = False,
     ):
         self.n_layers = n_layers
         self.C = C
@@ -1125,6 +1131,7 @@ class ImageRBIG:
         self.W = W
         self.strategy = strategy
         self.random_state = random_state
+        self.verbose = verbose
 
     def fit(self, X: np.ndarray, y=None) -> ImageRBIG:
         """Fit all (marginal, rotation) layer pairs sequentially.
@@ -1138,11 +1145,19 @@ class ImageRBIG:
         -------
         self : ImageRBIG
         """
+        from rbig._src._progress import maybe_tqdm
         from rbig._src.marginal import MarginalGaussianize
 
         self.layers_ = []
         Xt = X.copy()  # working copy updated layer by layer
-        for i in range(self.n_layers):
+        pbar = maybe_tqdm(
+            range(self.n_layers),
+            verbose=self.verbose,
+            level=1,
+            desc="Fitting ImageRBIG",
+            total=self.n_layers,
+        )
+        for i in pbar:
             # Step 1: marginal Gaussianisation
             marginal = MarginalGaussianize()
             Xt_m = marginal.fit_transform(Xt)
@@ -1167,8 +1182,17 @@ class ImageRBIG:
         Xt : np.ndarray, shape ``(N, C*H*W)``
             Gaussianised representation.
         """
+        from rbig._src._progress import maybe_tqdm
+
         Xt = X.copy()
-        for marginal, rotation in self.layers_:
+        layers_iter = maybe_tqdm(
+            self.layers_,
+            verbose=self.verbose,
+            level=2,
+            desc="Transforming",
+            total=len(self.layers_),
+        )
+        for marginal, rotation in layers_iter:
             Xt = rotation.transform(marginal.transform(Xt))
         return Xt
 
@@ -1185,9 +1209,18 @@ class ImageRBIG:
         Xr : np.ndarray, shape ``(N, C*H*W)``
             Reconstructed image batch in the original domain.
         """
+        from rbig._src._progress import maybe_tqdm
+
         Xt = X.copy()
         # Reverse the layer list; apply inverse of each (rotation first, then marginal)
-        for marginal, rotation in reversed(self.layers_):
+        layers_iter = maybe_tqdm(
+            reversed(self.layers_),
+            verbose=self.verbose,
+            level=2,
+            desc="Inverse transforming",
+            total=len(self.layers_),
+        )
+        for marginal, rotation in layers_iter:
             Xt = marginal.inverse_transform(rotation.inverse_transform(Xt))
         return Xt
 
