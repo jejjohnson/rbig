@@ -5,18 +5,22 @@ from __future__ import annotations
 import numpy as np
 import pytest
 from sklearn.base import BaseEstimator, TransformerMixin, clone
+from sklearn.exceptions import NotFittedError
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils.estimator_checks import parametrize_with_checks
 from sklearn.utils.validation import check_is_fitted
 
-from rbig._src.marginal import (
+from rbig import (
+    AnnealedRBIG,
+    ICARotation,
     MarginalGaussianize,
     MarginalUniformize,
+    PCARotation,
     QuantileGaussianizer,
+    RandomRotation,
+    RBIGLayer,
 )
-from rbig._src.model import AnnealedRBIG, RBIGLayer
-from rbig._src.rotation import ICARotation, PCARotation, RandomRotation
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -226,32 +230,32 @@ class TestCheckIsFitted:
 
     def test_transform_before_fit(self, X_test):
         model = AnnealedRBIG(n_layers=5)
-        with pytest.raises(Exception, match="not fitted"):
+        with pytest.raises(NotFittedError):
             model.transform(X_test)
 
     def test_inverse_transform_before_fit(self, X_test):
         model = AnnealedRBIG(n_layers=5)
-        with pytest.raises(Exception, match="not fitted"):
+        with pytest.raises(NotFittedError):
             model.inverse_transform(X_test)
 
     def test_score_samples_before_fit(self, X_test):
         model = AnnealedRBIG(n_layers=5)
-        with pytest.raises(Exception, match="not fitted"):
+        with pytest.raises(NotFittedError):
             model.score_samples(X_test)
 
     def test_score_before_fit(self, X_test):
         model = AnnealedRBIG(n_layers=5)
-        with pytest.raises(Exception, match="not fitted"):
+        with pytest.raises(NotFittedError):
             model.score(X_test)
 
     def test_entropy_before_fit(self):
         model = AnnealedRBIG(n_layers=5)
-        with pytest.raises(Exception, match="not fitted"):
+        with pytest.raises(NotFittedError):
             model.entropy()
 
     def test_sample_before_fit(self):
         model = AnnealedRBIG(n_layers=5)
-        with pytest.raises(Exception, match="not fitted"):
+        with pytest.raises(NotFittedError):
             model.sample(10)
 
     def test_is_fitted_after_fit(self, X_train):

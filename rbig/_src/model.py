@@ -736,18 +736,6 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
             f"object with a rotation_matrix_ attribute."
         )
 
-    def __sklearn_tags__(self):
-        """Declare sklearn estimator tags for RBIG.
-
-        Tags inform sklearn's ``check_estimator`` and other meta-utilities
-        about the capabilities and constraints of this estimator.
-        """
-        from sklearn.utils._tags import TransformerTags
-
-        tags = super().__sklearn_tags__()
-        tags.transformer_tags = TransformerTags(preserves_dtype=["float64"])
-        return tags
-
     def _make_rotation(self, layer_index: int = 0):
         """Instantiate the rotation component for a given layer.
 
