@@ -1,0 +1,41 @@
+---
+applyTo: "rbig/**/*.py,tests/**/*.py"
+---
+
+# Python Coding Standards
+
+## Modern Python (3.10+)
+
+- `from __future__ import annotations` recommended (used in `rbig/` but not required in `tests/`)
+- Type hints on **all** public functions, methods, and module-level variables
+- Modern union syntax: `X | None` not `Optional[X]`, `X | Y` not `Union[X, Y]`
+- Built-in generics: `list[int]`, `dict[str, Any]` not `List[int]`, `Dict[str, Any]`
+- `pathlib.Path` over `os.path`
+- f-strings for string formatting
+- `dataclasses` or `attrs` for data containers
+- `Enum` for fixed sets of constants
+- Context managers (`with` statements) for resource handling
+- Specific exception types (never bare `except:`)
+- Proper exception chaining (`raise ... from ...`)
+- Early returns / guard clauses to reduce nesting
+
+## Package Preferences
+
+| Purpose | Preferred Package |
+|---------|-------------------|
+| Numerical arrays | `numpy` |
+| Scientific computing | `scipy` |
+| Machine learning | `scikit-learn` |
+| Plotting | `matplotlib` |
+| Logging | `loguru` |
+| Data containers | `dataclasses` (stdlib) or `attrs` |
+| Path handling | `pathlib` (stdlib) |
+| Testing | `pytest` |
+
+## Documentation
+
+- Module-level docstrings explaining purpose
+- Function/method docstrings for all public APIs (Google style)
+- Inline comments explaining *why*, not *what*
+- Scientific algorithms should include Unicode equations in docstrings (e.g. `# σ² = Σ(xᵢ − μ)² / N`)
+- Public classes and functions should include 2–3 example use cases in docstrings
