@@ -20,3 +20,6 @@ code_through/
 \.eggs/
 \site/
 *.md.tmp
+
+# Plans (tracked via GitHub issues, not committed)
+.plans/
