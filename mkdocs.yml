@@ -74,14 +74,14 @@ nav:
       - Literature Review: notes/literature.md
       - Refactoring RBIG: notes/refactor.md
   - Notebooks:
-      - Marginal Uniformization: notebooks/01_marginal_uniformization.py
-      - Marginal Gaussianization: notebooks/02_marginal_gaussianization.py
-      - RBIG Walk-Through: notebooks/03_rbig_walkthrough.py
-      - RBIG Demo: notebooks/04_rbig_demo.py
-      - RBIG Loss & Convergence: notebooks/05_rbig_loss.py
-      - Information Theory: notebooks/06_information_theory.py
-      - Boundary Issues: notebooks/07_boundary_issues.py
-      - INNF Demo: notebooks/08_innf_demo.py
+      - Marginal Uniformization: notebooks/01_marginal_uniformization.ipynb
+      - Marginal Gaussianization: notebooks/02_marginal_gaussianization.ipynb
+      - RBIG Walk-Through: notebooks/03_rbig_walkthrough.ipynb
+      - RBIG Demo: notebooks/04_rbig_demo.ipynb
+      - RBIG Loss & Convergence: notebooks/05_rbig_loss.ipynb
+      - Information Theory: notebooks/06_information_theory.ipynb
+      - Boundary Issues: notebooks/07_boundary_issues.ipynb
+      - INNF Demo: notebooks/08_innf_demo.ipynb
   - API Reference: api/reference.md
   - Literature: literature.md
   - Changelog: CHANGELOG.md

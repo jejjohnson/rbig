@@ -1,11 +1,12 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: py:percent
+#     formats: py:percent,ipynb
 #     text_representation:
+#       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.19.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -24,6 +25,7 @@
 # boundaries.
 
 # %%
+# %matplotlib inline
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
@@ -45,7 +47,7 @@ def plot_dist(x, bins=100, title="Distribution", ax=None):
         bins=bins,
         ax=ax,
         kde=True,
-        kde_kws={"linewidth": 2, "color": "black"},
+        line_kws={"linewidth": 2, "color": "black"},
         color="steelblue",
         alpha=0.6,
     )

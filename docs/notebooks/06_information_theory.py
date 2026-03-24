@@ -1,11 +1,12 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: py:percent
+#     formats: py:percent,ipynb
 #     text_representation:
+#       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.19.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -36,7 +37,6 @@ from rbig import (
     mutual_information_rbig,
     total_correlation_rbig,
 )
-
 
 # %% [markdown]
 # ---
@@ -246,7 +246,8 @@ X_q = rng.multivariate_normal(mu_y, cov, n_samples)
 
 # %%
 # Use the known covariance matrix (not sample estimates) for the exact value
-kld_analytical = 0.5 * (mu_y - mu_x) @ np.linalg.inv(cov) @ (mu_y - mu_x).T
+diff = mu_y - mu_x
+kld_analytical = 0.5 * diff @ np.linalg.solve(cov, diff.T)
 print(f"KLD (analytical): {kld_analytical:.4f} nats")
 
 # %% [markdown]

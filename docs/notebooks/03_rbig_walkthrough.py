@@ -1,11 +1,12 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: py:percent
+#     formats: py:percent,ipynb
 #     text_representation:
+#       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.19.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -27,6 +28,7 @@
 # standard multivariate Gaussian.
 
 # %%
+# %matplotlib inline
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -56,7 +58,7 @@ def plot_2d_joint(data, title="Data", color="steelblue"):
 seed = 123
 rng = np.random.RandomState(seed=seed)
 
-num_samples = 5_000
+num_samples = 2_000
 x = np.abs(2 * rng.randn(1, num_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
 data = np.vstack((x, y)).T

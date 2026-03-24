@@ -1,11 +1,12 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: py:percent
+#     formats: py:percent,ipynb
 #     text_representation:
+#       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.19.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -26,6 +27,7 @@
 # - `AnnealedRBIG` — the full iterative model
 
 # %%
+# %matplotlib inline
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -45,7 +47,7 @@ sns.set_style("whitegrid")
 # %%
 seed = 123
 rng = np.random.RandomState(seed=seed)
-n_samples = 5_000
+n_samples = 2_000
 
 x = np.abs(2 * rng.randn(1, n_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, n_samples)

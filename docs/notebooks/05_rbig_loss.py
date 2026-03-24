@@ -1,11 +1,12 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: py:percent
+#     formats: py:percent,ipynb
 #     text_representation:
+#       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.19.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -28,6 +29,7 @@
 # and utility functions `entropy_reduction` and `total_correlation`.
 
 # %%
+# %matplotlib inline
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -87,7 +89,7 @@ for n in [5, 10, 20]:
 
 # %%
 rbig_tc = AnnealedRBIG(
-    n_layers=100,
+    n_layers=50,
     rotation="pca",
     patience=10,  # stop after 10 layers with negligible TC change
     tol=1e-5,
