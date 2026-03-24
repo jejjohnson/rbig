@@ -54,7 +54,7 @@ x = rng.randn(N, 1)
 y = (2 * x) ** 2 + rng.randn(N, 1)
 
 fig, ax = plt.subplots(figsize=(5, 4))
-ax.scatter(x, y, alpha=0.3, s=10)
+ax.scatter(x, y, alpha=0.5, s=10)
 ax.set(xlabel="x", ylabel="y", title="Quadratic relationship: $y = (2x)^2 + \\varepsilon$")
 fig.tight_layout()
 plt.show()
