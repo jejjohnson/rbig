@@ -80,6 +80,10 @@ if value < 0:
 
 Plans and design documents go in `.plans/` (gitignored, never committed). Track work via GitHub issues, not committed plan files.
 
+## PR Review Comments
+
+When addressing PR review comments, always resolve each comment thread after fixing it via the GitHub API. Do not leave addressed comments unresolved.
+
 ## Code Review
 
 For all code review tasks, follow the guidance in `/CODE_REVIEW.md`.
