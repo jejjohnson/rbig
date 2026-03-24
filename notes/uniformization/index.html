@@ -1008,34 +1008,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../mixture_models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Mixture Models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../literature/" class="md-nav__link">
         
   
@@ -1044,34 +1016,6 @@
     
   
     Literature Review
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../refactor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Refactoring RBIG
   
 
     
@@ -1368,6 +1312,90 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/09_dependence_1d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependence: 1D
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/10_dependence_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependence: 2D
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/11_real_world_it/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real-World IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1592,23 +1620,18 @@
 u = F_\theta(x)
 \]</div>
 <p>where <span class="arithmatex">\(F_\theta(\cdot)\)</span> is the empirical Cumulative distribution function (CDF) for <span class="arithmatex">\(\mathcal{X}\)</span>, and <span class="arithmatex">\(u\)</span> is drawn from a uniform distribution, <span class="arithmatex">\(u\sim \mathcal{U}([0,1])\)</span>.</p>
-<!-- NOTE: pics/uniform/ images are missing from the repository -->
-<figure align="center">
-<img src="pics/uniform/mu_data.png" width="200">
-<img src="pics/uniform/mu_cdf.png" width="200">
-<img src="pics/uniform/mu_uni.png" width="200">
-<figcaption><b>Fig 1</b>: (Left) Data distribution. (Center) Empirical CDF. (Right) Uniform distribution.</figcaption>
-</figure>
-
+<div class="admonition note">
+<p class="admonition-title">Visual walkthrough</p>
+<p>See the <a href="../../notebooks/01_marginal_uniformization/">Marginal Uniformization notebook</a> for interactive plots of data distribution, empirical CDF, and resulting uniform samples.</p>
+</div>
 <h3 id="boundary-issues">Boundary Issues</h3>
 <p>The bounds for <span class="arithmatex">\(\mathcal{U}\)</span> are <span class="arithmatex">\([0,1]\)</span> and the bounds for <span class="arithmatex">\(\mathcal{X}\)</span> are <code>X.min()</code> and <code>X.max()</code>. So function <span class="arithmatex">\(F_\theta\)</span> will be between 0 and 1 and the support <span class="arithmatex">\(F_\theta\)</span> will be between the limits for <span class="arithmatex">\(\mathcal{X}\)</span>. We have two options for dealing with this:</p>
 <p><strong>Map Outliers to Boundaries</strong></p>
 <p>The simplest method is to map all points outside the limits to the boundaries. This allows us to deal with points that lie outside the support of the estimated distribution.</p>
-<figure align="center">
-<img src="pics/uniform/cdf_extend.png" width="300">
-<figcaption><b>Fig 2</b>: CDF with the extension near the boundaries.</figcaption>
-</figure>
-
+<div class="admonition note">
+<p class="admonition-title">Boundary visualization</p>
+<p>See the <a href="../../notebooks/07_boundary_issues/">Boundary Issues notebook</a> for plots comparing boundary handling strategies.</p>
+</div>
 <p><strong>Widen the Limits of the Support</strong></p>
 <p>This is the harder option. This will essentially squish the CDF function near the middle and widen the tails.</p>
 <h2 id="reverse-transformation">Reverse Transformation</h2>

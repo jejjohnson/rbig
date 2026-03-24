@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../05_rbig_loss/">
+        <link rel="prev" href="../08_innf_demo/">
       
       
-        <link rel="next" href="../07_boundary_issues/">
+        <link rel="next" href="../10_dependence_2d/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Information Theory - rbig</title>
+        <title>Dependence: 1D - rbig</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#information-theory-measures-with-rbig" class="md-skip">
+        <a href="#measuring-dependence-1d-variables" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Information Theory
+              Dependence: 1D
             
           </span>
         </div>
@@ -1107,37 +1107,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Information Theory
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../06_information_theory/" class="md-nav__link">
         
   
   
@@ -1153,237 +1126,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#total-correlation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Total Correlation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Total Correlation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytical-tc-for-gaussian-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analytical TC for Gaussian data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rbig-based-tc-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBIG-based TC estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entropy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entropy
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Entropy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-data_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gaussian-plug-in-entropy-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gaussian plug-in entropy estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rbig-entropy-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBIG entropy estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mutual-information" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mutual Information
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Mutual Information">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-data_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytical-mi-for-gaussian-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analytical MI for Gaussian data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rbig-based-mi-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBIG-based MI estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kullback-leibler-divergence-kld" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kullback-Leibler Divergence (KLD)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Kullback-Leibler Divergence (KLD)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-data_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytical-kld-for-gaussian-distributions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analytical KLD for Gaussian distributions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rbig-based-kld-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBIG-based KLD estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1449,10 +1191,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../09_dependence_1d/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependence: 1D
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1468,6 +1237,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#generate-nonlinear-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate nonlinear data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-correlation-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linear correlation measures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutual-information-via-rbig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mutual Information via RBIG
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-near-independent-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison: near-independent case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1644,202 +1488,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#total-correlation" class="md-nav__link">
+  <a href="#generate-nonlinear-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Total Correlation
+        Generate nonlinear data
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Total Correlation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytical-tc-for-gaussian-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analytical TC for Gaussian data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rbig-based-tc-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBIG-based TC estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#entropy" class="md-nav__link">
+  <a href="#linear-correlation-measures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entropy
+        Linear correlation measures
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Entropy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-data_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gaussian-plug-in-entropy-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gaussian plug-in entropy estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rbig-entropy-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBIG entropy estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#mutual-information" class="md-nav__link">
+  <a href="#mutual-information-via-rbig" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mutual Information
+        Mutual Information via RBIG
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Mutual Information">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-data_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytical-mi-for-gaussian-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analytical MI for Gaussian data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rbig-based-mi-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBIG-based MI estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#kullback-leibler-divergence-kld" class="md-nav__link">
+  <a href="#comparison-near-independent-case" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kullback-Leibler Divergence (KLD)
+        Comparison: near-independent case
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Kullback-Leibler Divergence (KLD)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sample-data_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sample Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analytical-kld-for-gaussian-distributions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Analytical KLD for Gaussian distributions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rbig-based-kld-estimate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBIG-based KLD estimate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2595,50 +2283,57 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=77583141">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=15c4b9d6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="information-theory-measures-with-rbig">Information Theory Measures with RBIG<a class="anchor-link" href="#information-theory-measures-with-rbig">¶</a></h1><p>This notebook demonstrates how to estimate classical information-theoretic
-quantities using the new <code>rbig</code> functional API:</p>
+<h1 id="measuring-dependence-1d-variables">Measuring Dependence: 1D Variables<a class="anchor-link" href="#measuring-dependence-1d-variables">¶</a></h1><p>Linear correlation measures (Pearson, Spearman, Kendall) fail to capture
+<strong>nonlinear</strong> relationships between variables. This notebook demonstrates how
+RBIG-based Mutual Information (MI) detects dependence that traditional
+metrics miss entirely.</p>
+<p>We compare:</p>
 <table>
 <thead>
 <tr>
-<th>Measure</th>
-<th>Function</th>
+<th>Metric</th>
+<th>Captures nonlinear dependence?</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Total Correlation</td>
-<td><code>total_correlation_rbig(X)</code></td>
+<td>Pearson correlation</td>
+<td>No</td>
 </tr>
 <tr>
-<td>Entropy</td>
-<td><code>marginal_entropy(X)</code>, <code>AnnealedRBIG.entropy()</code></td>
+<td>Spearman correlation</td>
+<td>Partially</td>
 </tr>
 <tr>
-<td>Mutual Information</td>
-<td><code>mutual_information_rbig(model_X, model_Y, model_XY)</code></td>
+<td>Kendall tau</td>
+<td>Partially</td>
 </tr>
 <tr>
-<td>KL Divergence</td>
-<td><code>kl_divergence_rbig(model_P, X_Q)</code></td>
+<td>Mutual Information (RBIG)</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td>ICC (information correlation)</td>
+<td><strong>Yes</strong></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6c0caa08">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6d327391">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-1">
@@ -2651,78 +2346,43 @@ quantities using the new <code>rbig</code> functional API:</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_random_state</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">AnnealedRBIG</span><span class="p">,</span>
-    <span class="n">kl_divergence_rbig</span><span class="p">,</span>
-    <span class="n">marginal_entropy</span><span class="p">,</span>
-    <span class="n">mutual_information_rbig</span><span class="p">,</span>
-    <span class="n">total_correlation_rbig</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnnealedRBIG</span><span class="p">,</span> <span class="n">mutual_information_rbig</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import numpy as np
-from sklearn.utils import check_random_state
+<div class="clipboard-copy-txt" id="cell-1">import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
 
-from rbig import (
-    AnnealedRBIG,
-    kl_divergence_rbig,
-    marginal_entropy,
-    mutual_information_rbig,
-    total_correlation_rbig,
-)</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>/home/azureuser/localfiles/rbig/.venv/lib/python3.13/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
-  from .autonotebook import tqdm as notebook_tqdm
-</pre>
+from rbig import AnnealedRBIG, mutual_information_rbig</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=00f0eccb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0e0b8428">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<h2 id="total-correlation">Total Correlation<a class="anchor-link" href="#total-correlation">¶</a></h2><p>Total Correlation (TC), also called multi-information, measures the statistical
-dependence among all variables:</p>
-<p>$$\mathrm{TC}(X) = \sum_i H(X_i) - H(X)$$</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6a088d69">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="sample-data">Sample Data<a class="anchor-link" href="#sample-data">¶</a></h3>
+<h2 id="generate-nonlinear-data">Generate nonlinear data<a class="anchor-link" href="#generate-nonlinear-data">¶</a></h2><p>We create a simple quadratic relationship $y = (2x)^2 + \varepsilon$ where
+$x \sim \mathcal{N}(0, 1)$ and $\varepsilon \sim \mathcal{N}(0, 1)$.
+Despite strong dependence, the symmetry of $x^2$ makes linear correlation
+vanish.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ea2c0f18">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c3f22351">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
@@ -2735,59 +2395,53 @@ dependence among all variables:</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1_000</span>
-<span class="n">d_dimensions</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">seed</span> <span class="o">=</span> <span class="mi">123</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
 
-<span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="c1"># Generate correlated Gaussian data via a random linear mixing matrix</span>
-<span class="n">data_original</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">d_dimensions</span><span class="p">)</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">d_dimensions</span><span class="p">,</span> <span class="n">d_dimensions</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data_original</span> <span class="o">@</span> <span class="n">A</span>
-
-<span class="c1"># Covariance matrix</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">A</span>
-<span class="n">vv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Quadratic relationship: $y = (2x)^2 + </span><span class="se">\\</span><span class="s2">varepsilon$"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">n_samples = 1_000
-d_dimensions = 3
-seed = 123
+<div class="clipboard-copy-txt" id="cell-2">rng = np.random.RandomState(42)
+N = 1000
 
-rng = check_random_state(seed)
+x = rng.randn(N, 1)
+y = (2 * x) ** 2 + rng.randn(N, 1)
 
-# Generate correlated Gaussian data via a random linear mixing matrix
-data_original = rng.randn(n_samples, d_dimensions)
-A = rng.rand(d_dimensions, d_dimensions)
-data = data_original @ A
-
-# Covariance matrix
-C = A.T @ A
-vv = np.diag(C)</div>
+fig, ax = plt.subplots(figsize=(5, 4))
+ax.scatter(x, y, alpha=0.3, s=10)
+ax.set(xlabel="x", ylabel="y", title="Quadratic relationship: $y = (2x)^2 + \\varepsilon$")
+fig.tight_layout()
+plt.show()</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=63953bf5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0ac941e9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="analytical-tc-for-gaussian-data">Analytical TC for Gaussian data<a class="anchor-link" href="#analytical-tc-for-gaussian-data">¶</a></h3><p>For a multivariate Gaussian $X \sim \mathcal{N}(0, \Sigma)$:</p>
-<p>$$\mathrm{TC}(X) = \sum_i \frac{1}{2}\log\sigma_i^2 - \frac{1}{2}\log|\Sigma|$$</p>
+<h2 id="linear-correlation-measures">Linear correlation measures<a class="anchor-link" href="#linear-correlation-measures">¶</a></h2><p>All three classical correlations are near zero — they only measure
+<strong>monotonic</strong> (Spearman/Kendall) or <strong>linear</strong> (Pearson) association.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a02b30aa">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=813ec49e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
@@ -2800,48 +2454,46 @@ vv = np.diag(C)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tc_analytical</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vv</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"TC (analytical): </span><span class="si">{</span><span class="n">tc_analytical</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">pearson_r</span><span class="p">,</span> <span class="n">pearson_p</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="n">spearman_r</span><span class="p">,</span> <span class="n">spearman_p</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">spearmanr</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="n">kendall_tau</span><span class="p">,</span> <span class="n">kendall_p</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">kendalltau</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Pearson:  r = </span><span class="si">{</span><span class="n">pearson_r</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">  (p = </span><span class="si">{</span><span class="n">pearson_p</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Spearman: r = </span><span class="si">{</span><span class="n">spearman_r</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">  (p = </span><span class="si">{</span><span class="n">spearman_p</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Kendall:  τ = </span><span class="si">{</span><span class="n">kendall_tau</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">  (p = </span><span class="si">{</span><span class="n">kendall_p</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">tc_analytical = np.log(np.sqrt(vv)).sum() - 0.5 * np.log(np.linalg.det(C))
-print(f"TC (analytical): {tc_analytical:.4f} nats")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>TC (analytical): 2.9297 nats
-</pre>
+<div class="clipboard-copy-txt" id="cell-3">pearson_r, pearson_p = stats.pearsonr(x.ravel(), y.ravel())
+spearman_r, spearman_p = stats.spearmanr(x.ravel(), y.ravel())
+kendall_tau, kendall_p = stats.kendalltau(x.ravel(), y.ravel())
+
+print(f"Pearson:  r = {pearson_r:+.4f}  (p = {pearson_p:.3f})")
+print(f"Spearman: r = {spearman_r:+.4f}  (p = {spearman_p:.3f})")
+print(f"Kendall:  τ = {kendall_tau:+.4f}  (p = {kendall_p:.3f})")</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=73800ec1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cdf24c50">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="rbig-based-tc-estimate">RBIG-based TC estimate<a class="anchor-link" href="#rbig-based-tc-estimate">¶</a></h3><p><code>total_correlation_rbig(X)</code> directly estimates TC from samples without fitting
-a full RBIG model.</p>
+<h2 id="mutual-information-via-rbig">Mutual Information via RBIG<a class="anchor-link" href="#mutual-information-via-rbig">¶</a></h2><p>Mutual Information $I(X; Y)$ captures <strong>any</strong> statistical dependence,
+not just linear or monotonic. We estimate it by fitting three <code>AnnealedRBIG</code>
+models: one on $X$, one on $Y$, and one on the joint $(X, Y)$.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b4808d52">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c28db5ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
@@ -2854,48 +2506,81 @@ a full RBIG model.</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tc_rbig</span> <span class="o">=</span> <span class="n">total_correlation_rbig</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"TC (RBIG/direct): </span><span class="si">{</span><span class="n">tc_rbig</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">model_x</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">model_y</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">model_xy</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
+    <span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">model_x</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">model_y</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">model_xy</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]))</span>
+
+<span class="n">mi</span> <span class="o">=</span> <span class="n">mutual_information_rbig</span><span class="p">(</span><span class="n">model_x</span><span class="p">,</span> <span class="n">model_y</span><span class="p">,</span> <span class="n">model_xy</span><span class="p">)</span>
+<span class="n">icc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mi</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MI (RBIG): </span><span class="si">{</span><span class="n">mi</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ICC:       </span><span class="si">{</span><span class="n">icc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">tc_rbig = total_correlation_rbig(data)
-print(f"TC (RBIG/direct): {tc_rbig:.4f} nats")</div>
+<div class="clipboard-copy-txt" id="cell-4">model_x = AnnealedRBIG(
+    n_layers=50,
+    rotation="pca",
+    random_state=42,
+)
+model_y = AnnealedRBIG(
+    n_layers=50,
+    rotation="pca",
+    random_state=42,
+)
+model_xy = AnnealedRBIG(
+    n_layers=50,
+    rotation="pca",
+    random_state=42,
+)
+
+model_x.fit(x)
+model_y.fit(y)
+model_xy.fit(np.hstack([x, y]))
+
+mi = mutual_information_rbig(model_x, model_y, model_xy)
+icc = np.sqrt(1 - np.exp(-2 * mi))
+
+print(f"MI (RBIG): {mi:.4f} nats")
+print(f"ICC:       {icc:.4f}")</div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>TC (RBIG/direct): 2.9647 nats
-</pre>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=aaa5f30d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=921f8ddb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>We can also fit a full <code>AnnealedRBIG</code> model and use the TC tracked per layer.
-After convergence the sum of per-layer TC reductions approximates the initial TC.</p>
+<h2 id="comparison-near-independent-case">Comparison: near-independent case<a class="anchor-link" href="#comparison-near-independent-case">¶</a></h2><p>When we scale the signal down to $y = 0.01 \cdot (2x)^2 + \varepsilon$,
+the dependence nearly vanishes — all metrics should be close to zero.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7197cbbb">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=276868dc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
@@ -2908,691 +2593,103 @@ After convergence the sum of per-layer TC reductions approximates the initial TC
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">rbig_tc_model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-    <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
-    <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">rbig_tc_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">y_weak</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="c1"># tc_per_layer_ records TC *after* each layer; use total_correlation_rbig for the</span>
-<span class="c1"># initial (pre-RBIG) TC of the raw data.</span>
-<span class="n">tc_rbig_model</span> <span class="o">=</span> <span class="n">total_correlation_rbig</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"TC (AnnealedRBIG estimate from raw data): </span><span class="si">{</span><span class="n">tc_rbig_model</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
+<span class="c1"># Linear measures</span>
+<span class="n">pearson_weak</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_weak</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="n">spearman_weak</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">spearmanr</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_weak</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+
+<span class="c1"># RBIG MI</span>
+<span class="n">model_yw</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">model_xyw</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">model_yw</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">y_weak</span><span class="p">)</span>
+<span class="n">model_xyw</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y_weak</span><span class="p">]))</span>
+<span class="n">mi_weak</span> <span class="o">=</span> <span class="n">mutual_information_rbig</span><span class="p">(</span><span class="n">model_x</span><span class="p">,</span> <span class="n">model_yw</span><span class="p">,</span> <span class="n">model_xyw</span><span class="p">)</span>
+<span class="n">icc_weak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mi_weak</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Strong signal: y = (2x)^2 + noise ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Pearson:  </span><span class="si">{</span><span class="n">pearson_r</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Spearman: </span><span class="si">{</span><span class="n">spearman_r</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  MI:       </span><span class="si">{</span><span class="n">mi</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ICC:      </span><span class="si">{</span><span class="n">icc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== Weak signal: y = 0.01*(2x)^2 + noise ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Pearson:  </span><span class="si">{</span><span class="n">pearson_weak</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Spearman: </span><span class="si">{</span><span class="n">spearman_weak</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  MI:       </span><span class="si">{</span><span class="n">mi_weak</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ICC:      </span><span class="si">{</span><span class="n">icc_weak</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">rbig_tc_model = AnnealedRBIG(
-    n_layers=30,
-    rotation="pca",
-    patience=10,
-    random_state=seed,
-)
-rbig_tc_model.fit(data)
+<div class="clipboard-copy-txt" id="cell-5">y_weak = 0.01 * (2 * x) ** 2 + rng.randn(N, 1)
 
-# tc_per_layer_ records TC *after* each layer; use total_correlation_rbig for the
-# initial (pre-RBIG) TC of the raw data.
-tc_rbig_model = total_correlation_rbig(data)
-print(f"TC (AnnealedRBIG estimate from raw data): {tc_rbig_model:.4f} nats")</div>
+# Linear measures
+pearson_weak, _ = stats.pearsonr(x.ravel(), y_weak.ravel())
+spearman_weak, _ = stats.spearmanr(x.ravel(), y_weak.ravel())
+
+# RBIG MI
+model_yw = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_xyw = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model_yw.fit(y_weak)
+model_xyw.fit(np.hstack([x, y_weak]))
+mi_weak = mutual_information_rbig(model_x, model_yw, model_xyw)
+icc_weak = np.sqrt(1 - np.exp(-2 * mi_weak))
+
+print("=== Strong signal: y = (2x)^2 + noise ===")
+print(f"  Pearson:  {pearson_r:+.4f}")
+print(f"  Spearman: {spearman_r:+.4f}")
+print(f"  MI:       {mi:.4f} nats")
+print(f"  ICC:      {icc:.4f}")
+print()
+print("=== Weak signal: y = 0.01*(2x)^2 + noise ===")
+print(f"  Pearson:  {pearson_weak:+.4f}")
+print(f"  Spearman: {spearman_weak:+.4f}")
+print(f"  MI:       {mi_weak:.4f} nats")
+print(f"  ICC:      {icc_weak:.4f}")</div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>TC (AnnealedRBIG estimate from raw data): 2.9647 nats
-</pre>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=05093a4d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=861ec6ef">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<h2 id="entropy">Entropy<a class="anchor-link" href="#entropy">¶</a></h2>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b53a2836">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="sample-data">Sample Data<a class="anchor-link" href="#sample-data">¶</a></h3>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9b25fbb9">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1_000</span>
-<span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-
-<span class="n">data_original</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">d_dimensions</span><span class="p">)</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">d_dimensions</span><span class="p">,</span> <span class="n">d_dimensions</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data_original</span> <span class="o">@</span> <span class="n">A</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-6">n_samples = 1_000
-rng = check_random_state(seed)
-
-data_original = rng.randn(n_samples, d_dimensions)
-A = rng.rand(d_dimensions, d_dimensions)
-data = data_original @ A</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f7ee3a0e">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="gaussian-plug-in-entropy-estimate">Gaussian plug-in entropy estimate<a class="anchor-link" href="#gaussian-plug-in-entropy-estimate">¶</a></h3><p>We use the Gaussian entropy formula as a reference,
-$$H(X) = \frac{1}{2}\log|2\pi e \Sigma|$$
-but the value below is a plug-in / estimated quantity based on sampled data.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2e680aa5">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">Hx_marginals</span> <span class="o">=</span> <span class="n">marginal_entropy</span><span class="p">(</span><span class="n">data_original</span><span class="p">)</span>
-<span class="n">H_analytical</span> <span class="o">=</span> <span class="n">Hx_marginals</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">A</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"H (Gaussian plug-in estimate): </span><span class="si">{</span><span class="n">H_analytical</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-7">Hx_marginals = marginal_entropy(data_original)
-H_analytical = Hx_marginals.sum() + np.log(np.abs(np.linalg.det(A)))
-print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>H (Gaussian plug-in estimate): 1.3159 nats
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=11254645">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="rbig-entropy-estimate">RBIG entropy estimate<a class="anchor-link" href="#rbig-entropy-estimate">¶</a></h3><p><code>AnnealedRBIG.entropy()</code> returns the differential entropy in nats.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4791732e">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">ent_rbig_model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-    <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
-    <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">ent_rbig_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="n">H_rbig</span> <span class="o">=</span> <span class="n">ent_rbig_model</span><span class="o">.</span><span class="n">entropy</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"H (RBIG):        </span><span class="si">{</span><span class="n">H_rbig</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-8">ent_rbig_model = AnnealedRBIG(
-    n_layers=30,
-    rotation="pca",
-    patience=10,
-    random_state=seed,
-)
-ent_rbig_model.fit(data)
-H_rbig = ent_rbig_model.entropy()
-print(f"H (RBIG):        {H_rbig:.4f} nats")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>H (RBIG):        -50.4754 nats
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=402cd80c">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<h2 id="mutual-information">Mutual Information<a class="anchor-link" href="#mutual-information">¶</a></h2><p>Mutual information between two random vectors X and Y:</p>
-<p>$$\mathrm{MI}(X;Y) = H(X) + H(Y) - H(X,Y)$$</p>
-<p>Using RBIG we fit separate models for X, Y, and [X, Y] concatenated.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9c6f24e6">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="sample-data">Sample Data<a class="anchor-link" href="#sample-data">¶</a></h3>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8f6d6583">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1_000</span>
-<span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-
-<span class="n">A</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">d_dimensions</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d_dimensions</span><span class="p">)</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span>
-<span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">d_dimensions</span><span class="p">)</span>
-
-<span class="n">dat_all</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
-
-<span class="n">CX</span> <span class="o">=</span> <span class="n">C</span><span class="p">[:</span><span class="n">d_dimensions</span><span class="p">,</span> <span class="p">:</span><span class="n">d_dimensions</span><span class="p">]</span>
-<span class="n">CY</span> <span class="o">=</span> <span class="n">C</span><span class="p">[</span><span class="n">d_dimensions</span><span class="p">:,</span> <span class="n">d_dimensions</span><span class="p">:]</span>
-
-<span class="n">X</span> <span class="o">=</span> <span class="n">dat_all</span><span class="p">[:,</span> <span class="p">:</span><span class="n">d_dimensions</span><span class="p">]</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="n">dat_all</span><span class="p">[:,</span> <span class="n">d_dimensions</span><span class="p">:]</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-9">n_samples = 1_000
-rng = check_random_state(seed)
-
-A = rng.rand(2 * d_dimensions, 2 * d_dimensions)
-C = A @ A.T
-mu = np.zeros(2 * d_dimensions)
-
-dat_all = rng.multivariate_normal(mu, C, n_samples)
-
-CX = C[:d_dimensions, :d_dimensions]
-CY = C[d_dimensions:, d_dimensions:]
-
-X = dat_all[:, :d_dimensions]
-Y = dat_all[:, d_dimensions:]</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1f687bc4">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="analytical-mi-for-gaussian-data">Analytical MI for Gaussian data<a class="anchor-link" href="#analytical-mi-for-gaussian-data">¶</a></h3>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2b9ffdf4">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">H_X</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span> <span class="o">*</span> <span class="n">CX</span><span class="p">))</span>
-<span class="n">H_Y</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span> <span class="o">*</span> <span class="n">CY</span><span class="p">))</span>
-<span class="n">H</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span> <span class="o">*</span> <span class="n">C</span><span class="p">))</span>
-
-<span class="n">mi_analytical</span> <span class="o">=</span> <span class="n">H_X</span> <span class="o">+</span> <span class="n">H_Y</span> <span class="o">-</span> <span class="n">H</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MI (analytical): </span><span class="si">{</span><span class="n">mi_analytical</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-10">H_X = 0.5 * np.log(np.linalg.det(2 * np.pi * np.e * CX))
-H_Y = 0.5 * np.log(np.linalg.det(2 * np.pi * np.e * CY))
-H = 0.5 * np.log(np.linalg.det(2 * np.pi * np.e * C))
-
-mi_analytical = H_X + H_Y - H
-print(f"MI (analytical): {mi_analytical:.4f} nats")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>MI (analytical): 4.8933 nats
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=517e2688">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="rbig-based-mi-estimate">RBIG-based MI estimate<a class="anchor-link" href="#rbig-based-mi-estimate">¶</a></h3><p><code>mutual_information_rbig(model_X, model_Y, model_XY)</code> computes
-MI = H(X) + H(Y) - H(X,Y) using fitted <code>AnnealedRBIG</code> models.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5e2576c8">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">rbig_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span>
-<span class="p">)</span>
-
-<span class="n">model_X</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">rbig_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="n">model_Y</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">rbig_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
-<span class="n">model_XY</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">rbig_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">]))</span>
-
-<span class="n">mi_rbig</span> <span class="o">=</span> <span class="n">mutual_information_rbig</span><span class="p">(</span><span class="n">model_X</span><span class="p">,</span> <span class="n">model_Y</span><span class="p">,</span> <span class="n">model_XY</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MI (RBIG):       </span><span class="si">{</span><span class="n">mi_rbig</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-11">rbig_kwargs = dict(
-    n_layers=30, rotation="pca", patience=10, random_state=seed
-)
-
-model_X = AnnealedRBIG(**rbig_kwargs).fit(X)
-model_Y = AnnealedRBIG(**rbig_kwargs).fit(Y)
-model_XY = AnnealedRBIG(**rbig_kwargs).fit(np.hstack([X, Y]))
-
-mi_rbig = mutual_information_rbig(model_X, model_Y, model_XY)
-print(f"MI (RBIG):       {mi_rbig:.4f} nats")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>MI (RBIG):       4.4847 nats
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=14bb38b9">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<h2 id="kullback-leibler-divergence-kld">Kullback-Leibler Divergence (KLD)<a class="anchor-link" href="#kullback-leibler-divergence-kld">¶</a></h2><p>$$\mathrm{KL}(P \| Q) = \int p(x) \log\frac{p(x)}{q(x)}\,dx$$</p>
-<p>We estimate this using RBIG by:</p>
-<ol>
-<li>Fitting a model on samples from <strong>P</strong>.</li>
-<li>Evaluating that model's log-likelihood on samples from <strong>Q</strong>.</li>
-</ol>
-<p><code>kl_divergence_rbig(model_P, X_Q)</code> computes <code>KL(P‖Q)</code>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=17013e4a">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="sample-data">Sample Data<a class="anchor-link" href="#sample-data">¶</a></h3>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=135b7dd5">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1_000</span>
-<span class="n">mu_offset</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c1"># controls how different the two distributions are</span>
-<span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-
-<span class="n">A</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">d_dimensions</span><span class="p">,</span> <span class="n">d_dimensions</span><span class="p">)</span>
-<span class="n">cov</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span>
-<span class="n">cov</span> <span class="o">=</span> <span class="n">cov</span> <span class="o">/</span> <span class="n">cov</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>  <span class="c1"># normalise</span>
-
-<span class="n">mu_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d_dimensions</span><span class="p">)</span>
-<span class="n">mu_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">d_dimensions</span><span class="p">)</span> <span class="o">*</span> <span class="n">mu_offset</span>
-
-<span class="n">X_p</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mu_x</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
-<span class="n">X_q</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mu_y</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-12">n_samples = 1_000
-mu_offset = 0.4  # controls how different the two distributions are
-rng = check_random_state(seed)
-
-A = rng.rand(d_dimensions, d_dimensions)
-cov = A @ A.T
-cov = cov / cov.max()  # normalise
-
-mu_x = np.zeros(d_dimensions)
-mu_y = np.ones(d_dimensions) * mu_offset
-
-X_p = rng.multivariate_normal(mu_x, cov, n_samples)
-X_q = rng.multivariate_normal(mu_y, cov, n_samples)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=34c415bd">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="analytical-kld-for-gaussian-distributions">Analytical KLD for Gaussian distributions<a class="anchor-link" href="#analytical-kld-for-gaussian-distributions">¶</a></h3><p>Since both distributions share the same covariance <code>cov</code>, the formula simplifies:</p>
-<p>$$\mathrm{KL}(\mathcal{N}(\mu_x,\Sigma) \| \mathcal{N}(\mu_y,\Sigma))
-= \frac{1}{2}(\mu_y - \mu_x)^\top \Sigma^{-1} (\mu_y - \mu_x)$$</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9c29fecd">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Use the known covariance matrix (not sample estimates) for the exact value</span>
-<span class="n">diff</span> <span class="o">=</span> <span class="n">mu_y</span> <span class="o">-</span> <span class="n">mu_x</span>
-<span class="n">kld_analytical</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">diff</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">cov</span><span class="p">,</span> <span class="n">diff</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"KLD (analytical): </span><span class="si">{</span><span class="n">kld_analytical</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># Use the known covariance matrix (not sample estimates) for the exact value
-diff = mu_y - mu_x
-kld_analytical = 0.5 * diff @ np.linalg.solve(cov, diff.T)
-print(f"KLD (analytical): {kld_analytical:.4f} nats")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>KLD (analytical): 96.8304 nats
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9eb5ad1b">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="rbig-based-kld-estimate">RBIG-based KLD estimate<a class="anchor-link" href="#rbig-based-kld-estimate">¶</a></h3>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=31162cee">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">kld_rbig_model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-    <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
-    <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">kld_rbig_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_p</span><span class="p">)</span>
-
-<span class="n">kld_rbig</span> <span class="o">=</span> <span class="n">kl_divergence_rbig</span><span class="p">(</span><span class="n">kld_rbig_model</span><span class="p">,</span> <span class="n">X_q</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"KLD (RBIG):       </span><span class="si">{</span><span class="n">kld_rbig</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-14">kld_rbig_model = AnnealedRBIG(
-    n_layers=30,
-    rotation="pca",
-    patience=10,
-    random_state=seed,
-)
-kld_rbig_model.fit(X_p)
-
-kld_rbig = kl_divergence_rbig(kld_rbig_model, X_q)
-print(f"KLD (RBIG):       {kld_rbig:.4f} nats")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>KLD (RBIG):       90.4413 nats
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=17fabd81">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
 <h2 id="summary">Summary<a class="anchor-link" href="#summary">¶</a></h2><table>
 <thead>
 <tr>
-<th>Measure</th>
-<th>Old API</th>
-<th>New API</th>
+<th>Metric</th>
+<th style="text-align:center">Strong signal</th>
+<th style="text-align:center">Weak signal</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Total Correlation</td>
-<td><code>RBIG(...).fit(X).mutual_information * log(2)</code></td>
-<td><code>total_correlation_rbig(X)</code></td>
+<td>Pearson</td>
+<td style="text-align:center">~0</td>
+<td style="text-align:center">~0</td>
 </tr>
 <tr>
-<td>Entropy</td>
-<td><code>RBIG(...).fit(X).entropy(correction=True) * log(2)</code></td>
-<td><code>AnnealedRBIG(...).fit(X).entropy()</code></td>
+<td>Spearman</td>
+<td style="text-align:center">~0</td>
+<td style="text-align:center">~0</td>
 </tr>
 <tr>
-<td>Mutual Info</td>
-<td><code>RBIGMI(...).fit(X,Y).mutual_information() * log(2)</code></td>
-<td><code>mutual_information_rbig(mX, mY, mXY)</code></td>
+<td>MI (RBIG)</td>
+<td style="text-align:center"><strong>high</strong></td>
+<td style="text-align:center">~0</td>
 </tr>
 <tr>
-<td>KL Divergence</td>
-<td><code>RBIGKLD(...).fit(X,Y).kld * log(2)</code></td>
-<td><code>kl_divergence_rbig(model_P, X_Q)</code></td>
+<td>ICC</td>
+<td style="text-align:center"><strong>high</strong></td>
+<td style="text-align:center">~0</td>
 </tr>
 </tbody>
 </table>
-<p>The new API uses <strong>nats</strong> (natural logarithm) throughout; multiply by
-<code>np.log2(np.e) ≈ 1.4427</code> to convert to bits.</p>
+<p>MI correctly detects the nonlinear quadratic dependence that linear
+correlation entirely misses, and correctly shows near-zero dependence
+when the signal is negligible.</p>
 </div>
 </div>
 </div>
