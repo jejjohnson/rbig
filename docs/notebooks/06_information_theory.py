@@ -37,7 +37,6 @@ from rbig import (
     total_correlation_rbig,
 )
 
-
 # %% [markdown]
 # ---
 # ## Total Correlation

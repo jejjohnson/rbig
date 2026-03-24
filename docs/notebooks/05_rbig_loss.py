@@ -87,7 +87,7 @@ for n in [5, 10, 20]:
 
 # %%
 rbig_tc = AnnealedRBIG(
-    n_layers=100,
+    n_layers=50,
     rotation="pca",
     patience=10,  # stop after 10 layers with negligible TC change
     tol=1e-5,

@@ -56,7 +56,7 @@ def plot_2d_joint(data, title="Data", color="steelblue"):
 seed = 123
 rng = np.random.RandomState(seed=seed)
 
-num_samples = 5_000
+num_samples = 2_000
 x = np.abs(2 * rng.randn(1, num_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
 data = np.vstack((x, y)).T

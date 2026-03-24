@@ -45,7 +45,7 @@ sns.set_style("whitegrid")
 # %%
 seed = 123
 rng = np.random.RandomState(seed=seed)
-n_samples = 5_000
+n_samples = 2_000
 
 x = np.abs(2 * rng.randn(1, n_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, n_samples)
