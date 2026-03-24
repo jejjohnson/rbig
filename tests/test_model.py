@@ -87,6 +87,20 @@ def test_rbig_layer_fit_transform(simple_2d):
 
 
 def test_rbig_tc_convergence(simple_5d):
-    model = AnnealedRBIG(n_layers=20, rotation="pca", tol=1e-3, zero_tolerance=5)
+    model = AnnealedRBIG(n_layers=20, rotation="pca", tol=1e-3, patience=5)
     model.fit(simple_5d)
     assert len(model.tc_per_layer_) > 0
+
+
+def test_zero_tolerance_deprecation_warning():
+    model = AnnealedRBIG(n_layers=3, patience=5)
+    with pytest.warns(FutureWarning, match="zero_tolerance is deprecated"):
+        model.zero_tolerance = 2
+    assert model.patience == 2
+
+
+def test_zero_tolerance_getter_warns():
+    model = AnnealedRBIG(n_layers=3, patience=7)
+    with pytest.warns(FutureWarning, match="zero_tolerance is deprecated"):
+        val = model.zero_tolerance
+    assert val == 7

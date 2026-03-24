@@ -144,7 +144,7 @@ print(f"Mean absolute reconstruction error: {residual:.4e}")
 rbig_model = AnnealedRBIG(
     n_layers=50,
     rotation="pca",
-    zero_tolerance=10,
+    patience=10,
     random_state=seed,
 )
 rbig_model.fit(data)

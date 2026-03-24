@@ -61,14 +61,14 @@ plt.show()
 n_layers = 50
 rotation_type = "pca"
 random_state = 123
-zero_tolerance = 10
+patience = 10
 
 t0 = time()
 rbig_model = AnnealedRBIG(
     n_layers=n_layers,
     rotation=rotation_type,
     random_state=random_state,
-    zero_tolerance=zero_tolerance,
+    patience=patience,
 )
 rbig_model.fit(data)
 print(f"Fitted {len(rbig_model.layers_)} layers in {time() - t0:.2f}s")
@@ -219,7 +219,7 @@ t0 = time()
 rbig_bench = AnnealedRBIG(
     n_layers=30,
     rotation="pca",
-    zero_tolerance=10,
+    patience=10,
     random_state=0,
 )
 rbig_bench.fit(data_bench)

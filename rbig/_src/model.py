@@ -204,14 +204,15 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
     ----------
     n_layers : int, default=100
         Maximum number of RBIG layers to apply.  Early stopping via
-        ``zero_tolerance`` may halt training before this limit.
+        ``patience`` may halt training before this limit.
     rotation : str, default="pca"
         Rotation method: ``"pca"`` (PCA with whitening), ``"ica"``
         (Independent Component Analysis), or ``"random"`` (Haar-distributed
         orthogonal rotation).
-    zero_tolerance : int, default=60
+    patience : int, default=10
         Number of consecutive layers showing a TC change smaller than
-        ``tol`` before training stops early.
+        ``tol`` before training stops early.  (Formerly ``zero_tolerance``,
+        which is still accepted but deprecated.)
     tol : float or "auto", default=1e-5
         Convergence threshold for the per-layer change in total correlation:
         ``|TC(k) − TC(k−1)| < tol``.  When set to ``"auto"``, the tolerance
@@ -275,17 +276,40 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         self,
         n_layers: int = 100,
         rotation: str = "pca",
-        zero_tolerance: int = 60,
+        patience: int = 10,
         tol: float | str = 1e-5,
         random_state: int | None = None,
         strategy: list | None = None,
     ):
         self.n_layers = n_layers
         self.rotation = rotation
-        self.zero_tolerance = zero_tolerance
+        self.patience = patience
         self.tol = tol
         self.random_state = random_state
         self.strategy = strategy
+
+    @property
+    def zero_tolerance(self):
+        """Deprecated alias for ``patience``."""
+        import warnings
+
+        warnings.warn(
+            "zero_tolerance is deprecated, use patience instead",
+            FutureWarning,
+            stacklevel=2,
+        )
+        return self.patience
+
+    @zero_tolerance.setter
+    def zero_tolerance(self, value):
+        import warnings
+
+        warnings.warn(
+            "zero_tolerance is deprecated, use patience instead",
+            FutureWarning,
+            stacklevel=2,
+        )
+        self.patience = value
 
     def fit(self, X: np.ndarray, y=None) -> AnnealedRBIG:
         """Fit the RBIG model by iteratively Gaussianizing X.
@@ -300,7 +324,7 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         4. Advances ``Xt`` through the layer: ``Xt = f_k(Xt)``.
         5. Measures residual total correlation: ``TC(Xt) = ∑ᵢ H(Xᵢ) − H(X)``.
         6. Stops early when TC has not changed by more than ``tol`` for
-           ``zero_tolerance`` consecutive layers.
+           ``patience`` consecutive layers.
 
         Parameters
         ----------
@@ -364,8 +388,8 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
                 else:
                     zero_count = 0  # reset on any significant improvement
 
-            # Stop early if TC has been flat for zero_tolerance consecutive layers
-            if zero_count >= self.zero_tolerance:
+            # Stop early if TC has been flat for patience consecutive layers
+            if zero_count >= self.patience:
                 break
 
         # Store the fully transformed training data for efficient entropy estimation

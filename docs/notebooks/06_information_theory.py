@@ -95,7 +95,7 @@ print(f"TC (RBIG/direct): {tc_rbig:.4f} nats")
 rbig_tc_model = AnnealedRBIG(
     n_layers=30,
     rotation="pca",
-    zero_tolerance=10,
+    patience=10,
     random_state=seed,
 )
 rbig_tc_model.fit(data)
@@ -141,7 +141,7 @@ print(f"H (Gaussian plug-in estimate): {H_analytical:.4f} nats")
 ent_rbig_model = AnnealedRBIG(
     n_layers=30,
     rotation="pca",
-    zero_tolerance=10,
+    patience=10,
     random_state=seed,
 )
 ent_rbig_model.fit(data)
@@ -196,7 +196,7 @@ print(f"MI (analytical): {mi_analytical:.4f} nats")
 
 # %%
 rbig_kwargs = dict(
-    n_layers=30, rotation="pca", zero_tolerance=10, random_state=seed
+    n_layers=30, rotation="pca", patience=10, random_state=seed
 )
 
 model_X = AnnealedRBIG(**rbig_kwargs).fit(X)
@@ -256,7 +256,7 @@ print(f"KLD (analytical): {kld_analytical:.4f} nats")
 kld_rbig_model = AnnealedRBIG(
     n_layers=30,
     rotation="pca",
-    zero_tolerance=10,
+    patience=10,
     random_state=seed,
 )
 kld_rbig_model.fit(X_p)

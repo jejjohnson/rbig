@@ -72,24 +72,24 @@ plot_2d_joint(data, title="Original Data")
 # %%
 for n in [5, 10, 20]:
     m = AnnealedRBIG(
-        n_layers=n, rotation="pca", zero_tolerance=n + 1, random_state=seed
+        n_layers=n, rotation="pca", patience=n + 1, random_state=seed
     )
     Z = m.fit_transform(data)
     tc_final = m.tc_per_layer_[-1]
     print(f"n_layers={n:3d}  → TC after last layer: {tc_final:.4f}")
 
 # %% [markdown]
-# ## Strategy II — TC Convergence (`zero_tolerance`)
+# ## Strategy II — TC Convergence (`patience`)
 #
 # `AnnealedRBIG` tracks the TC after each layer.  When the TC change is smaller
-# than `tol` for `zero_tolerance` consecutive layers the fitting stops early.
+# than `tol` for `patience` consecutive layers the fitting stops early.
 # This mirrors the old `InformationLoss`.
 
 # %%
 rbig_tc = AnnealedRBIG(
     n_layers=100,
     rotation="pca",
-    zero_tolerance=10,  # stop after 10 layers with negligible TC change
+    patience=10,  # stop after 10 layers with negligible TC change
     tol=1e-5,
     random_state=seed,
 )
@@ -184,7 +184,7 @@ for ax, (n, label) in zip(axes, configs, strict=False):
         Z_plot = Z_tc
     else:
         m = AnnealedRBIG(
-            n_layers=n, rotation="pca", zero_tolerance=n + 1, random_state=seed
+            n_layers=n, rotation="pca", patience=n + 1, random_state=seed
         )
         Z_plot = m.fit_transform(data)
     ax.scatter(Z_plot[:, 0], Z_plot[:, 1], s=1, alpha=0.3)
@@ -201,8 +201,8 @@ plt.show()
 #
 # | Old API | New API equivalent |
 # |---|---|
-# | `MaxLayersLoss(n_layers=N)` | `AnnealedRBIG(n_layers=N, zero_tolerance=N+1)` |
-# | `InformationLoss(tol_layers=K)` | `AnnealedRBIG(n_layers=∞, zero_tolerance=K)` |
+# | `MaxLayersLoss(n_layers=N)` | `AnnealedRBIG(n_layers=N, patience=N+1)` |
+# | `InformationLoss(tol_layers=K)` | `AnnealedRBIG(n_layers=∞, patience=K)` |
 # | `NegEntropyLoss` | Monitor `tc_per_layer_` or `score_samples` |
 # | `rbig_model.losses_` | `rbig_model.tc_per_layer_` |
 # | `InformationLoss.calculate_loss(X, Y)` | `entropy_reduction(X, Y)` |

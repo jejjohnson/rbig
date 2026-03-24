@@ -120,7 +120,7 @@ for ax, n in zip(axes, n_layer_list, strict=False):
     model = AnnealedRBIG(
         n_layers=n,
         rotation="pca",
-        zero_tolerance=n + 1,  # never stop early in this demo
+        patience=n + 1,  # never stop early in this demo
         random_state=seed,
     )
     Z = model.fit_transform(X)
@@ -142,7 +142,7 @@ plt.show()
 rbig_full = AnnealedRBIG(
     n_layers=50,
     rotation="pca",
-    zero_tolerance=10,
+    patience=10,
     random_state=seed,
 )
 rbig_full.fit(X)

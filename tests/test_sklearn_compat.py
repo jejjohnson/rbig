@@ -301,7 +301,7 @@ class TestSklearnTags:
 
 @parametrize_with_checks(
     [
-        AnnealedRBIG(n_layers=3, zero_tolerance=2),
+        AnnealedRBIG(n_layers=3, patience=2),
     ]
 )
 def test_sklearn_compatible_estimators(estimator, check):
