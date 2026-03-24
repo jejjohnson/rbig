@@ -2389,7 +2389,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=49ac26b7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6efe6d09">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2407,7 +2407,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=dd17f7ff">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=84781d77">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2444,7 +2444,7 @@ from rbig import AnnealedRBIG</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f4c08a43">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c041bf64">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2456,7 +2456,7 @@ $y = \sin(x) + 0.25\,\varepsilon$, $\varepsilon \sim \mathcal{N}(0,1)$.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=71ae349d">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cc2b08de">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2511,7 +2511,7 @@ plt.show()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=34a066b9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e2bf504d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2522,7 +2522,7 @@ plt.show()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e2ec9ee5">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0ef0629d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2543,14 +2543,14 @@ plt.show()</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">n_layers</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">rotation_type</span> <span class="o">=</span> <span class="s2">"pca"</span>
 <span class="n">random_state</span> <span class="o">=</span> <span class="mi">123</span>
-<span class="n">zero_tolerance</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">patience</span> <span class="o">=</span> <span class="mi">10</span>
 
 <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 <span class="n">rbig_model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
     <span class="n">n_layers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span>
     <span class="n">rotation</span><span class="o">=</span><span class="n">rotation_type</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-    <span class="n">zero_tolerance</span><span class="o">=</span><span class="n">zero_tolerance</span><span class="p">,</span>
+    <span class="n">patience</span><span class="o">=</span><span class="n">patience</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">rbig_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Fitted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rbig_model</span><span class="o">.</span><span class="n">layers_</span><span class="p">)</span><span class="si">}</span><span class="s2"> layers in </span><span class="si">{</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
@@ -2558,14 +2558,14 @@ plt.show()</div>
 <div class="clipboard-copy-txt" id="cell-3">n_layers = 50
 rotation_type = "pca"
 random_state = 123
-zero_tolerance = 10
+patience = 10
 
 t0 = time()
 rbig_model = AnnealedRBIG(
     n_layers=n_layers,
     rotation=rotation_type,
     random_state=random_state,
-    zero_tolerance=zero_tolerance,
+    patience=patience,
 )
 rbig_model.fit(data)
 print(f"Fitted {len(rbig_model.layers_)} layers in {time() - t0:.2f}s")</div>
@@ -2575,7 +2575,7 @@ print(f"Fitted {len(rbig_model.layers_)} layers in {time() - t0:.2f}s")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fb3e6303">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=43681bb5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2586,7 +2586,7 @@ print(f"Fitted {len(rbig_model.layers_)} layers in {time() - t0:.2f}s")</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f1943393">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f30bf0d3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2631,7 +2631,7 @@ plt.show()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=db4c6411">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=95d30a36">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2643,7 +2643,7 @@ numerical precision).</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0dc1ac55">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=bb715fe3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2704,7 +2704,7 @@ if max_err &gt; tol:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=24d0ccc0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c4da0a22">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2716,7 +2716,7 @@ after each layer.  As the algorithm converges, TC drops to (near) zero.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b69ccb65">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b4b797a2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2755,7 +2755,7 @@ plt.show()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a2bce31d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f2dce2d3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2770,7 +2770,7 @@ plt.show()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2a75f5f3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=72c6732d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2843,7 +2843,7 @@ plt.show()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d6e10bf3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=36b03446">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2854,7 +2854,7 @@ plt.show()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e5586ec9">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=de490bba">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2883,7 +2883,7 @@ print(f"Sampled data shape: {data_sampled.shape}")</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=08c94251">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3acdb0a7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2896,7 +2896,7 @@ model using the change-of-variables formula:</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1bd7d1b5">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=58d5a6dc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2929,7 +2929,7 @@ print(f"Log-prob — min: {log_probs.min():.3f}, max: {log_probs.max():.3f}")</d
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2134265c">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=bb6a8101">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2966,7 +2966,7 @@ plt.show()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=372c0697">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=55c34a6c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2977,7 +2977,7 @@ plt.show()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=60442f2a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6b7360f5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3022,7 +3022,7 @@ plt.show()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=73f171f9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7129299a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3034,7 +3034,7 @@ plt.show()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ab79e4c1">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cdbc928d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3058,7 +3058,7 @@ plt.show()</div>
 <span class="n">rbig_bench</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
     <span class="n">n_layers</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
     <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span>
-    <span class="n">zero_tolerance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">rbig_bench</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_bench</span><span class="p">)</span>
@@ -3074,7 +3074,7 @@ t0 = time()
 rbig_bench = AnnealedRBIG(
     n_layers=30,
     rotation="pca",
-    zero_tolerance=10,
+    patience=10,
     random_state=0,
 )
 rbig_bench.fit(data_bench)
@@ -3089,7 +3089,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7b2114cf">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6923ae5c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
