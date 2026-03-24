@@ -257,7 +257,7 @@ class WaveletTransform(BaseTransform):
         self.level = level
         self.mode = mode
 
-    def fit(self, X: np.ndarray) -> WaveletTransform:
+    def fit(self, X: np.ndarray, y=None) -> WaveletTransform:
         """Compute and store coefficient layout from the first sample.
 
         Parameters
@@ -398,7 +398,7 @@ class ImageBijector(Bijector):
         N = X.shape[0]
         return X.reshape(N, -1)
 
-    def fit(self, X: np.ndarray) -> ImageBijector:
+    def fit(self, X: np.ndarray, y=None) -> ImageBijector:
         raise NotImplementedError
 
     def transform(self, X: np.ndarray) -> np.ndarray:
@@ -492,7 +492,7 @@ class OrthogonalWaveletLayer(ImageBijector):
         self.H = H
         self.W = W
 
-    def fit(self, X: np.ndarray) -> OrthogonalWaveletLayer:
+    def fit(self, X: np.ndarray, y=None) -> OrthogonalWaveletLayer:
         """Store spatial dimensions; no data-dependent fitting required.
 
         Parameters
@@ -650,7 +650,7 @@ class HartleyRotation(ImageBijector):
         self.H = H
         self.W = W
 
-    def fit(self, X: np.ndarray) -> HartleyRotation:
+    def fit(self, X: np.ndarray, y=None) -> HartleyRotation:
         """Store spatial dimensions; no data-dependent fitting required.
 
         Parameters
@@ -801,7 +801,7 @@ class DCTRotation(ImageBijector):
         self.H = H
         self.W = W
 
-    def fit(self, X: np.ndarray) -> DCTRotation:
+    def fit(self, X: np.ndarray, y=None) -> DCTRotation:
         """Store spatial dimensions; no data-dependent fitting required.
 
         Parameters
@@ -955,7 +955,7 @@ class RandomChannelRotation(ImageBijector):
         self.W = W
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> RandomChannelRotation:
+    def fit(self, X: np.ndarray, y=None) -> RandomChannelRotation:
         """Draw a random orthogonal rotation matrix via QR decomposition.
 
         Parameters
@@ -1126,7 +1126,7 @@ class ImageRBIG:
         self.strategy = strategy
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray) -> ImageRBIG:
+    def fit(self, X: np.ndarray, y=None) -> ImageRBIG:
         """Fit all (marginal, rotation) layer pairs sequentially.
 
         Parameters

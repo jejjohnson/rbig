@@ -408,7 +408,7 @@ class Tanh(Bijector):
     True
     """
 
-    def fit(self, X: np.ndarray) -> Tanh:
+    def fit(self, X: np.ndarray, y=None) -> Tanh:
         """No-op fit (stateless bijector).
 
         Parameters
@@ -496,7 +496,7 @@ class Exp(Bijector):
     True
     """
 
-    def fit(self, X: np.ndarray) -> Exp:
+    def fit(self, X: np.ndarray, y=None) -> Exp:
         """No-op fit (stateless bijector).
 
         Parameters
@@ -584,7 +584,7 @@ class Cube(Bijector):
     True
     """
 
-    def fit(self, X: np.ndarray) -> Cube:
+    def fit(self, X: np.ndarray, y=None) -> Cube:
         """No-op fit (stateless bijector).
 
         Parameters

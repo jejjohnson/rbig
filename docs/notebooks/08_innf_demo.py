@@ -45,7 +45,7 @@ sns.set_style("whitegrid")
 # %%
 seed = 123
 rng = np.random.RandomState(seed=seed)
-n_samples = 10_000
+n_samples = 5_000
 
 x = np.abs(2 * rng.randn(1, n_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, n_samples)
@@ -113,10 +113,10 @@ plt.show()
 # We show the output after 1, 2, 3, 4, 5, and 6 layers.
 
 # %%
-n_layer_list = [1, 2, 3, 4, 5, 6]
-fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+n_layer_list = [1, 3, 5]
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
-for ax, n in zip(axes.ravel(), n_layer_list, strict=False):
+for ax, n in zip(axes, n_layer_list, strict=False):
     model = AnnealedRBIG(
         n_layers=n,
         rotation="pca",
@@ -140,9 +140,9 @@ plt.show()
 
 # %%
 rbig_full = AnnealedRBIG(
-    n_layers=200,
+    n_layers=50,
     rotation="pca",
-    zero_tolerance=30,
+    zero_tolerance=10,
     random_state=seed,
 )
 rbig_full.fit(X)

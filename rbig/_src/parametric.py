@@ -39,7 +39,7 @@ class LogitTransform(BaseTransform):
     True
     """
 
-    def fit(self, X: np.ndarray) -> LogitTransform:
+    def fit(self, X: np.ndarray, y=None) -> LogitTransform:
         """No-op fit (stateless transform).
 
         Parameters
@@ -159,7 +159,7 @@ class BoxCoxTransform(BaseTransform):
     def __init__(self, method: str = "mle"):
         self.method = method
 
-    def fit(self, X: np.ndarray) -> BoxCoxTransform:
+    def fit(self, X: np.ndarray, y=None) -> BoxCoxTransform:
         """Estimate one Box-Cox λ per feature via MLE.
 
         Parameters
@@ -309,7 +309,7 @@ class QuantileTransform(BaseTransform):
         self.n_quantiles = n_quantiles
         self.output_distribution = output_distribution
 
-    def fit(self, X: np.ndarray) -> QuantileTransform:
+    def fit(self, X: np.ndarray, y=None) -> QuantileTransform:
         """Fit the quantile transform to the training data.
 
         Parameters

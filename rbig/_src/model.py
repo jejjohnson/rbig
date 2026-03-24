@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 
 import numpy as np
 from scipy import stats
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.utils.validation import check_is_fitted, validate_data
 
 from rbig._src.marginal import MarginalGaussianize
 from rbig._src.rotation import PCARotation
@@ -87,7 +89,7 @@ class RBIGLayer:
     marginal: MarginalGaussianize = field(default_factory=MarginalGaussianize)
     rotation: PCARotation = field(default_factory=PCARotation)
 
-    def fit(self, X: np.ndarray) -> RBIGLayer:
+    def fit(self, X: np.ndarray, y=None) -> RBIGLayer:
         """Fit the marginal and rotation transforms to data X.
 
         First fits the marginal Gaussianizer on X, applies it to obtain the
@@ -98,6 +100,8 @@ class RBIGLayer:
         ----------
         X : np.ndarray of shape (n_samples, n_features)
             Training data.
+        y : ignored
+            Not used, present for sklearn pipeline compatibility.
 
         Returns
         -------
@@ -175,7 +179,7 @@ class RBIGLayer:
         return self.marginal.inverse_transform(Xr)  # undo marginal Gaussianization
 
 
-class AnnealedRBIG:
+class AnnealedRBIG(TransformerMixin, BaseEstimator):
     """Rotation-Based Iterative Gaussianization (RBIG).
 
     RBIG is a density estimation and data transformation method that
@@ -283,7 +287,7 @@ class AnnealedRBIG:
         self.random_state = random_state
         self.strategy = strategy
 
-    def fit(self, X: np.ndarray) -> AnnealedRBIG:
+    def fit(self, X: np.ndarray, y=None) -> AnnealedRBIG:
         """Fit the RBIG model by iteratively Gaussianizing X.
 
         At each layer k the algorithm:
@@ -302,13 +306,21 @@ class AnnealedRBIG:
         ----------
         X : np.ndarray of shape (n_samples, n_features)
             Training data.
+        y : ignored
+            Not used, present for sklearn pipeline compatibility.
 
         Returns
         -------
         self : AnnealedRBIG
             The fitted model.
         """
+        X = validate_data(self, X)
         n_samples, n_features = X.shape
+        if n_samples < 2:
+            raise ValueError(
+                f"RBIG requires at least 2 samples to estimate marginal CDFs, "
+                f"got n_samples = {n_samples}."
+            )
         self.n_features_in_ = n_features  # remember input dimensionality
         self.layers_: list[RBIGLayer] = []
         self.tc_per_layer_: list[float] = []
@@ -376,7 +388,8 @@ class AnnealedRBIG:
         Z : np.ndarray of shape (n_samples, n_features)
             Data in the approximately Gaussian latent space.
         """
-        Xt = X.copy()  # shape (n_samples, n_features)
+        check_is_fitted(self)
+        Xt = validate_data(self, X, reset=False).copy()
         for layer in self.layers_:
             Xt = layer.transform(Xt)
         return Xt
@@ -397,12 +410,13 @@ class AnnealedRBIG:
         Xr : np.ndarray of shape (n_samples, n_features)
             Data recovered in the original input space.
         """
-        Xt = X.copy()  # shape (n_samples, n_features)
+        check_is_fitted(self)
+        Xt = validate_data(self, X, reset=False).copy()
         for layer in reversed(self.layers_):
             Xt = layer.inverse_transform(Xt)
         return Xt
 
-    def fit_transform(self, X: np.ndarray) -> np.ndarray:
+    def fit_transform(self, X: np.ndarray, y=None) -> np.ndarray:
         """Fit the model to X and return the latent-space representation.
 
         Parameters
@@ -445,6 +459,8 @@ class AnnealedRBIG:
 
             log|det J_f(x)| = ∑ₖ log|det J_fₖ(xₖ₋₁)|
         """
+        check_is_fitted(self)
+        X = validate_data(self, X, reset=False)
         Xt = X.copy()  # shape (n_samples, n_features)
         log_det_jac = np.zeros(X.shape[0])  # accumulator; shape (n_samples,)
         for layer in self.layers_:
@@ -456,13 +472,15 @@ class AnnealedRBIG:
         # change-of-variables: log p(x) = log p_Z(f(x)) + log|det J_f(x)|
         return log_pz + log_det_jac
 
-    def score(self, X: np.ndarray) -> float:
+    def score(self, X: np.ndarray, y=None) -> float:
         """Mean log-likelihood of samples X under the fitted density.
 
         Parameters
         ----------
         X : np.ndarray of shape (n_samples, n_features)
             Data points to evaluate.
+        y : ignored
+            Not used, present for sklearn pipeline compatibility.
 
         Returns
         -------
@@ -494,6 +512,7 @@ class AnnealedRBIG:
         This is equivalent to ``-self.score(X_train)`` but avoids the cost
         of re-passing training data through all layers.
         """
+        check_is_fitted(self)
         return float(-np.mean(self.score_samples_raw_()))
 
     def score_samples_raw_(self) -> np.ndarray:
@@ -534,6 +553,7 @@ class AnnealedRBIG:
         X_new : np.ndarray of shape (n_samples, n_features_in_)
             Samples in the original data space.
         """
+        check_is_fitted(self)
         rng = np.random.default_rng(random_state)
         Z = rng.standard_normal((n_samples, self.n_features_in_))  # latent samples
         return self.inverse_transform(Z)
@@ -567,6 +587,8 @@ class AnnealedRBIG:
             Probability density estimates.  When ``domain="both"``, returns
             ``(p_input, p_transform)``.
         """
+        check_is_fitted(self)
+        X = validate_data(self, X, reset=False)
         jac, Xt = self.jacobian(X, return_X_transform=True)
 
         # Work in log-space for numerical stability
@@ -623,6 +645,7 @@ class AnnealedRBIG:
             Only returned when ``return_X_transform=True``.  The data after
             passing through all layers.
         """
+        check_is_fitted(self)
         n_samples, n_features = X.shape
 
         # ── Forward pass: collect per-layer derivatives and rotation matrices ──

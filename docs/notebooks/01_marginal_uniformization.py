@@ -41,7 +41,7 @@ plt.style.use("seaborn-v0_8-paper")
 
 # %%
 seed = 123
-n_samples = 10_000
+n_samples = 3_000
 a = 4  # shape parameter for Gamma
 
 # initialise data distribution

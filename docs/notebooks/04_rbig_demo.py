@@ -41,7 +41,7 @@ from rbig import AnnealedRBIG
 seed = 123
 rng = np.random.RandomState(seed=seed)
 
-num_samples = 10_000
+num_samples = 2_000
 x = np.abs(2 * rng.randn(1, num_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
 data = np.vstack((x, y)).T
@@ -58,10 +58,10 @@ plt.show()
 # ## RBIG Fitting
 
 # %%
-n_layers = 100
+n_layers = 50
 rotation_type = "pca"
 random_state = 123
-zero_tolerance = 20
+zero_tolerance = 10
 
 t0 = time()
 rbig_model = AnnealedRBIG(
@@ -210,16 +210,16 @@ plt.show()
 # ## Benchmarks — Larger Dataset
 #
 # The following cells benchmark `AnnealedRBIG` on a moderately large dataset
-# (50 000 samples, 20 features).
+# (2 000 samples, 10 features).
 
 # %%
-data_bench = rng.randn(50_000, 20)
+data_bench = rng.randn(2_000, 10)
 
 t0 = time()
 rbig_bench = AnnealedRBIG(
-    n_layers=200,
+    n_layers=30,
     rotation="pca",
-    zero_tolerance=20,
+    zero_tolerance=10,
     random_state=0,
 )
 rbig_bench.fit(data_bench)

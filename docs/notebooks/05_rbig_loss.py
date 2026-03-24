@@ -56,7 +56,7 @@ def plot_2d_joint(data, color="steelblue", title="Data"):
 seed = 123
 rng = np.random.RandomState(seed=seed)
 
-num_samples = 5_000
+num_samples = 2_500
 x = np.abs(2 * rng.randn(1, num_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
 data = np.vstack((x, y)).T
@@ -70,7 +70,7 @@ plot_2d_joint(data, title="Original Data")
 # mirrors the old `MaxLayersLoss(n_layers=N)`.
 
 # %%
-for n in [5, 10, 30, 50]:
+for n in [5, 10, 20]:
     m = AnnealedRBIG(
         n_layers=n, rotation="pca", zero_tolerance=n + 1, random_state=seed
     )
@@ -87,9 +87,9 @@ for n in [5, 10, 30, 50]:
 
 # %%
 rbig_tc = AnnealedRBIG(
-    n_layers=200,
+    n_layers=100,
     rotation="pca",
-    zero_tolerance=20,  # stop after 20 layers with negligible TC change
+    zero_tolerance=10,  # stop after 10 layers with negligible TC change
     tol=1e-5,
     random_state=seed,
 )
