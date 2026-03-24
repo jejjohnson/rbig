@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.1.8](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.7...rbig-v0.1.8) (2026-03-24)
+
+
+### Features
+
+* add scikit-learn compatibility to all RBIG estimators ([db86a38](https://github.com/jejjohnson/rbig/commit/db86a38b596a0a59cde1c20d58f49dc8fd1ade9d))
+* add scikit-learn compatibility to all RBIG estimators ([cab9249](https://github.com/jejjohnson/rbig/commit/cab9249cfe670c1377f85b25a0d8723c8b3dfaea))
+
+
+### Bug Fixes
+
+* address PR [#59](https://github.com/jejjohnson/rbig/issues/59) review comments ([2bdf1bb](https://github.com/jejjohnson/rbig/commit/2bdf1bbd27ea667235a41845d6e6ad9c86fab39e))
+* address PR review comments on Makefile and README ([d0d65e8](https://github.com/jejjohnson/rbig/commit/d0d65e84c57b8e04225b0cda67113df4ba0ee0d2))
+* skip flaky check_methods_subset_invariance in CI ([cbb12d1](https://github.com/jejjohnson/rbig/commit/cbb12d1f4a3306a13dada54aca430f62e84f9058))
+
+
+### Documentation
+
+* reduce example notebook runtimes from minutes to seconds ([f124f84](https://github.com/jejjohnson/rbig/commit/f124f84e83c92b5a62f3f8e78a0b9eed3dfa26c9))
+
 ## [0.1.7](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.6...rbig-v0.1.7) (2026-03-24)
 
 
