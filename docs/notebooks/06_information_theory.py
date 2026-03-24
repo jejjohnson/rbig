@@ -246,7 +246,8 @@ X_q = rng.multivariate_normal(mu_y, cov, n_samples)
 
 # %%
 # Use the known covariance matrix (not sample estimates) for the exact value
-kld_analytical = 0.5 * (mu_y - mu_x) @ np.linalg.inv(cov) @ (mu_y - mu_x).T
+diff = mu_y - mu_x
+kld_analytical = 0.5 * diff @ np.linalg.solve(cov, diff.T)
 print(f"KLD (analytical): {kld_analytical:.4f} nats")
 
 # %% [markdown]
