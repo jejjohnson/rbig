@@ -25,12 +25,16 @@
 #
 # | Rotation | Class | `AnnealedRBIG` string | Description |
 # |----------|-------|----------------------|-------------|
-# | **PCA** | `PCARotation` | `"pca"` | Whitening PCA — decorrelates and normalizes variance |
-# | **ICA** | `ICARotation` | `"ica"` | Independent Component Analysis — finds maximally non-Gaussian directions |
-# | **Random** | `RandomRotation` | `"random"` | Haar-uniform random orthogonal matrix via QR decomposition |
+# | **PCA** | `PCARotation(whiten=False)` | `"pca"` | PCA eigenvector rotation (orthogonal) |
+# | **ICA** | `ICARotation(orthogonal=True)` | `"ica"` | ICA rotation only — skips whitening (orthogonal) |
+# | **Random** | `RandomRotation` | `"random"` | Haar-uniform random orthogonal matrix via QR |
 #
-# All three are orthogonal transforms with log-det-Jacobian = 0, so they
-# preserve the density and add no cost to the likelihood computation.
+# All three are **orthogonal** transforms with log|det J| = 0, so they
+# preserve volume and add no cost to the likelihood computation.
+#
+# By default, both `PCARotation` and `ICARotation` use their orthogonal modes.
+# Set `whiten=True` (PCA) or `orthogonal=False` (ICA) to include the
+# non-orthogonal scaling/whitening step.
 #
 # For the mathematical properties of rotation matrices (orthogonality, Jacobian, decompositions), see the [Rotation note](../notes/rotation.md).
 

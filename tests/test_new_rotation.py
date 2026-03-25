@@ -127,8 +127,16 @@ def test_picard_rotation_log_det(simple_5d):
 
 
 def test_picard_rotation_log_det_non_square(simple_5d):
-    """log det jacobian raises when transform is non-square."""
-    r = PicardRotation(n_components=3, random_state=42)
+    """log det jacobian raises when orthogonal=False and transform is non-square."""
+    r = PicardRotation(n_components=3, random_state=42, orthogonal=False)
     r.fit(simple_5d)
     with pytest.raises(ValueError, match="square"):
         r.get_log_det_jacobian(simple_5d)
+
+
+def test_picard_rotation_orthogonal_log_det_zero(simple_5d):
+    """orthogonal=True gives log_det = 0 regardless of n_components."""
+    r = PicardRotation(n_components=3, random_state=42, orthogonal=True)
+    r.fit(simple_5d)
+    ldj = r.get_log_det_jacobian(simple_5d)
+    np.testing.assert_allclose(ldj, 0.0)
