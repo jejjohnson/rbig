@@ -68,8 +68,6 @@ nav:
       - Information Theory Measures: notes/information_theory_measures.md
       - Density Estimation: notes/density_estimation.md
       - Gaussian Distribution: notes/gaussian_distribution.md
-      - Exponential Distribution: notes/exponential_distribution.md
-      - Uniform Distribution: notes/uniform_distribution.md
       - Literature Review: notes/literature.md
   - Notebooks:
       - Marginal Uniformization: notebooks/01_marginal_uniformization.ipynb

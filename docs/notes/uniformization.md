@@ -2,6 +2,18 @@
 
 > Detailed reference for the uniformization step of [Marginal Gaussianization](marginal_gaussianization.md). This page covers the mathematical derivations (derivative proof, log-Jacobian, density computation via change of variables) in full detail.
 
+## Uniform Distribution Reference
+
+The continuous uniform distribution on $[a, b]$ is defined by:
+
+**PDF**: $p(x) = \frac{1}{b - a}, \quad a \leq x \leq b$
+
+**CDF**: $F(x) = \frac{x - a}{b - a}, \quad a \leq x \leq b$
+
+**Entropy**: For independent marginals on $[a_d, b_d]$: $H(x) = \log \left[ \prod_{d=1}^{D}(b_d - a_d) \right]$. For the standard uniform on $[0, 1]^D$, this simplifies to $H(x) = 0$.
+
+---
+
 ## Forward Transformation
 
 In this step, we estimate the forward transformation of samples from $\mathcal{X}$ to the uniform distribution $\mathcal{U}$. The relation is:
