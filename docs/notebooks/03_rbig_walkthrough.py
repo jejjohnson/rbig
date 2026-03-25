@@ -379,17 +379,24 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")
 # transformation. Because RBIG iteratively removes structure (reduces TC), the
 # entropy reduction at each layer gives us a natural estimator.
 #
-# ![Information Theory measures overview](../notes/pics/rbig_it/Fig_1.png)
+# See [Information Theory Measures](06_information_theory.ipynb) for full
+# definitions and the functional API.
+#
+# <figure align="center">
+# <img src="../notes/pics/rbig_it/Fig_1.png" width="500">
+# <figcaption>Information Theory measures computable via RBIG.</figcaption>
+# </figure>
 #
 # ### Entropy
 #
-# The entropy of the data decreases at each RBIG iteration as the distribution
-# approaches a multivariate Gaussian. The total entropy can be estimated by
-# summing the entropy reductions across all layers.
+# Estimated by summing entropy reductions across all RBIG layers. The total
+# entropy can be computed as the data approaches a multivariate Gaussian.
 #
 # ### Mutual Information
 #
-# ![Mutual Information using RBIG](../notes/pics/rbig_it/mi.png)
+# <figure align="center">
+# <img src="../notes/pics/rbig_it/mi.png" alt="MI using RBIG" width="500">
+# </figure>
 #
 # Given two random vectors $\mathbf{X}$ and $\mathbf{Y}$, we first Gaussianize
 # each independently, then measure the total correlation of the joint:
@@ -399,24 +406,27 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")
 #     \mathcal{G}_\phi(\mathbf{Y})
 # \right]\right)$$
 #
-# See [notebook 06](./06_information_theory.ipynb) for the functional API
-# (`mutual_information_rbig`) and [notebooks 09–10](./09_dependence_1d.ipynb)
+# See [notebook 06](06_information_theory.ipynb) for the functional API
+# (`mutual_information_rbig`) and [notebooks 09–10](09_dependence_1d.ipynb)
 # for practical dependence-detection examples.
 #
 # ### KL-Divergence
 #
-# ![KL-Divergence using RBIG](../notes/pics/rbig_it/kld.png)
-#
-# Let $\mathcal{G}_\theta(\mathbf{X})$ be the Gaussianization of $\mathbf{X}$.
-# We can estimate the KL-divergence between two distributions by applying the
-# Gaussianization learned on $\mathbf{Y}$ to samples from $\mathbf{X}$:
+# <figure align="center">
+# <img src="../notes/pics/rbig_it/kld.png" width="500">
+# </figure>
 #
 # $$D_\text{KL}\!\left[\mathbf{X} \| \mathbf{Y}\right]
-# = D_\text{KL}\!\left[\mathbf{X} \| \mathcal{G}_\theta(\mathbf{Y})\right]
 # = J\!\left[\mathcal{G}_\theta(\hat{\mathbf{y}})\right]$$
 #
-# See [notebook 06](./06_information_theory.ipynb) for the functional API
+# See [notebook 06](06_information_theory.ipynb) for the functional API
 # (`kl_divergence_rbig`).
+#
+# ### References
+#
+# * Iterative Gaussianization: from ICA to Random Rotations — Laparra et al. (2011) — [Paper](https://arxiv.org/abs/1602.00229)
+# * Gaussianization — Chen & Gopinath (2000) — [PDF](https://papers.nips.cc/paper/1856-gaussianization.pdf)
+#
 
 # %% [markdown]
 # ---
