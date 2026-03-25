@@ -89,7 +89,7 @@ print(f"Kendall:  τ = {kendall_tau:+.4f}  (p = {kendall_p:.3f})")
 # not just linear or monotonic. We estimate it by fitting three `AnnealedRBIG`
 # models: one on $X$, one on $Y$, and one on the joint $(X, Y)$.
 #
-# See the [Information Theory Measures note](../notes/information_theory_measures.md) for the formal definition of MI.
+# See the [Information Theory Measures note](06_information_theory.ipynb) for the formal definition of MI.
 
 # %%
 model_x = AnnealedRBIG(
@@ -169,6 +169,6 @@ print(f"  ICC:      {icc_weak:.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of MI, TC, and ICC
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of MI, TC, and ICC
 # - [Measuring Dependence: 2D Variables](./10_dependence_2d.ipynb) — extending MI analysis to multivariate vectors
 # - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD estimation

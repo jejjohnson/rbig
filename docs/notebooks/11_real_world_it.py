@@ -28,7 +28,7 @@
 # This complements notebook 06 (synthetic Gaussian data) with a practical
 # example where the true dependence structure is unknown.
 #
-# For definitions of TC, MI, and ICC, see the [Information Theory Measures note](../notes/information_theory_measures.md).
+# For definitions of TC, MI, and ICC, see the [Information Theory Measures note](06_information_theory.ipynb).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -201,6 +201,6 @@ print(f"MI(AAPL ; GOOG+AMZN) = {mi_group:.4f} nats, ICC = {icc_group:.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of TC, MI, and ICC
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of TC, MI, and ICC
 # - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD on synthetic Gaussian data
 # - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D

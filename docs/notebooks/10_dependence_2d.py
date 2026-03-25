@@ -24,7 +24,7 @@
 # Mutual Information on two synthetic datasets with different nonlinear
 # structures.
 #
-# For MI definitions and the RBIG estimation approach, see the [Information Theory Measures note](../notes/information_theory_measures.md).
+# For MI definitions and the RBIG estimation approach, see the [Information Theory Measures note](06_information_theory.ipynb).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -231,6 +231,6 @@ print(f"  ICC:       {icc2:.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of MI, TC, and ICC
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of MI, TC, and ICC
 # - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
 # - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD estimation

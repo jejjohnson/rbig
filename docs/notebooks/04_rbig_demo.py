@@ -190,7 +190,7 @@ print(f"Sampled data shape: {data_sampled.shape}")
 #
 # $$\log p(x) = \log p_Z(f(x)) + \log|\det J_f(x)|$$
 #
-# See the [RBIG algorithm note](../notes/rbig.md) for the change-of-variables derivation.
+# See the [RBIG algorithm note](03_rbig_walkthrough.ipynb) for the change-of-variables derivation.
 
 # %%
 t0 = time()
@@ -259,6 +259,6 @@ print(
 # ---
 # ## See Also
 #
-# - [RBIG Algorithm Note](../notes/rbig.md) — theory and derivation of the RBIG algorithm
+# - [RBIG Algorithm Note](03_rbig_walkthrough.ipynb) — theory and derivation of the RBIG algorithm
 # - [RBIG Walk-Through](./03_rbig_walkthrough.ipynb) — step-by-step walkthrough of RBIG internals
 # - [Configuration](../configuration.md) — guide to configuring RBIG parameters

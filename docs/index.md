@@ -35,7 +35,7 @@ Rotation-Based Iterative Gaussianization — density estimation, IT measures, an
 
 - [Quickstart](quickstart.md) — From install to results in 5 minutes
 - [RBIG Walk-Through](notebooks/03_rbig_walkthrough.ipynb) — Theory + hands-on tutorial
-- [Notes](notes/rbig.md) — Mathematical reference
+- [Notes](notebooks/03_rbig_walkthrough.ipynb) — Mathematical reference
 - [API Reference](api/reference.md) — Full API documentation
 
 ---

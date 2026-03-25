@@ -29,7 +29,7 @@
 # `NegEntropyLoss` classes with built-in convergence logic in `AnnealedRBIG`
 # and utility functions `entropy_reduction` and `total_correlation`.
 #
-# See [Information Theory Measures](../notes/information_theory_measures.md) for definitions of TC and entropy.
+# See [Information Theory Measures](06_information_theory.ipynb) for definitions of TC and entropy.
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -223,6 +223,6 @@ plt.show()
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of TC, entropy, and MI
-# - [RBIG Algorithm Note](../notes/rbig.md) — theory and derivation of the RBIG algorithm
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of TC, entropy, and MI
+# - [RBIG Algorithm Note](03_rbig_walkthrough.ipynb) — theory and derivation of the RBIG algorithm
 # - [Configuration](../configuration.md) — guide to configuring RBIG parameters

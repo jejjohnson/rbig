@@ -25,7 +25,7 @@
 # clips output probabilities to `[eps, 1-eps]` to avoid infinite values at the
 # boundaries.
 #
-# For the underlying theory of the uniformization step, see the [Uniformization note](../notes/uniformization.md).
+# For the underlying theory of the uniformization step, see the [Uniformization note](01_marginal_transforms.ipynb).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -239,6 +239,6 @@ plt.show()
 # ---
 # ## See Also
 #
-# - [Uniformization Note](../notes/uniformization.md) — theory of the CDF-based uniformization step
-# - [Marginal Gaussianization Note](../notes/marginal_gaussianization.md) — marginal Gaussianization theory
+# - [Uniformization Note](01_marginal_transforms.ipynb) — theory of the CDF-based uniformization step
+# - [Marginal Gaussianization Note](01_marginal_transforms.ipynb) — marginal Gaussianization theory
 # - [Marginal Transforms](./01_marginal_transforms.ipynb) — hands-on demo of marginal transform classes
