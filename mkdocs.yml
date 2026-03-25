@@ -57,6 +57,7 @@ extra_javascript:
 
 nav:
   - Home: index.md
+  - Quickstart: quickstart.md
   - Notes:
       - RBIG Algorithm: notes/rbig.md
       - Marginal Gaussianization: notes/marginal_gaussianization.md
