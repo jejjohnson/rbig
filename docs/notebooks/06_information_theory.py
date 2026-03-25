@@ -25,7 +25,7 @@
 # | **Change-of-variables** | $\log p(x) = \log p_Z(f(x)) + \log\lvert\det J\rvert$ | Standard normalizing-flow density estimation |
 # | **RBIG-way** (Laparra et al. 2011, 2020) | Per-layer TC reduction | No Jacobian needed; sums dependence removed per layer |
 #
-# For mathematical definitions, see the [Information Theory Measures note](../notes/information_theory_measures.md).
+# For mathematical definitions, see the [Information Theory Measures note](06_information_theory.ipynb).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -250,7 +250,7 @@ print(f"{'KLD':12} {kld_true:12.4f} {kld_cov:16.4f} {kld_rbig:12.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of TC, entropy, MI, and KLD
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of TC, entropy, MI, and KLD
 # - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
 # - [Measuring Dependence: 2D Variables](./10_dependence_2d.ipynb) — MI for multivariate dependence
 # - [Information Theory with Synthetic Stock-Market Data](./11_real_world_it.ipynb) — practical IT application
