@@ -255,10 +255,14 @@ class ICARotation(BaseTransform):
     """
 
     def __init__(
-        self, n_components: int | None = None, random_state: int | None = None
+        self,
+        n_components: int | None = None,
+        random_state: int | None = None,
+        orthogonal: bool = True,
     ):
         self.n_components = n_components
         self.random_state = random_state
+        self.orthogonal = orthogonal
 
     def fit(self, X: np.ndarray, y=None) -> ICARotation:
         """Fit the ICA model (Picard if available, otherwise FastICA).
@@ -288,6 +292,15 @@ class ICARotation(BaseTransform):
             self.K_ = K  # whitening matrix, shape (K, D)
             self.W_ = W  # unmixing matrix, shape (K, K)
             self.n_features_in_ = X.shape[1]
+            if (
+                self.orthogonal
+                and self.n_components is not None
+                and self.n_components != X.shape[1]
+            ):
+                raise ValueError(
+                    "orthogonal=True requires n_components=None or "
+                    "n_components=n_features"
+                )
         except ImportError:
             from sklearn.decomposition import FastICA
 
@@ -299,10 +312,23 @@ class ICARotation(BaseTransform):
             )
             self.ica_.fit(X)
             self.K_ = None  # signals that FastICA path is active
+            if (
+                self.orthogonal
+                and self.n_components is not None
+                and self.n_components != X.shape[1]
+            ):
+                raise ValueError(
+                    "orthogonal=True requires n_components=None or "
+                    "n_components=n_features"
+                ) from None
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
-        """Apply the ICA unmixing to X: s = W K x.
+        """Apply the ICA unmixing to X.
+
+        When ``orthogonal=True`` (default), applies only the orthogonal
+        rotation W_ (skips whitening K_), giving ``s = W x``.  When
+        ``orthogonal=False``, applies the full unmixing ``s = W K x``.
 
         Parameters
         ----------
@@ -317,12 +343,15 @@ class ICARotation(BaseTransform):
         if self.K_ is None:
             # FastICA path: uses sklearn's built-in transform
             return self.ica_.transform(X)
-        # Picard path: first whiten X with K, then unmix with W
+        if self.orthogonal:
+            # Orthogonal mode: apply only W_ (rotation without whitening)
+            return X @ self.W_.T  # (N, D) @ (D, D) -> (N, D)
+        # Full unmixing: whiten then rotate
         Xw = X @ self.K_.T  # (N, D) @ (D, K) -> (N, K)  whitening step
         return Xw @ self.W_.T  # (N, K) @ (K, K) -> (N, K)  unmixing step
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
-        """Invert the ICA unmixing: x = (W K)^{-1} s.
+        """Invert the ICA unmixing.
 
         Parameters
         ----------
@@ -336,6 +365,9 @@ class ICARotation(BaseTransform):
         """
         if self.K_ is None:
             return self.ica_.inverse_transform(X)
+        if self.orthogonal:
+            # W_ is orthogonal, so W_^{-1} = W_^T
+            return X @ self.W_  # (N, D) @ (D, D) -> (N, D)
         # Invert unmixing W then whitening K using pseudo-inverses
         Xw = X @ np.linalg.pinv(self.W_).T  # (N, K) -> (N, K)
         return Xw @ np.linalg.pinv(self.K_).T  # (N, K) -> (N, D)
@@ -379,6 +411,9 @@ class ICARotation(BaseTransform):
                     "equals the number of features."
                 )
             log_det = np.log(np.abs(np.linalg.det(W)))
+        elif self.orthogonal:
+            # W_ is orthogonal → |det W_| = 1 → log|det| = 0
+            log_det = 0.0
         else:
             # Combined unmixing matrix: W @ K, shape (K, D)
             WK = self.W_ @ self.K_
@@ -775,8 +810,8 @@ class GaussianRandomProjection(RotationBijector):
         Xr : np.ndarray of shape (n_samples, n_features)
             Approximately recovered original data.
         """
-        # Pseudoinverse: M^+ = (M^T M)^{-1} M^T; here we use pinv(M).T
-        return X @ np.linalg.pinv(self.matrix_).T  # (N, K) @ (K, D) -> (N, D)
+        # Pseudoinverse: M^+ has shape (K, D), so X @ M^+ gives (N, D)
+        return X @ np.linalg.pinv(self.matrix_)  # (N, K) @ (K, D) -> (N, D)
 
     def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
         """Return zeros (approximation; Gaussian projections are not isometric).
@@ -1031,12 +1066,14 @@ class PicardRotation(RotationBijector):
         random_state: int | None = None,
         max_iter: int = 500,
         tol: float = 1e-5,
+        orthogonal: bool = True,
     ):
         self.n_components = n_components
         self.extended = extended
         self.random_state = random_state
         self.max_iter = max_iter
         self.tol = tol
+        self.orthogonal = orthogonal
 
     def fit(self, X: np.ndarray, y=None) -> PicardRotation:
         """Fit ICA (Picard if available, otherwise FastICA).
@@ -1067,6 +1104,15 @@ class PicardRotation(RotationBijector):
             self.K_ = K  # pre-whitening matrix, shape (K, D)
             self.W_ = W  # ICA unmixing matrix, shape (K, K)
             self.use_picard_ = True
+            if (
+                self.orthogonal
+                and self.n_components is not None
+                and self.n_components != X.shape[1]
+            ):
+                raise ValueError(
+                    "orthogonal=True requires n_components=None or "
+                    "n_components=n_features"
+                )
         except (ImportError, TypeError):
             from sklearn.decomposition import FastICA
 
@@ -1079,10 +1125,23 @@ class PicardRotation(RotationBijector):
             self.ica_.fit(X)
             self.K_ = None
             self.use_picard_ = False
+            if (
+                self.orthogonal
+                and self.n_components is not None
+                and self.n_components != X.shape[1]
+            ):
+                raise ValueError(
+                    "orthogonal=True requires n_components=None or "
+                    "n_components=n_features"
+                ) from None
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
-        """Apply the ICA unmixing: s = W K x.
+        """Apply the ICA unmixing.
+
+        When ``orthogonal=True`` (default), applies only the orthogonal
+        rotation W_ (skips whitening K_).  When ``orthogonal=False``,
+        applies the full unmixing ``s = W K x``.
 
         Parameters
         ----------
@@ -1096,12 +1155,12 @@ class PicardRotation(RotationBijector):
         """
         if not self.use_picard_:
             return self.ica_.transform(X)
-        # Picard path: whiten then unmix
-        # (N, D) @ (D, K) -> (N, K) whitening; then (N, K) @ (K, K) -> (N, K) unmixing
+        if self.orthogonal:
+            return X @ self.W_.T  # (N, D) @ (D, D) -> (N, D)
         return (X @ self.K_.T) @ self.W_.T
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
-        """Invert the ICA unmixing: x = (W K)^{-1} s.
+        """Invert the ICA unmixing.
 
         Parameters
         ----------
@@ -1115,11 +1174,12 @@ class PicardRotation(RotationBijector):
         """
         if not self.use_picard_:
             return self.ica_.inverse_transform(X)
-        # Invert unmixing W then whitening K, each via pseudo-inverse
+        if self.orthogonal:
+            return X @ self.W_  # W_ orthogonal → W_^{-1} = W_^T
         return (X @ np.linalg.pinv(self.W_).T) @ np.linalg.pinv(self.K_).T
 
     def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
-        """Log absolute Jacobian determinant: log|det(W K)| (constant).
+        """Log absolute Jacobian determinant (constant for linear transforms).
 
         Parameters
         ----------
@@ -1147,8 +1207,11 @@ class PicardRotation(RotationBijector):
                     "is None or equals the number of features."
                 )
             log_det = np.log(np.abs(np.linalg.det(W)))
+        elif self.orthogonal:
+            # W_ is orthogonal → |det W_| = 1 → log|det| = 0
+            log_det = 0.0
         else:
-            WK = self.W_ @ self.K_  # combined unmixing matrix, shape (K, D)
+            WK = self.W_ @ self.K_
             if WK.shape[0] != WK.shape[1]:
                 raise ValueError(
                     "PicardRotation.get_log_det_jacobian is only defined for square "

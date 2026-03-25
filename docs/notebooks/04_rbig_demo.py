@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # RBIG Demo
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/04_rbig_demo.ipynb)
 #
 # This notebook demonstrates the full RBIG workflow using `AnnealedRBIG`:
 #
@@ -23,6 +24,15 @@
 # 3. Invert the transform (check for accuracy)
 # 4. Sample new data from the learned distribution
 # 5. Estimate log-probabilities
+#
+# For the full theory behind RBIG, see the [RBIG Walk-Through](./03_rbig_walkthrough.ipynb).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 # %matplotlib inline
@@ -30,8 +40,11 @@ from time import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
 from rbig import AnnealedRBIG
+
+sns.set_style("whitegrid")
 
 # %% [markdown]
 # #### Toy Data
@@ -48,11 +61,10 @@ x = np.abs(2 * rng.randn(1, num_samples))
 y = np.sin(x) + 0.25 * rng.randn(1, num_samples)
 data = np.vstack((x, y)).T
 
-fig, ax = plt.subplots()
-ax.scatter(data[:, 0], data[:, 1], s=5, alpha=0.5)
-ax.set_xlabel("X")
-ax.set_ylabel("Y")
-ax.set_title("Original Data")
+g = sns.jointplot(x=data[:, 0], y=data[:, 1], kind="hex", color="steelblue")
+g.ax_joint.set_xlabel("X")
+g.ax_joint.set_ylabel("Y")
+g.ax_joint.set_title("Original Data")
 plt.tight_layout()
 plt.show()
 
@@ -82,11 +94,10 @@ print(f"Fitted {len(rbig_model.layers_)} layers in {time() - t0:.2f}s")
 data_trans = rbig_model.transform(data)
 
 print(f"Transformed data shape: {data_trans.shape}")
-fig, ax = plt.subplots()
-ax.scatter(data_trans[:, 0], data_trans[:, 1], s=5, alpha=0.5)
-ax.set_xlabel("Z₁")
-ax.set_ylabel("Z₂")
-ax.set_title("Data after RBIG Transformation (should be ≈ N(0,I))")
+g = sns.jointplot(x=data_trans[:, 0], y=data_trans[:, 1], kind="hex", color="steelblue")
+g.ax_joint.set_xlabel("Z₁")
+g.ax_joint.set_ylabel("Z₂")
+g.ax_joint.set_title("Data after RBIG Transformation (should be ≈ N(0,I))")
 plt.tight_layout()
 plt.show()
 
@@ -147,13 +158,13 @@ data_synthetic = rbig_model.inverse_transform(data_synthetic_latent)
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
-axes[0].scatter(data[:, 0], data[:, 1], s=5, alpha=0.5)
+axes[0].hexbin(data[:, 0], data[:, 1], gridsize=30, cmap="Blues", mincnt=1)
 axes[0].set_title("Original Data")
 axes[0].set_xlabel("X")
 axes[0].set_ylabel("Y")
 
-axes[1].scatter(
-    data_synthetic[:, 0], data_synthetic[:, 1], s=5, alpha=0.5, color="darkorange"
+axes[1].hexbin(
+    data_synthetic[:, 0], data_synthetic[:, 1], gridsize=30, cmap="Oranges", mincnt=1
 )
 axes[1].set_title("Synthesized Data (RBIG samples)")
 axes[1].set_xlabel("X")
@@ -178,6 +189,8 @@ print(f"Sampled data shape: {data_sampled.shape}")
 # model using the change-of-variables formula:
 #
 # $$\log p(x) = \log p_Z(f(x)) + \log|\det J_f(x)|$$
+#
+# See the [RBIG algorithm note](../notes/rbig.md) for the change-of-variables derivation.
 
 # %%
 t0 = time()
@@ -241,3 +254,11 @@ print(
 # | `.score_samples(X)` | Per-sample log-likelihood via change-of-variables |
 # | `.score(X)` | Mean log-likelihood |
 # | `.entropy()` | Entropy of the fitted distribution (in nats) |
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [RBIG Algorithm Note](../notes/rbig.md) — theory and derivation of the RBIG algorithm
+# - [RBIG Walk-Through](./03_rbig_walkthrough.ipynb) — step-by-step walkthrough of RBIG internals
+# - [Configuration](../configuration.md) — guide to configuring RBIG parameters

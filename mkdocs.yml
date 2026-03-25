@@ -57,34 +57,35 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Introduction: intro.md
+  - Quickstart: quickstart.md
+  - Configuration: configuration.md
   - Notes:
-      - RBIG Algorithm: notes/rbig.md
-      - Marginal Gaussianization: notes/marginal_gaussianization.md
-      - Uniformization: notes/uniformization.md
-      - Gaussianization: notes/gaussianization.md
-      - Rotation: notes/rotation.md
-      - Normalizing Flows: notes/normalizing_flows.md
-      - Information Theory Measures: notes/information_theory_measures.md
-      - Deep Density Destructors: notes/deep_density_destructors.md
-      - Kernel Density Estimation: notes/kernel_density_estimation.md
-      - PDF Estimation: notes/pdf_estimation.md
-      - Gaussian Distribution: notes/gaussian_distribution.md
-      - Exponential Distribution: notes/exponential_distribution.md
-      - Uniform Distribution: notes/uniform_distribution.md
-      - Literature Review: notes/literature.md
+      - Algorithm:
+          - RBIG Algorithm: notes/rbig.md
+      - Components:
+          - Uniformization: notes/uniformization.md
+          - Marginal Gaussianization: notes/marginal_gaussianization.md
+          - Rotation: notes/rotation.md
+      - Foundations:
+          - Information Theory Measures: notes/information_theory_measures.md
+          - Density Estimation: notes/density_estimation.md
+          - Gaussian Distribution: notes/gaussian_distribution.md
+      - Context:
+          - Related Methods: notes/related_methods.md
+          - Literature Review: notes/literature.md
   - Notebooks:
-      - Marginal Uniformization: notebooks/01_marginal_uniformization.ipynb
-      - Marginal Gaussianization: notebooks/02_marginal_gaussianization.ipynb
+      - Marginal Transforms: notebooks/01_marginal_transforms.ipynb
       - RBIG Walk-Through: notebooks/03_rbig_walkthrough.ipynb
       - RBIG Demo: notebooks/04_rbig_demo.ipynb
       - RBIG Loss & Convergence: notebooks/05_rbig_loss.ipynb
       - Information Theory: notebooks/06_information_theory.ipynb
       - Boundary Issues: notebooks/07_boundary_issues.ipynb
-      - INNF Demo: notebooks/08_innf_demo.ipynb
+      - Rotation Choices: notebooks/08_rotation_choices.ipynb
       - "Dependence: 1D": notebooks/09_dependence_1d.ipynb
       - "Dependence: 2D": notebooks/10_dependence_2d.ipynb
       - Real-World IT: notebooks/11_real_world_it.ipynb
+      - Image Rotations: notebooks/12_image_rotations.ipynb
+      - Dimensionality Reduction: notebooks/13_dimensionality_reduction.ipynb
   - API Reference: api/reference.md
-  - Literature: literature.md
+  - Literature: notes/literature.md
   - Changelog: CHANGELOG.md

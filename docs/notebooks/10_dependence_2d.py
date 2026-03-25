@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Measuring Dependence: Multivariate (2D) Variables
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/10_dependence_2d.ipynb)
 #
 # This notebook extends the 1D dependence analysis to **multivariate**
 # random vectors $X \in \mathbb{R}^2$ and $Y \in \mathbb{R}^2$.
@@ -22,6 +23,15 @@
 # We compare classical matrix-based dependence measures with RBIG-based
 # Mutual Information on two synthetic datasets with different nonlinear
 # structures.
+#
+# For MI definitions and the RBIG estimation approach, see the [Information Theory Measures note](../notes/information_theory_measures.md).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 import matplotlib.pyplot as plt
@@ -73,9 +83,36 @@ plt.show()
 # ### Classical measures
 
 # %%
-# Hilbert-Schmidt score: ||X^T Y||_F
-hs_score = np.linalg.norm(x1.T @ y1, "fro")
-hs_norm = hs_score / (np.linalg.norm(x1.T @ x1, "fro") * np.linalg.norm(y1.T @ y1, "fro"))
+from sklearn.metrics.pairwise import rbf_kernel
+
+
+def hsic(K, L):
+    """Biased HSIC estimator from centered kernel matrices."""
+    n = K.shape[0]
+    H = np.eye(n) - np.ones((n, n)) / n  # centering matrix
+    Kc = H @ K @ H
+    Lc = H @ L @ H
+    return np.trace(Kc @ Lc) / (n - 1) ** 2
+
+
+def normalized_hsic(K, L):
+    """CKA: HSIC(K,L) / sqrt(HSIC(K,K) * HSIC(L,L)), bounded [0, 1]."""
+    return hsic(K, L) / np.sqrt(hsic(K, K) * hsic(L, L))
+
+
+# --- Linear kernels ---
+K_lin1 = x1 @ x1.T
+L_lin1 = y1 @ y1.T
+cka_lin1 = normalized_hsic(K_lin1, L_lin1)
+
+# --- RBF kernels (median heuristic for length scale) ---
+from scipy.spatial.distance import pdist
+
+sigma_x1 = np.median(pdist(x1, "euclidean"))
+sigma_y1 = np.median(pdist(y1, "euclidean"))
+K_rbf1 = rbf_kernel(x1, gamma=1.0 / (2 * sigma_x1**2))
+L_rbf1 = rbf_kernel(y1, gamma=1.0 / (2 * sigma_y1**2))
+cka_rbf1 = normalized_hsic(K_rbf1, L_rbf1)
 
 # Spearman on stacked [X, Y]
 stacked = np.hstack([x1, y1])
@@ -85,8 +122,8 @@ spearman_xy = spearman_matrix[:2, 2:]
 spearman_fro = np.linalg.norm(spearman_xy, "fro")
 
 print("Dataset 1 — classical measures:")
-print(f"  HS score:      {hs_score:.4f}")
-print(f"  HS normalized: {hs_norm:.4f}")
+print(f"  CKA linear:  {cka_lin1:.4f}")
+print(f"  CKA RBF:     {cka_rbf1:.4f}")
 print(f"  Spearman cross-block Frobenius: {spearman_fro:.4f}")
 
 # %% [markdown]
@@ -102,7 +139,7 @@ model_y1.fit(y1)
 model_xy1.fit(np.hstack([x1, y1]))
 
 mi1 = mutual_information_rbig(model_x1, model_y1, model_xy1)
-icc1 = np.sqrt(1 - np.exp(-2 * mi1))
+icc1 = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi1)))
 
 print(f"  MI (RBIG): {mi1:.4f} nats")
 print(f"  ICC:       {icc1:.4f}")
@@ -138,8 +175,17 @@ plt.show()
 # ### Classical measures + MI
 
 # %%
-hs_score2 = np.linalg.norm(x2.T @ y2, "fro")
-hs_norm2 = hs_score2 / (np.linalg.norm(x2.T @ x2, "fro") * np.linalg.norm(y2.T @ y2, "fro"))
+# Linear CKA
+K_lin2 = x2 @ x2.T
+L_lin2 = y2 @ y2.T
+cka_lin2 = normalized_hsic(K_lin2, L_lin2)
+
+# RBF CKA (median heuristic)
+sigma_x2 = np.median(pdist(x2, "euclidean"))
+sigma_y2 = np.median(pdist(y2, "euclidean"))
+K_rbf2 = rbf_kernel(x2, gamma=1.0 / (2 * sigma_x2**2))
+L_rbf2 = rbf_kernel(y2, gamma=1.0 / (2 * sigma_y2**2))
+cka_rbf2 = normalized_hsic(K_rbf2, L_rbf2)
 
 spearman2 = stats.spearmanr(np.hstack([x2, y2])).statistic
 spearman_xy2 = spearman2[:2, 2:]
@@ -153,11 +199,11 @@ model_y2.fit(y2)
 model_xy2.fit(np.hstack([x2, y2]))
 
 mi2 = mutual_information_rbig(model_x2, model_y2, model_xy2)
-icc2 = np.sqrt(1 - np.exp(-2 * mi2))
+icc2 = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi2)))
 
 print("Dataset 2 — classical measures:")
-print(f"  HS score:      {hs_score2:.4f}")
-print(f"  HS normalized: {hs_norm2:.4f}")
+print(f"  CKA linear:  {cka_lin2:.4f}")
+print(f"  CKA RBF:     {cka_rbf2:.4f}")
 print(f"  Spearman cross-block Frobenius: {spearman_fro2:.4f}")
 print(f"  MI (RBIG): {mi2:.4f} nats")
 print(f"  ICC:       {icc2:.4f}")
@@ -167,11 +213,24 @@ print(f"  ICC:       {icc2:.4f}")
 #
 # | Metric | Dataset 1 (asymmetric) | Dataset 2 (symmetric, noisy) |
 # |--------|:---------------------:|:---------------------------:|
-# | HS norm | low | low |
+# | CKA linear | low | low |
+# | CKA RBF | **moderate–high** | **moderate** |
 # | Spearman cross-Frobenius | low | low |
 # | MI (RBIG) | **high** | **moderate** |
 # | ICC | **high** | **moderate** |
 #
+# The RBF kernel captures nonlinear dependence that the linear kernel misses
+# entirely — similar to how MI outperforms Pearson/Spearman. However, CKA RBF
+# depends on the bandwidth choice, while MI (RBIG) is non-parametric.
+#
 # Again, MI detects nonlinear multivariate dependence that classical
 # matrix-based measures largely miss. Dataset 2 shows lower MI due to
 # the higher noise level, correctly reflecting the weaker signal.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of MI, TC, and ICC
+# - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
+# - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD estimation

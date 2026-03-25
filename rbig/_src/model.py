@@ -61,11 +61,13 @@ class RBIGLayer:
         log|det J_layer(x)| = log|det J_marginal(x)| + log|det J_rotation|
                              = ∑ᵢ log|Φ⁻¹′(F̂ₙ(xᵢ)) · f̂ₙ(xᵢ)| + log|det J_rotation|
 
-    The rotation term ``log|det J_rotation|`` is zero only when the rotation is
+    The rotation term ``log|det J_rotation|`` is zero when the rotation is
     strictly orthogonal (``|det R| = 1``).  The default
-    ``PCARotation(whiten=True)`` includes per-component scaling and therefore
-    has a generally non-zero ``log_det_jacobian``.  More general rotations such
-    as ICA are also not guaranteed to be orthogonal.
+    ``PCARotation(whiten=False)`` is orthogonal, so its log-det is always
+    zero.  ``PCARotation(whiten=True)`` includes per-component scaling by
+    ``1/√λ`` and is *not* orthogonal (non-zero log-det).  Note that both
+    converge to identical results in practice because marginal
+    Gaussianization already produces near-unit-variance features.
 
     References
     ----------
@@ -88,7 +90,7 @@ class RBIGLayer:
     """
 
     marginal: MarginalGaussianize = field(default_factory=MarginalGaussianize)
-    rotation: PCARotation = field(default_factory=PCARotation)
+    rotation: PCARotation = field(default_factory=lambda: PCARotation(whiten=False))
 
     def fit(self, X: np.ndarray, y=None) -> RBIGLayer:
         """Fit the marginal and rotation transforms to data X.
@@ -141,9 +143,10 @@ class RBIGLayer:
 
             log|det J_layer(x)| = log|det J_marginal(x)| + log|det J_rotation(z)|
 
-        For strictly orthogonal rotations (e.g. ``RandomRotation``), the
-        rotation term is zero.  For ``PCARotation(whiten=True)`` the rotation
-        includes a per-component rescaling, so its term is generally non-zero.
+        For orthogonal rotations (e.g. ``RandomRotation``,
+        ``PCARotation(whiten=False)``), the rotation term is zero.  For
+        ``PCARotation(whiten=True)`` the rotation includes a per-component
+        rescaling, so its term is generally non-zero.
 
         Parameters
         ----------
@@ -207,9 +210,9 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         Maximum number of RBIG layers to apply.  Early stopping via
         ``patience`` may halt training before this limit.
     rotation : str, default="pca"
-        Rotation method: ``"pca"`` (PCA with whitening), ``"ica"``
-        (Independent Component Analysis), or ``"random"`` (Haar-distributed
-        orthogonal rotation).
+        Rotation method: ``"pca"`` (PCA without whitening — orthogonal),
+        ``"ica"`` (Independent Component Analysis), or ``"random"``
+        (Haar-distributed orthogonal rotation).
     patience : int, default=10
         Number of consecutive layers showing a TC change smaller than
         ``tol`` before training stops early.  (Formerly ``zero_tolerance``,
@@ -842,7 +845,7 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
             rotation_name = entry[0] if isinstance(entry, list | tuple) else entry
             return self._get_component(rotation_name, "rotation", layer_index)
         if self.rotation == "pca":
-            return PCARotation(whiten=True)
+            return PCARotation(whiten=False)
         elif self.rotation == "ica":
             from rbig._src.rotation import ICARotation
 
@@ -924,7 +927,7 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
             If ``name`` is not a recognised rotation type.
         """
         if name == "pca":
-            return PCARotation(whiten=True)
+            return PCARotation(whiten=False)
         if name == "ica":
             from rbig._src.rotation import ICARotation
 

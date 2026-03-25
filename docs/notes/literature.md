@@ -27,6 +27,11 @@
 * Information theory measures and RBIG for Spatial-Temporal Data analysis - Johnson et. al. - In progress
 
 
+### Other
+
+* A Note on the Evaluation of Generative Models - Theis et. al. - ICLR 2016 - [PDF](https://arxiv.org/pdf/1511.01844.pdf)
+
+
 ### RBIG
 
 > The most updated Gaussianization algorithm which generalizes the original algorithms. It is more computationally efficient and still very simple to implement.

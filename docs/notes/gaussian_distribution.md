@@ -94,3 +94,10 @@ $$
 $$I(X)= - \frac{1}{2} \ln | \rho_0 |$$
 
 where $\rho_0$ is the correlation matrix derived from $\Sigma_0$.
+
+---
+
+## Notebooks
+
+- [RBIG Walk-Through](../notebooks/03_rbig_walkthrough.ipynb) — RBIG drives data towards a multivariate Gaussian
+- [Information Theory](../notebooks/06_information_theory.ipynb) — analytical Gaussian IT measures vs RBIG estimates

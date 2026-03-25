@@ -409,6 +409,10 @@ class MarginalGaussianize(BaseTransform):
         # Sorted columns serve as empirical quantile nodes
         self.support_ = np.sort(X, axis=0)
         self.n_features_ = X.shape[1]
+        self.kdes_ = [
+            stats.gaussian_kde(self.support_[:, i].copy())
+            for i in range(self.n_features_)
+        ]
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
@@ -470,7 +474,8 @@ class MarginalGaussianize(BaseTransform):
         For g(x) = Phi^{-1}(F_n(x)):
             log|dg/dx| = log f_n(x_i) - log phi(g(x_i))
 
-        where f_n is estimated from the spacing of the empirical support.
+        where f_n is estimated from a Gaussian KDE fitted to the training
+        data for each feature.
 
         Parameters
         ----------
@@ -484,25 +489,25 @@ class MarginalGaussianize(BaseTransform):
 
         Notes
         -----
-        The empirical density is approximated as::
-
-            f_hat_n(x) ~= 1 / (N * spacing)
-
-        where *spacing* is the gap between adjacent sorted training values
-        at the location of x.  Tied values produce zero spacings; these are
-        replaced by the minimum positive spacing to keep the log-density
-        finite.
+        The empirical density is approximated via a Gaussian KDE (one per
+        feature) fitted during :meth:`fit`.  Bandwidth is selected
+        automatically using Scott's rule (the default in
+        :func:`scipy.stats.gaussian_kde`).  The KDE objects are cached
+        in ``self.kdes_`` so that ``log_det_jacobian`` and repeated calls
+        to ``_per_feature_log_deriv`` do not re-fit the KDEs.
         """
         return np.sum(self._per_feature_log_deriv(X), axis=1)
 
     def _per_feature_log_deriv(
         self, X: np.ndarray, return_transform: bool = False
     ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
-        """Per-feature log |dz_i/dx_i| for marginal Gaussianization.
+        """Per-feature log |dz_i/dx_i| via cached KDE density estimates.
 
-        Returns the un-summed per-feature log-derivatives needed for both
-        ``log_det_jacobian`` (which sums them) and the full Jacobian
-        computation in ``AnnealedRBIG.jacobian``.
+        Uses the per-feature Gaussian KDEs stored in ``self.kdes_`` (fitted
+        during :meth:`fit` with Scott's rule bandwidth) to evaluate the
+        marginal density f_n(x_i) at each query point.  The log-derivative
+        is then ``log f_n(x_i) - log phi(z_i)`` where ``z_i`` is the
+        Gaussianized value.
 
         Parameters
         ----------
@@ -519,23 +524,21 @@ class MarginalGaussianize(BaseTransform):
             Only returned when ``return_transform=True``.
         """
         Xt = self.transform(X)  # Gaussianized output, shape (N, D)
-        n = self.support_.shape[0]  # number of training samples
         log_derivs = np.zeros_like(X, dtype=float)
         for i in range(self.n_features_):
-            support_i = self.support_[:, i]  # sorted training values, shape (n,)
-            spacings = np.diff(support_i)  # gaps between consecutive support points
-            pos_sp = spacings[spacings > 0]
-            min_sp = pos_sp.min() if len(pos_sp) > 0 else 1e-10
-            safe_sp = np.where(spacings > 0, spacings, min_sp)
-            # Pad to n elements: first element uses the first spacing
-            sp_full = np.concatenate([[safe_sp[0]], safe_sp])
-            ranks = np.clip(np.searchsorted(support_i, X[:, i], side="left"), 0, n - 1)
-            local_spacing = sp_full[ranks]  # spacing at each sample's location
-            # Empirical log-density: log f_hat_n(x) ~= -log(N * spacing)
-            log_f_i = -np.log(n * local_spacing)
+            # KDE-based density estimate for feature i
+            # After pickle with readonly memmap, the KDE's internal arrays
+            # may be read-only.  Re-create the KDE from a writable copy of
+            # the dataset if necessary.
+            kde = self.kdes_[i]
+            if not kde.dataset.flags.writeable:
+                kde = stats.gaussian_kde(kde.dataset.copy())
+                self.kdes_[i] = kde
+            xi = np.ascontiguousarray(X[:, i])
+            log_f_i = np.log(np.maximum(kde(xi), 1e-300))
             # Log standard-normal PDF at Gaussianized value: log phi(z_i)
             log_phi_gi = stats.norm.logpdf(Xt[:, i])
-            # Chain rule: log|dz/dx| = log f_hat_n(x) - log phi(z)
+            # Chain rule: log|dz/dx| = log f(x) - log phi(z)
             log_derivs[:, i] = log_f_i - log_phi_gi
         if return_transform:
             return log_derivs, Xt

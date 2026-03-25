@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # RBIG Loss Functions and Convergence
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/05_rbig_loss.ipynb)
 #
 # This notebook explores how `AnnealedRBIG` converges and the information
 # measures that can be used to track training progress:
@@ -27,6 +28,15 @@
 # The new API replaces the old `MaxLayersLoss`, `InformationLoss`, and
 # `NegEntropyLoss` classes with built-in convergence logic in `AnnealedRBIG`
 # and utility functions `entropy_reduction` and `total_correlation`.
+#
+# See [Information Theory Measures](../notes/information_theory_measures.md) for definitions of TC and entropy.
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 # %matplotlib inline
@@ -208,3 +218,11 @@ plt.show()
 # | `NegEntropyLoss` | Monitor `tc_per_layer_` or `score_samples` |
 # | `rbig_model.losses_` | `rbig_model.tc_per_layer_` |
 # | `InformationLoss.calculate_loss(X, Y)` | `entropy_reduction(X, Y)` |
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of TC, entropy, and MI
+# - [RBIG Algorithm Note](../notes/rbig.md) — theory and derivation of the RBIG algorithm
+# - [Configuration](../configuration.md) — guide to configuring RBIG parameters

@@ -1,10 +1,21 @@
 # Uniformization
 
-* Author: J. Emmanuel Johnson
-* Email: jemanjohnson34@gmail.com
-* Date Updated: 11-03-2020
+> Detailed mathematical reference for the uniformization step of
+> [Marginal Gaussianization](marginal_gaussianization.md). For a hands-on
+> tutorial with code, see the
+> [Marginal Transforms notebook](../notebooks/01_marginal_transforms.ipynb).
 
+## Uniform Distribution Reference
 
+The continuous uniform distribution on $[a, b]$ is defined by:
+
+**PDF**: $p(x) = \frac{1}{b - a}, \quad a \leq x \leq b$
+
+**CDF**: $F(x) = \frac{x - a}{b - a}, \quad a \leq x \leq b$
+
+**Entropy**: For independent marginals on $[a_d, b_d]$: $H(x) = \log \left[ \prod_{d=1}^{D}(b_d - a_d) \right]$. For the standard uniform on $[0, 1]^D$, this simplifies to $H(x) = 0$.
+
+---
 
 ## Forward Transformation
 
@@ -17,7 +28,7 @@ $$
 where $F_\theta(\cdot)$ is the empirical Cumulative distribution function (CDF) for $\mathcal{X}$, and $u$ is drawn from a uniform distribution, $u\sim \mathcal{U}([0,1])$.
 
 !!! note "Visual walkthrough"
-    See the [Marginal Uniformization notebook](../notebooks/01_marginal_uniformization.ipynb) for interactive plots of data distribution, empirical CDF, and resulting uniform samples.
+    See the [Marginal Transforms notebook](../notebooks/01_marginal_transforms.ipynb) for interactive plots of data distribution, empirical CDF, and resulting uniform samples.
 
 
 

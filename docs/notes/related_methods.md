@@ -1,21 +1,23 @@
-# Normalizing Flows
+# Related Methods
 
-- [Main Idea](#main-idea)
+- [Normalizing Flows](#normalizing-flows)
   - [Loss Function](#loss-function)
   - [Sampling](#sampling)
 - [Choice of Transformations](#choice-of-transformations)
   - [Prior Distribution](#prior-distribution)
   - [Jacobian](#jacobian)
+- [Density Destructors](#density-destructors)
 - [Resources](#resources)
     - [Best Tutorials](#best-tutorials)
 - [Survey of Literature](#survey-of-literature)
   - [Neural Density Estimators](#neural-density-estimators)
-  - [Deep Density Destructors](#deep-density-destructors)
 - [Code Tutorials](#code-tutorials)
   - [Tutorials](#tutorials)
   - [RBIG Upgrades](#rbig-upgrades)
   - [Cutting Edge](#cutting-edge)
   - [Github Implementations](#github-implementations)
+
+## Normalizing Flows
 
 
 ## Main Idea
@@ -161,9 +163,25 @@ This is the area of the most research within the community. There are many diffe
 
 Neural density estimators use neural networks to directly parameterize the transformations in a normalizing flow. Key approaches include Masked Autoregressive Flows (MAF) and Inverse Autoregressive Flows (IAF), which exploit autoregressive structure for efficient density evaluation or sampling, respectively.
 
-### Deep Density Destructors
+---
 
-Density destructors take a complementary view: instead of transforming a simple distribution into a complex one, they iteratively transform a complex distribution toward uniformity. See the [Deep Density Destructors](deep_density_destructors.md) notes for details.
+## Density Destructors
+
+A density destructor is a model that transforms a complex data distribution into a simple base distribution (typically uniform or Gaussian) through a sequence of invertible transformations. By "destroying" the structure in the data, we can compute exact likelihoods via the change of variables formula.
+
+### Constructive vs. Destructive
+
+We can view the approach of modeling from two perspectives: constructive or destructive. A constructive process tries to learn how to build an exact sequence of transformations to go from $z$ to $x$. The destructive process does the complete opposite and decides to create a sequence of transforms from $x$ to $z$ while also remembering the exact transforms; enabling it to reverse that sequence of transforms.
+
+Let's define two spaces: one is our data space $\mathcal X$ and the other is the base space $\mathcal Z$. We want to learn a transformation $f_\theta$ that maps us from $\mathcal X$ to $\mathcal Z$, $f : \mathcal X \rightarrow \mathcal Z$. We also want a function $\mathcal{G}_\theta$ that maps us from $\mathcal Z$ to $\mathcal X$, $\mathcal{G} : \mathcal Z \rightarrow \mathcal X$.
+
+**Generative step** (constructive): sample $z \sim \mathcal{P}_\mathcal{Z}$, then $\hat x = \mathcal G_\theta (z)$.
+
+**Inference step** (destructive): given $x \sim \mathcal{P}_\mathcal{X}$, compute $\hat z = f_\theta (x)$.
+
+Typically we want $f_\theta = \mathcal G_\theta^{-1}$, so we only need to learn one transformation. With this requirement, we can compute the likelihood exactly:
+
+$$\mathcal P_{\hat x}(x)=\mathcal P_{z} \left( \mathcal G_\theta (x) \right)\left| \text{det } \mathbf J_{\mathcal G_\theta} \right|$$
 
 ---
 
