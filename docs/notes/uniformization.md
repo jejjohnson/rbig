@@ -1,6 +1,9 @@
 # Uniformization
 
-> Detailed reference for the uniformization step of [Marginal Gaussianization](marginal_gaussianization.md). This page covers the mathematical derivations (derivative proof, log-Jacobian, density computation via change of variables) in full detail.
+> Detailed mathematical reference for the uniformization step of
+> [Marginal Gaussianization](marginal_gaussianization.md). For a hands-on
+> tutorial with code, see the
+> [Marginal Transforms notebook](../notebooks/01_marginal_transforms.ipynb).
 
 ## Uniform Distribution Reference
 
@@ -25,7 +28,7 @@ $$
 where $F_\theta(\cdot)$ is the empirical Cumulative distribution function (CDF) for $\mathcal{X}$, and $u$ is drawn from a uniform distribution, $u\sim \mathcal{U}([0,1])$.
 
 !!! note "Visual walkthrough"
-    See the [Marginal Uniformization notebook](../notebooks/01_marginal_uniformization.ipynb) for interactive plots of data distribution, empirical CDF, and resulting uniform samples.
+    See the [Marginal Transforms notebook](../notebooks/01_marginal_transforms.ipynb) for interactive plots of data distribution, empirical CDF, and resulting uniform samples.
 
 
 
