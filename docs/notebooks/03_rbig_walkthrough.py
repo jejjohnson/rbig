@@ -282,6 +282,37 @@ print(f"Mean absolute reconstruction error: {residual:.4e}")
 
 # %% [markdown]
 # ---
+# ## Layer Progression
+#
+# To visualize how the distribution evolves, we show the output after 1, 3, and
+# 5 RBIG layers. With each additional layer the joint distribution becomes more
+# circular (more Gaussian).
+
+# %%
+import seaborn as sns
+
+n_layer_list = [1, 3, 5]
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+for ax, n in zip(axes, n_layer_list, strict=False):
+    model_n = AnnealedRBIG(
+        n_layers=n,
+        rotation="pca",
+        patience=n + 1,  # never stop early in this demo
+        random_state=seed,
+    )
+    Z_n = model_n.fit_transform(data)
+    ax.hexbin(Z_n[:, 0], Z_n[:, 1], gridsize=30, cmap="Reds", mincnt=1)
+    ax.set_title(f"{n} layer{'s' if n > 1 else ''}")
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+plt.suptitle("RBIG output at increasing numbers of layers", y=1.01)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ---
 # ## Full RBIG Model with `AnnealedRBIG`
 #
 # `AnnealedRBIG` stacks many `RBIGLayer` instances and iterates until the total
