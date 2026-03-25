@@ -17,15 +17,11 @@
 # # RBIG Demo
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/04_rbig_demo.ipynb)
 #
-# This notebook demonstrates the full RBIG workflow using `AnnealedRBIG`:
+# This notebook is a practical guide to using `AnnealedRBIG` as a density
+# estimator and generative model. It covers the full workflow: fitting,
+# transforming, inverting, sampling, and scoring — everything you need to use
+# RBIG on your own data.
 #
-# 1. Fit the model to data
-# 2. Transform data to Gaussian space
-# 3. Invert the transform (check for accuracy)
-# 4. Sample new data from the learned distribution
-# 5. Estimate log-probabilities
-#
-# For the full theory behind RBIG, see the [RBIG Walk-Through](./03_rbig_walkthrough.ipynb).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -259,6 +255,6 @@ print(
 # ---
 # ## See Also
 #
-# - [RBIG Algorithm Note](03_rbig_walkthrough.ipynb) — theory and derivation of the RBIG algorithm
-# - [RBIG Walk-Through](./03_rbig_walkthrough.ipynb) — step-by-step walkthrough of RBIG internals
-# - [Configuration](../configuration.md) — guide to configuring RBIG parameters
+# - [RBIG Walk-Through](03_rbig_walkthrough.ipynb) — step-by-step theory and algorithm walkthrough
+# - [RBIG Loss & Convergence](05_rbig_loss.ipynb) — stopping criteria and convergence strategies
+#

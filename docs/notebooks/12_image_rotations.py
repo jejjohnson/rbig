@@ -17,23 +17,11 @@
 # # Image Rotations
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/12_image_rotations.ipynb)
 #
-# RBIG provides specialized rotation transforms for image data. These operate
-# in the **spatial** or **channel** domain of images rather than treating pixels
-# as generic features.
+# Standard PCA/ICA rotations treat features as a flat vector. For image data,
+# `rbig` provides **domain-specific rotations** that exploit spatial and channel
+# structure: DCT for frequency-domain decorrelation, Hartley as a self-inverse
+# alternative, and channel mixing for multi-channel data.
 #
-# All image rotations expect data in **flattened** format `(N, C·H·W)` and
-# reshape internally to `(N, C, H, W)` for computation.
-#
-# | Class | Domain | Description |
-# |-------|--------|-------------|
-# | `DCTRotation` | Spatial (per-channel) | Type-II orthonormal 2-D Discrete Cosine Transform |
-# | `HartleyRotation` | Spatial (per-channel) | Real-valued 2-D Discrete Hartley Transform (self-inverse) |
-# | `RandomChannelRotation` | Channel (per-pixel) | Random orthogonal 1×1 convolution mixing channels |
-#
-# All three are **orthonormal** → log\|det J\| = 0, so they add no cost to
-# density estimation.
-#
-# For the general theory of rotation matrices in RBIG, see the [Rotation note](08_rotation_choices.ipynb).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -329,6 +317,6 @@ plt.show()
 # ---
 # ## See Also
 #
-# - [Rotation Note](08_rotation_choices.ipynb) — mathematical properties of rotation matrices in RBIG
-# - [Rotation Choices in RBIG](./08_rotation_choices.ipynb) — comparison of PCA, ICA, and random rotations
-# - [Dimensionality-Reducing Rotations](./13_dimensionality_reduction.ipynb) — rotations that reduce dimensionality
+# - [Rotation Choices](08_rotation_choices.ipynb) — comparison of PCA, ICA, and random rotations
+# - [Dimensionality-Reducing Rotations](13_dimensionality_reduction.ipynb) — projections with K < D
+#

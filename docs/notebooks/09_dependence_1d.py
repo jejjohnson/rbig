@@ -17,20 +17,10 @@
 # # Measuring Dependence: 1D Variables
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/09_dependence_1d.ipynb)
 #
-# Linear correlation measures (Pearson, Spearman, Kendall) fail to capture
-# **nonlinear** relationships between variables. This notebook demonstrates how
-# RBIG-based Mutual Information (MI) detects dependence that traditional
-# metrics miss entirely.
+# Pearson, Spearman, and Kendall correlations are blind to nonlinear dependence.
+# This notebook demonstrates how RBIG-based Mutual Information detects
+# relationships that classical measures miss entirely.
 #
-# We compare:
-#
-# | Metric | Captures nonlinear dependence? |
-# |--------|-------------------------------|
-# | Pearson correlation | No |
-# | Spearman correlation | Partially |
-# | Kendall tau | Partially |
-# | Mutual Information (RBIG) | **Yes** |
-# | ICC (information correlation) | **Yes** |
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -170,5 +160,5 @@ print(f"  ICC:      {icc_weak:.4f}")
 # ## See Also
 #
 # - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of MI, TC, and ICC
-# - [Measuring Dependence: 2D Variables](./10_dependence_2d.ipynb) — extending MI analysis to multivariate vectors
-# - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD estimation
+# - [Measuring Dependence: 2D Variables](10_dependence_2d.ipynb) — extending MI and ICC to multivariate vectors
+#

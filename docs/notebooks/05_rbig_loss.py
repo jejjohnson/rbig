@@ -17,19 +17,10 @@
 # # RBIG Loss Functions and Convergence
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/05_rbig_loss.ipynb)
 #
-# This notebook explores how `AnnealedRBIG` converges and the information
-# measures that can be used to track training progress:
+# How do you know when RBIG has converged? This notebook explores three stopping
+# strategies — fixed layer count, TC convergence with patience, and entropy
+# reduction — and shows how to monitor training via log-likelihood.
 #
-# - **Maximum layers** — stop after a fixed number of layers.
-# - **Total Correlation (TC) reduction** — track the TC per layer and stop when
-#   it stops decreasing.
-# - **Entropy reduction** — compare the entropy before and after transformation.
-#
-# The new API replaces the old `MaxLayersLoss`, `InformationLoss`, and
-# `NegEntropyLoss` classes with built-in convergence logic in `AnnealedRBIG`
-# and utility functions `entropy_reduction` and `total_correlation`.
-#
-# See [Information Theory Measures](06_information_theory.ipynb) for definitions of TC and entropy.
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -224,5 +215,5 @@ plt.show()
 # ## See Also
 #
 # - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of TC, entropy, and MI
-# - [RBIG Algorithm Note](03_rbig_walkthrough.ipynb) — theory and derivation of the RBIG algorithm
-# - [Configuration](../configuration.md) — guide to configuring RBIG parameters
+# - [RBIG Walk-Through](03_rbig_walkthrough.ipynb) — theory and derivation of the RBIG algorithm
+#

@@ -379,23 +379,21 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")
 # transformation. Because RBIG iteratively removes structure (reduces TC), the
 # entropy reduction at each layer gives us a natural estimator.
 #
-# See [Information Theory Measures](06_information_theory.ipynb) for full
-# definitions and the functional API.
-#
 # <figure align="center">
-# <img src="../notes/pics/rbig_it/Fig_1.png" width="500">
+# <img src="../pics/rbig_it/Fig_1.png" width="500">
 # <figcaption>Information Theory measures computable via RBIG.</figcaption>
 # </figure>
 #
 # ### Entropy
 #
-# Estimated by summing entropy reductions across all RBIG layers. The total
-# entropy can be computed as the data approaches a multivariate Gaussian.
+# Estimated by summing entropy reductions across all RBIG layers. As the
+# distribution approaches a multivariate Gaussian, the total entropy can be
+# decomposed layer by layer.
 #
 # ### Mutual Information
 #
 # <figure align="center">
-# <img src="../notes/pics/rbig_it/mi.png" alt="MI using RBIG" width="500">
+# <img src="../pics/rbig_it/mi.png" alt="MI using RBIG" width="500">
 # </figure>
 #
 # Given two random vectors $\mathbf{X}$ and $\mathbf{Y}$, we first Gaussianize
@@ -406,26 +404,20 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")
 #     \mathcal{G}_\phi(\mathbf{Y})
 # \right]\right)$$
 #
-# See [notebook 06](06_information_theory.ipynb) for the functional API
-# (`mutual_information_rbig`) and [notebooks 09–10](09_dependence_1d.ipynb)
-# for practical dependence-detection examples.
-#
 # ### KL-Divergence
 #
 # <figure align="center">
-# <img src="../notes/pics/rbig_it/kld.png" width="500">
+# <img src="../pics/rbig_it/kld.png" width="500">
 # </figure>
+#
+# We estimate KL-divergence by applying the Gaussianization learned on
+# $\mathbf{Y}$ to samples from $\mathbf{X}$:
 #
 # $$D_\text{KL}\!\left[\mathbf{X} \| \mathbf{Y}\right]
 # = J\!\left[\mathcal{G}_\theta(\hat{\mathbf{y}})\right]$$
 #
-# See [notebook 06](06_information_theory.ipynb) for the functional API
-# (`kl_divergence_rbig`).
-#
-# ### References
-#
-# * Iterative Gaussianization: from ICA to Random Rotations — Laparra et al. (2011) — [Paper](https://arxiv.org/abs/1602.00229)
-# * Gaussianization — Chen & Gopinath (2000) — [PDF](https://papers.nips.cc/paper/1856-gaussianization.pdf)
+# See [notebook 06](06_information_theory.ipynb) for the functional API and
+# [notebooks 09-11](09_dependence_1d.ipynb) for practical examples.
 #
 
 # %% [markdown]
@@ -454,3 +446,4 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")
 #   [Paper](https://arxiv.org/abs/1602.00229)
 # * Gaussianization — Chen & Gopinath (2000) —
 #   [PDF](https://papers.nips.cc/paper/1856-gaussianization.pdf)
+#

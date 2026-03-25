@@ -17,18 +17,16 @@
 # # Marginal Transforms
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/01_marginal_transforms.ipynb)
 #
-# This notebook covers the **marginal transforms** used in the RBIG pipeline —
-# both the theory and all available implementations.
+# Marginal Gaussianization is the first building block of the RBIG algorithm.
+# It transforms each feature **independently** to a standard Gaussian — a
+# necessary preprocessing step before rotation can mix the dimensions.
 #
-# **Contents**
+# This notebook covers:
 #
-# 1. [Theory](#theory)
-# 2. [Data](#data)
-# 3. [Step 1 — Marginal Uniformization](#step-1--marginal-uniformization)
-# 4. [Step 2 — Marginal Gaussianization](#step-2--marginal-gaussianization)
-# 5. [All Available Methods](#all-available-methods)
-# 6. [Comparison](#comparison)
-# 7. [Summary](#summary)
+# - **Why** marginal transforms matter for density estimation and normalizing flows
+# - **How** the two-step pipeline (CDF → uniform → probit → Gaussian) works
+# - **All 7 implementations** available in `rbig`, with a head-to-head comparison
+#
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -41,11 +39,14 @@
 # ---
 # ## Theory
 #
-# ### What is Marginal Gaussianization?
+# ### Why Marginal Gaussianization?
 #
-# Marginal Gaussianization is a **dimension-wise** (feature-independent)
-# transform whose Jacobian is a diagonal matrix. It maps each feature of a
-# $d$-dimensional random variable to a standard Gaussian independently.
+# Many statistical methods assume Gaussian data. Marginal Gaussianization makes
+# that assumption true — at least marginally — by applying an invertible,
+# dimension-wise transform. Because each dimension is handled independently, the
+# Jacobian is **diagonal**, making the log-determinant cheap to compute
+# ($O(D)$ instead of $O(D^3)$). This is critical for density estimation in
+# normalizing flows.
 #
 # ### The Pipeline
 #
@@ -63,30 +64,45 @@
 #
 #    $$z_d = \Phi^{-1}(u_d)$$
 #
-# ### Why Diagonal Jacobian?
+# ### Log-Determinant Jacobian
 #
-# Because each dimension is transformed independently, the Jacobian is diagonal:
+# The key property is that the derivative of the CDF is the PDF: $dF/dx = f(x)$.
+# Combined with the probit step, the full log-determinant Jacobian is:
 #
 # $$\log|\det J| = \sum_{d=1}^{D} \log\left|\frac{dz_d}{dx_d}\right|$$
 #
-# This makes the log-determinant cheap to compute ($O(D)$ instead of $O(D^3)$),
-# which is critical for density estimation in normalizing flows.
+# This diagonal structure means we only need per-dimension derivatives — no
+# matrix determinants.
+#
+# ### Boundary Issues
+#
+# At test time, points outside the training support can cause the probit to
+# diverge ($\Phi^{-1}(0) = -\infty$, $\Phi^{-1}(1) = +\infty$). Two
+# strategies exist:
+#
+# - **Clip to boundaries** — map outliers to $[\epsilon, 1-\epsilon]$
+#   (simple, used by `MarginalGaussianize`)
+# - **KDE tails** — use a smooth KDE whose tails extend beyond the training
+#   range (used by `MarginalKDEGaussianize`)
+#
+# See the [Boundary Issues notebook](07_boundary_issues.ipynb) for a detailed
+# comparison.
 #
 # ### CDF Estimation Methods
 #
 # The key design choice is **how to estimate $F_d$**. Different estimators trade
 # off smoothness, accuracy, and speed:
 #
-# - **Empirical CDF** (rank-based) — fast, non-parametric, piecewise-constant
-# - **KDE CDF** — smooth, bandwidth-dependent
-# - **Quantile transform** — rank-based with interpolation
-# - **GMM CDF** — parametric mixture, analytic
-# - **Spline CDF** — smooth monotone interpolation
+# | Class | CDF Method | Best for |
+# |-------|-----------|----------|
+# | `MarginalUniformize` | Empirical (rank) | Uniformization step |
+# | `MarginalGaussianize` | Empirical + probit | Default in `RBIGLayer` |
+# | `MarginalKDEGaussianize` | KDE + probit | Smooth CDF, small data |
+# | `QuantileGaussianizer` | Quantile (sklearn) | Large data |
+# | `KDEGaussianizer` | KDE + probit (bijector) | Analytic Jacobian |
+# | `GMMGaussianizer` | GMM CDF + probit | Multimodal marginals |
+# | `SplineGaussianizer` | PCHIP spline | Smooth + fast + accurate |
 #
-# See the [Uniformization note](01_marginal_transforms.ipynb) for the full
-# mathematical derivation and the
-# [Marginal Gaussianization note](01_marginal_transforms.ipynb)
-# for implementation details.
 
 # %%
 # %matplotlib inline
@@ -112,7 +128,9 @@ plt.style.use("seaborn-v0_8-paper")
 # ## Data
 #
 # We use a **Gamma(4)** distribution — a skewed, non-Gaussian marginal that
-# clearly shows the effect of each transform.
+# clearly shows the effect of each transform. Its asymmetry makes it easy to
+# see whether the output is truly Gaussian.
+#
 
 # %%
 seed = 123
@@ -133,10 +151,15 @@ plt.show()
 # ---
 # ## Step 1 — Marginal Uniformization
 #
-# `MarginalUniformize` uses the empirical CDF (rank-based with Hazen
-# continuity correction) to map each marginal to Uniform[0, 1].
+# The first step maps each marginal to a Uniform[0, 1] distribution using the
+# empirical CDF. `MarginalUniformize` uses a rank-based estimator with Hazen
+# continuity correction:
 #
 # $$u = \hat{F}_n(x) = \frac{\text{rank}(x) + 0.5}{N}$$
+#
+# This is useful on its own (e.g., for copula models) and is the intermediate
+# step inside every Gaussianizer.
+#
 
 # %%
 marg_unif = MarginalUniformize(bound_correct=True, eps=1e-6)
@@ -165,6 +188,10 @@ print(f"Mean |round-trip error|: {np.abs(X - X_rt).mean():.2e}")
 #
 # `MarginalGaussianize` combines the empirical CDF with the probit transform
 # $\Phi^{-1}$ in a single step: $z = \Phi^{-1}(\hat{F}_n(x))$.
+#
+# Why probit? Because $\Phi^{-1}$ maps Uniform[0,1] exactly to $\mathcal{N}(0,1)$
+# — so if the CDF estimate is accurate, the output is Gaussian by construction.
+#
 
 # %%
 marg_gauss = MarginalGaussianize(bound_correct=True, eps=1e-6)
@@ -201,7 +228,10 @@ print(
 #
 # Beyond the two core transforms above, `rbig` provides several alternative
 # marginal Gaussianizers. Each estimates the CDF differently, offering different
-# tradeoffs in smoothness, speed, and accuracy.
+# tradeoffs in smoothness, speed, and accuracy. The right choice depends on your
+# data size, whether you need an analytic Jacobian, and how smooth you want the
+# transform to be.
+#
 
 # %% [markdown]
 # ### MarginalKDEGaussianize
@@ -354,3 +384,10 @@ for name, model in models.items():
 #
 # All transforms follow the scikit-learn API: `.fit(X)`, `.transform(X)`,
 # `.inverse_transform(Z)`.
+#
+# ### References
+#
+# * Quantile Transformation — [sklearn](https://stats.stackexchange.com/questions/325570/quantile-transformation-with-gaussian-distribution-sklearn-implementation) | [PyTorch](https://github.com/MilesCranmer/differentiable_quantile_transform)
+# * KDE — [Density Estimation](../notes/density_estimation.md#kernel-density-estimation)
+# * Splines — [Neural Spline Flows](https://github.com/bayesiains/nsf) | [TF Probability](https://github.com/tensorflow/probability/blob/master/tensorflow_probability/python/bijectors/rational_quadratic_spline.py)
+#

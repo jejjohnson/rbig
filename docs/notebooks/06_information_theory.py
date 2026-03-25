@@ -17,15 +17,21 @@
 # # Information Theory Measures with RBIG
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/06_information_theory.ipynb)
 #
-# This notebook demonstrates **two approaches** for estimating information-theoretic
-# quantities with RBIG, and compares both against analytical values on Gaussian data.
+# A key advantage of RBIG is that information-theoretic quantities fall out
+# naturally from the Gaussianization process. This notebook demonstrates
+# **two approaches** for estimating them, and compares both against analytical
+# values on Gaussian data where ground truth is available.
 #
-# | Approach | Method | Key idea |
-# |---|---|---|
-# | **Change-of-variables** | $\log p(x) = \log p_Z(f(x)) + \log\lvert\det J\rvert$ | Standard normalizing-flow density estimation |
-# | **RBIG-way** (Laparra et al. 2011, 2020) | Per-layer TC reduction | No Jacobian needed; sums dependence removed per layer |
+# <figure align="center">
+# <img src="../pics/rbig_it/Fig_1.png" alt="IT measures" width="500">
+# <figcaption>Information Theory measures computable via RBIG.</figcaption>
+# </figure>
 #
-# For mathematical definitions, see the [Information Theory Measures note](06_information_theory.ipynb).
+# | Approach | How it works | Pros |
+# |----------|-------------|------|
+# | **Change-of-variables** | Fit a full RBIG model, use the learned density | Single model, exact density |
+# | **RBIG-way** | Sum per-layer TC reductions | No Jacobian needed, more stable |
+#
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -61,7 +67,7 @@ from rbig import (
 # %%
 seed = 42
 rng = np.random.RandomState(seed)
-n_samples = 5_000
+n_samples = 1_000
 d = 2  # dimensionality per block
 
 # Joint covariance for [X, Y] with cross-correlations
@@ -83,13 +89,21 @@ mu_shift = np.array([0.5, 0.0])
 X_shifted = rng.multivariate_normal(mu_shift, CX, size=n_samples)
 
 # Common RBIG settings
-rbig_kw = dict(n_layers=50, rotation="pca", patience=10, random_state=seed)
+rbig_kw = dict(n_layers=20, rotation="pca", patience=10, random_state=seed)
 
 # %% [markdown]
 # ---
 # ## 1. Total Correlation
 #
-# $$\mathrm{TC}(X) = \sum_i H(X_i) - H(X)$$
+# Total correlation measures the overall statistical dependence among all
+# dimensions of a random vector — how far the joint distribution is from
+# being fully independent:
+#
+# $$\mathrm{TC}(X) = \sum_i H(X_i) - H(X) = D_\text{KL}\left[ p(\mathbf{x}) \| \prod_d p(x_d) \right]$$
+#
+# TC is zero if and only if all dimensions are independent. In 2D, TC equals
+# the mutual information.
+#
 
 # %% [markdown]
 # ### Analytical
@@ -122,13 +136,19 @@ print(f"TC(XY) RBIG-way: {tc_rbig_XY:.4f} nats")
 # ---
 # ## 2. Entropy
 #
-# $$H(X) = \frac{1}{2}\log\lvert 2\pi e\,\Sigma \rvert$$
+# Entropy measures the uncertainty of a random variable — the expected
+# information content:
+#
+# $$H(X) = -\int p(x) \log p(x) \, dx$$
+#
+# For Gaussian data: $H(X) = \frac{1}{2}\log\lvert 2\pi e\,\Sigma \rvert$
 #
 # **RBIG-way**: $H(X) = \sum_d H(X_d) - \mathrm{TC}(X)$ — marginal entropies minus
 # the RBIG-accumulated total correlation (no Jacobian needed).
 #
 # **Change-of-variables**: $H(X) = -\mathbb{E}[\log p(x)]$ using the normalizing-flow
 # density $\log p(x) = \log p_Z(f(x)) + \log\lvert\det J\rvert$.
+#
 
 # %% [markdown]
 # ### Analytical
@@ -164,10 +184,15 @@ print(f"H(XY) RBIG-way: {H_XY_rbig:.4f} nats")
 # ---
 # ## 3. Mutual Information
 #
+# Mutual information quantifies how much knowing $X$ tells you about $Y$
+# (and vice versa). It is zero if and only if $X$ and $Y$ are independent —
+# unlike linear correlation, MI captures **all** forms of dependence:
+#
 # $$\mathrm{MI}(X;Y) = H(X) + H(Y) - H(X,Y)$$
 #
 # **RBIG-way**: $\mathrm{MI}(X;Y) = \mathrm{TC}([G_X(X),\, G_Y(Y)])$ —
 # Gaussianize each block independently, then measure the TC of the concatenation.
+#
 
 # %% [markdown]
 # ### Analytical
@@ -196,6 +221,9 @@ print(f"MI(X;Y) RBIG-way: {mi_rbig:.4f} nats")
 # ---
 # ## 4. KL Divergence
 #
+# KL-divergence measures how one probability distribution $P$ differs from a
+# reference distribution $Q$. It is asymmetric and always non-negative:
+#
 # $$\mathrm{KL}(P \| Q) = \int p(x) \log\frac{p(x)}{q(x)}\,dx$$
 #
 # **RBIG-way**: $\mathrm{KL}(P_X \| P_Y) = \sum_d D(Z_d \| \mathcal{N}(0,1)) + \mathrm{TC}(Z)$
@@ -203,6 +231,7 @@ print(f"MI(X;Y) RBIG-way: {mi_rbig:.4f} nats")
 # per-marginal KL to standard Gaussian plus the TC of Z.
 #
 # **Change-of-variables**: Uses cross-scoring of P's density model on Q's samples.
+#
 
 # %% [markdown]
 # ### Analytical
@@ -250,7 +279,13 @@ print(f"{'KLD':12} {kld_true:12.4f} {kld_cov:16.4f} {kld_rbig:12.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of TC, entropy, MI, and KLD
-# - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
-# - [Measuring Dependence: 2D Variables](./10_dependence_2d.ipynb) — MI for multivariate dependence
-# - [Information Theory with Synthetic Stock-Market Data](./11_real_world_it.ipynb) — practical IT application
+# - [Measuring Dependence: 1D Variables](09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
+# - [Measuring Dependence: 2D Variables](10_dependence_2d.ipynb) — MI for multivariate dependence
+# - [Information Theory with Synthetic Stock-Market Data](11_real_world_it.ipynb) — IT measures on financial data
+#
+# ### References
+#
+# * Nonlinear Extraction of "Independent Components" of elliptically symmetric
+#   densities using radial Gaussianization — Lyu & Simoncelli (2008) —
+#   [PDF](https://www.cns.nyu.edu/pub/lcv/lyu08a.pdf)
+#
