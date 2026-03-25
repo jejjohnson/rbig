@@ -169,8 +169,6 @@ class TestEstimateKLD:
 # Integration tests (accuracy, slow)
 # ---------------------------------------------------------------------------
 
-pytestmark_integration = pytest.mark.integration
-
 
 @pytest.fixture
 def gaussian_2d_large():

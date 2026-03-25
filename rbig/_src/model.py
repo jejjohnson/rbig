@@ -243,7 +243,9 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
     layers_ : list of RBIGLayer
         Fitted RBIG layers in application order.
     tc_per_layer_ : list of float
-        Total correlation of the data after each fitted layer.
+        Total correlation of the data at each stage.  Index 0 is the TC
+        of the *input* data (before any layers); index *k* >= 1 is the TC
+        after layer *k*.
     log_det_train_ : np.ndarray of shape (n_samples,)
         Accumulated per-sample log-det-Jacobian over all layers,
         computed on the training data during ``fit``.

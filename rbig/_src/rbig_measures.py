@@ -26,7 +26,10 @@ Laparra, V., Johnson, J.E., et al. (2020).
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from rbig._src.model import AnnealedRBIG
 
 import numpy as np
 
@@ -37,7 +40,7 @@ from rbig._src.densities import kl_to_standard_normal, marginal_entropy
 # ---------------------------------------------------------------------------
 
 
-def total_correlation_rbig_reduction(model) -> float:
+def total_correlation_rbig_reduction(model: AnnealedRBIG) -> float:
     """Total correlation via per-layer TC reduction.
 
     TC(X) = tc_per_layer_[0] − tc_per_layer_[-1]
@@ -55,7 +58,7 @@ def total_correlation_rbig_reduction(model) -> float:
     return model.total_correlation_reduction()
 
 
-def entropy_rbig_reduction(model, X: np.ndarray) -> float:
+def entropy_rbig_reduction(model: AnnealedRBIG, X: np.ndarray) -> float:
     """Entropy via marginal entropies minus RBIG-way TC.
 
     H(X) = Σ_d H(X_d) − TC(X)
@@ -82,12 +85,12 @@ def entropy_rbig_reduction(model, X: np.ndarray) -> float:
 
 
 def mutual_information_rbig_reduction(
-    model_X,
-    model_Y,
+    model_X: AnnealedRBIG,
+    model_Y: AnnealedRBIG,
     X: np.ndarray,
     Y: np.ndarray,
     *,
-    model_XY=None,
+    model_XY: AnnealedRBIG | None = None,
     rbig_kwargs: dict[str, Any] | None = None,
 ) -> float:
     """Mutual information via RBIG-way TC reduction.
@@ -134,7 +137,7 @@ def mutual_information_rbig_reduction(
 
 
 def kl_divergence_rbig_reduction(
-    model_Y,
+    model_Y: AnnealedRBIG,
     X: np.ndarray,
     *,
     rbig_kwargs: dict[str, Any] | None = None,
@@ -293,10 +296,11 @@ def estimate_kld(
 ) -> float:
     """Estimate KL divergence KLD(P_X ‖ P_Y) via RBIG-way TC reduction.
 
-    KLD(P_X ‖ P_Y) ≈ Σ_d D(Z_d ‖ N(0,1)) + TC(Z)  where Z = G_Y(X)
+    KLD(P_X ‖ P_Y) ≈ Σ_d KL(P_{Z_d} ‖ N(0, 1)) + TC(Z),  where Z = G_Y(X)
 
     Fits an ``AnnealedRBIG`` model on Y, applies its transform to X,
-    then estimates per-marginal KL to N(0,1) + TC of the result.
+    then estimates the sum of per-marginal KL divergences to N(0, 1)
+    plus the total correlation of Z.
 
     Parameters
     ----------
