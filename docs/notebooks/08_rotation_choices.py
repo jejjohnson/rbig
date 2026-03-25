@@ -36,7 +36,7 @@
 # Set `whiten=True` (PCA) or `orthogonal=False` (ICA) to include the
 # non-orthogonal scaling/whitening step.
 #
-# For the mathematical properties of rotation matrices (orthogonality, Jacobian, decompositions), see the [Rotation note](../notes/rotation.md).
+# For the mathematical properties of rotation matrices (orthogonality, Jacobian, decompositions), see the [Rotation note](08_rotation_choices.ipynb).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -244,6 +244,6 @@ for name, model in models.items():
 # ---
 # ## See Also
 #
-# - [Rotation Note](../notes/rotation.md) — mathematical properties of rotation matrices in RBIG
+# - [Rotation Note](08_rotation_choices.ipynb) — mathematical properties of rotation matrices in RBIG
 # - [Image Rotations](./12_image_rotations.ipynb) — specialized rotations for image data (DCT, Hartley, channel mixing)
 # - [Dimensionality-Reducing Rotations](./13_dimensionality_reduction.ipynb) — rotations that reduce dimensionality
