@@ -376,6 +376,11 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         )  # accumulated log|det J|; shape (n_samples,)
         zero_count = 0  # consecutive non-improving layer counter
 
+        # Record TC of the *input* data (before any layers).  This is
+        # needed by total_correlation_reduction() which uses
+        # tc_per_layer_[0] - tc_per_layer_[-1].
+        self.tc_per_layer_.append(self._total_correlation(Xt))
+
         pbar = maybe_tqdm(
             range(self.n_layers),
             verbose=self.verbose,
@@ -588,6 +593,25 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         """
         check_is_fitted(self)
         return float(-np.mean(self.score_samples_raw_()))
+
+    def total_correlation_reduction(self) -> float:
+        """Total correlation removed by RBIG (RBIG-way TC estimation).
+
+        Uses the per-layer TC reduction approach from Laparra et al. (2011):
+
+            TC(X) = TC₀ − TCₖ = Σₖ ΔTCₖ
+
+        where TC₀ is the total correlation of the input and TCₖ is the
+        residual TC after K layers of Gaussianization.  When the model has
+        converged, TCₖ ≈ 0 and the result equals TC₀.
+
+        Returns
+        -------
+        tc : float
+            Estimated total correlation in nats.
+        """
+        check_is_fitted(self)
+        return float(self.tc_per_layer_[0] - self.tc_per_layer_[-1])
 
     def score_samples_raw_(self) -> np.ndarray:
         """Log-likelihood for the stored training data without recomputing layers.
