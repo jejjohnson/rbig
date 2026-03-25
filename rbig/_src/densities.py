@@ -62,6 +62,56 @@ def marginal_entropy(X: np.ndarray, correction: bool = True) -> np.ndarray:
     return entropies
 
 
+def kl_to_standard_normal(X: np.ndarray, n_grid: int = 2000) -> np.ndarray:
+    """Per-dimension KL divergence from the empirical distribution to N(0,1).
+
+    For each feature dimension d, estimates
+
+        D_KL(X_d ‖ N(0,1)) = ∫ p(x) log(p(x) / φ(x)) dx
+
+    where p is a KDE density estimate and φ is the standard normal PDF.
+    The integral is evaluated via numerical quadrature on a uniform grid
+    (matching the MATLAB ``ksdensity`` approach from
+    Laparra et al. 2020).
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n_samples, n_features)
+        Data matrix.  Each column is treated independently.
+    n_grid : int, optional (default=2000)
+        Number of grid points for numerical integration.
+
+    Returns
+    -------
+    kl : np.ndarray of shape (n_features,)
+        Per-dimension KL divergence in nats.  Clamped to ≥ 0.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from rbig._src.densities import kl_to_standard_normal
+    >>> rng = np.random.default_rng(0)
+    >>> X = rng.standard_normal((2000, 2))
+    >>> kl = kl_to_standard_normal(X)
+    >>> kl.shape
+    (2,)
+    >>> np.all(kl < 0.1)  # near zero for standard normal input
+    True
+    """
+    n_features = X.shape[1]
+    kl = np.zeros(n_features)
+    for d in range(n_features):
+        kde = stats.gaussian_kde(X[:, d])
+        lo, hi = X[:, d].min() - 4, X[:, d].max() + 4
+        z_grid = np.linspace(lo, hi, n_grid)
+        dz = z_grid[1] - z_grid[0]
+        p = kde(z_grid)
+        q = stats.norm.pdf(z_grid)
+        mask = p > 1e-300
+        kl[d] = max(0.0, np.sum(p[mask] * np.log(p[mask] / q[mask])) * dz)
+    return kl
+
+
 def joint_entropy_gaussian(X: np.ndarray) -> float:
     """Entropy of a multivariate Gaussian fitted to the covariance of X.
 

@@ -243,7 +243,9 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
     layers_ : list of RBIGLayer
         Fitted RBIG layers in application order.
     tc_per_layer_ : list of float
-        Total correlation of the data after each fitted layer.
+        Total correlation of the data at each stage.  Index 0 is the TC
+        of the *input* data (before any layers); index *k* >= 1 is the TC
+        after layer *k*.
     log_det_train_ : np.ndarray of shape (n_samples,)
         Accumulated per-sample log-det-Jacobian over all layers,
         computed on the training data during ``fit``.
@@ -375,6 +377,11 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
             n_samples
         )  # accumulated log|det J|; shape (n_samples,)
         zero_count = 0  # consecutive non-improving layer counter
+
+        # Record TC of the *input* data (before any layers).  This is
+        # needed by total_correlation_reduction() which uses
+        # tc_per_layer_[0] - tc_per_layer_[-1].
+        self.tc_per_layer_.append(self._total_correlation(Xt))
 
         pbar = maybe_tqdm(
             range(self.n_layers),
@@ -588,6 +595,49 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         """
         check_is_fitted(self)
         return float(-np.mean(self.score_samples_raw_()))
+
+    def total_correlation_reduction(self) -> float:
+        """Total correlation removed by RBIG (RBIG-way TC estimation).
+
+        Uses the per-layer TC reduction approach from Laparra et al. (2011):
+
+            TC(X) = TC₀ − TCₖ = Σₖ ΔTCₖ
+
+        where TC₀ is the total correlation of the input and TCₖ is the
+        residual TC after K layers of Gaussianization.  When the model has
+        converged, TCₖ ≈ 0 and the result equals TC₀.
+
+        Returns
+        -------
+        tc : float
+            Estimated total correlation in nats.
+        """
+        check_is_fitted(self)
+        return float(self.tc_per_layer_[0] - self.tc_per_layer_[-1])
+
+    def entropy_reduction(self, X: np.ndarray) -> float:
+        """Differential entropy via RBIG-way TC reduction.
+
+        Uses the identity H(X) = Σ_d H(X_d) − TC(X) where marginal
+        entropies are estimated via KDE and TC is obtained from the
+        cumulative per-layer TC reduction (Laparra et al. 2011).
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_features)
+            Data whose entropy is estimated (typically the training data).
+
+        Returns
+        -------
+        h : float
+            Estimated differential entropy in nats.
+        """
+        check_is_fitted(self)
+        from rbig._src.densities import marginal_entropy
+
+        h_marginals = marginal_entropy(X)  # shape (n_features,)
+        tc = self.total_correlation_reduction()
+        return float(np.sum(h_marginals) - tc)
 
     def score_samples_raw_(self) -> np.ndarray:
         """Log-likelihood for the stored training data without recomputing layers.
