@@ -43,31 +43,29 @@ from rbig import DCTRotation, HartleyRotation, RandomChannelRotation
 # ---
 # ## Grayscale Images (C=1)
 #
-# We create a small synthetic 8×8 grayscale "image" dataset to demonstrate
-# the spatial transforms.
+# We use the **sklearn digits dataset** — 1,797 handwritten digit images at
+# 8×8 pixels. This is a real image dataset that's perfect for demonstrating
+# spatial transforms.
 
 # %%
-rng = np.random.default_rng(42)
-N, C, H, W = 200, 1, 8, 8
-D = C * H * W  # 64
+from sklearn.datasets import load_digits
 
-# Synthetic images: smooth gradients + noise (not just random pixels)
-coords = np.stack(np.meshgrid(np.linspace(0, 1, W), np.linspace(0, 1, H)), axis=-1)
-images = np.zeros((N, C, H, W))
-for i in range(N):
-    freq = rng.uniform(1, 4, size=2)
-    phase = rng.uniform(0, 2 * np.pi, size=2)
-    pattern = np.sin(freq[0] * coords[..., 0] + phase[0]) + np.cos(freq[1] * coords[..., 1] + phase[1])
-    images[i, 0] = pattern + 0.3 * rng.standard_normal((H, W))
+rng = np.random.default_rng(42)
+
+digits = load_digits()
+images = digits.images  # (1797, 8, 8)
+N, H, W = images.shape
+C = 1
+D = C * H * W  # 64
 
 X_gray = images.reshape(N, D)  # flatten to (N, 64)
 
-fig, axes = plt.subplots(1, 5, figsize=(12, 2.5))
+fig, axes = plt.subplots(1, 10, figsize=(14, 2))
 for i, ax in enumerate(axes):
-    ax.imshow(images[i, 0], cmap="gray")
-    ax.set_title(f"Image {i}")
+    ax.imshow(images[i], cmap="gray_r")
+    ax.set_title(f"{digits.target[i]}", fontsize=11)
     ax.axis("off")
-plt.suptitle("Sample grayscale images (8×8)", y=1.02)
+plt.suptitle("sklearn digits: 8×8 grayscale handwritten digits", y=1.05)
 plt.tight_layout()
 plt.show()
 
@@ -87,15 +85,15 @@ dct.fit(X_gray)
 X_dct = dct.transform(X_gray)
 
 # Visualise: original vs DCT coefficients
-fig, axes = plt.subplots(2, 5, figsize=(12, 5))
-for i in range(5):
-    axes[0, i].imshow(X_gray[i].reshape(H, W), cmap="gray")
+fig, axes = plt.subplots(2, 8, figsize=(16, 4))
+for i in range(8):
+    axes[0, i].imshow(X_gray[i].reshape(H, W), cmap="gray_r")
     axes[0, i].axis("off")
     axes[1, i].imshow(X_dct[i].reshape(H, W), cmap="RdBu_r")
     axes[1, i].axis("off")
-axes[0, 0].set_ylabel("Original", fontsize=11)
-axes[1, 0].set_ylabel("DCT coeffs", fontsize=11)
-plt.suptitle("DCTRotation: pixel space → frequency space", y=1.02)
+axes[0, 0].set_ylabel("Pixels", fontsize=11)
+axes[1, 0].set_ylabel("DCT", fontsize=11)
+plt.suptitle("DCTRotation: pixel space → frequency coefficients", y=1.02)
 plt.tight_layout()
 plt.show()
 
@@ -121,14 +119,14 @@ X_double = hartley.transform(X_hartley)
 print(f"Hartley self-inverse error: {np.abs(X_gray - X_double).max():.2e}")
 
 # %%
-fig, axes = plt.subplots(2, 5, figsize=(12, 5))
-for i in range(5):
-    axes[0, i].imshow(X_gray[i].reshape(H, W), cmap="gray")
+fig, axes = plt.subplots(2, 8, figsize=(16, 4))
+for i in range(8):
+    axes[0, i].imshow(X_gray[i].reshape(H, W), cmap="gray_r")
     axes[0, i].axis("off")
     axes[1, i].imshow(X_hartley[i].reshape(H, W), cmap="RdBu_r")
     axes[1, i].axis("off")
-axes[0, 0].set_ylabel("Original", fontsize=11)
-axes[1, 0].set_ylabel("Hartley coeffs", fontsize=11)
+axes[0, 0].set_ylabel("Pixels", fontsize=11)
+axes[1, 0].set_ylabel("Hartley", fontsize=11)
 plt.suptitle("HartleyRotation: pixel space → Hartley domain", y=1.02)
 plt.tight_layout()
 plt.show()
@@ -160,24 +158,28 @@ plt.show()
 
 # %% [markdown]
 # ---
-# ## RGB Images (C=3)
+# ## Multi-Channel Images (C=3)
 #
 # `RandomChannelRotation` is designed for **multi-channel** data. It applies
 # the same random orthogonal matrix at every spatial location — equivalent to
 # a 1×1 convolution that mixes channels.
 #
-# This is useful when channels are correlated (e.g., R/G/B in natural images).
+# This is useful when channels are correlated (e.g., R/G/B in natural images,
+# or multi-spectral bands in remote sensing).
+#
+# We construct 3-channel images by stacking digit images from three
+# classes — these naturally have correlated spatial structure.
 
 # %%
-N_rgb, C_rgb = 200, 3
-D_rgb = C_rgb * H * W  # 192
+C_rgb = 3
+# Use digits 0, 1, 2 as three "channels"
+ch0 = digits.images[digits.target == 0][:200]
+ch1 = digits.images[digits.target == 1][:200]
+ch2 = digits.images[digits.target == 2][:200]
+N_rgb = min(len(ch0), len(ch1), len(ch2))
 
-# Synthetic RGB images: correlated channels
-base = rng.standard_normal((N_rgb, H, W))
-images_rgb = np.zeros((N_rgb, C_rgb, H, W))
-images_rgb[:, 0] = base + 0.3 * rng.standard_normal((N_rgb, H, W))  # R
-images_rgb[:, 1] = 0.8 * base + 0.3 * rng.standard_normal((N_rgb, H, W))  # G (correlated with R)
-images_rgb[:, 2] = 0.5 * base + 0.5 * rng.standard_normal((N_rgb, H, W))  # B
+images_rgb = np.stack([ch0[:N_rgb], ch1[:N_rgb], ch2[:N_rgb]], axis=1)  # (N, 3, 8, 8)
+D_rgb = C_rgb * H * W
 
 X_rgb = images_rgb.reshape(N_rgb, D_rgb)
 
