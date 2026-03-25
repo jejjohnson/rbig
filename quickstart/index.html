@@ -597,10 +597,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
+  <a href="#quick-estimates-level-0-data-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Setup
+        Quick estimates (Level 0 — data only)
       
     </span>
   </a>
@@ -608,10 +608,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fit-models" class="md-nav__link">
+  <a href="#pre-fitted-models-level-1-more-control" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fit models
+        Pre-fitted models (Level 1 — more control)
       
     </span>
   </a>
@@ -619,10 +619,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#total-correlation" class="md-nav__link">
+  <a href="#model-level-access-level-2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Total Correlation
+        Model-level access (Level 2)
       
     </span>
   </a>
@@ -630,43 +630,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#entropy" class="md-nav__link">
+  <a href="#change-of-variables-approach-also-available" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entropy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mutual-information" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mutual Information
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kl-divergence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        KL-Divergence
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#full-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Full summary
+        Change-of-variables approach (also available)
       
     </span>
   </a>
@@ -1851,10 +1818,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
+  <a href="#quick-estimates-level-0-data-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Setup
+        Quick estimates (Level 0 — data only)
       
     </span>
   </a>
@@ -1862,10 +1829,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fit-models" class="md-nav__link">
+  <a href="#pre-fitted-models-level-1-more-control" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fit models
+        Pre-fitted models (Level 1 — more control)
       
     </span>
   </a>
@@ -1873,10 +1840,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#total-correlation" class="md-nav__link">
+  <a href="#model-level-access-level-2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Total Correlation
+        Model-level access (Level 2)
       
     </span>
   </a>
@@ -1884,43 +1851,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#entropy" class="md-nav__link">
+  <a href="#change-of-variables-approach-also-available" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entropy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mutual-information" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mutual Information
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kl-divergence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        KL-Divergence
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#full-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Full summary
+        Change-of-variables approach (also available)
       
     </span>
   </a>
@@ -2020,113 +1954,118 @@
 <p>For a full walkthrough with theory, see the <a href="../notebooks/03_rbig_walkthrough/">RBIG Walk-Through notebook</a>.</p>
 <hr />
 <h2 id="part-2-information-theory-measures">Part 2 — Information Theory Measures</h2>
-<p>RBIG can estimate classical information-theoretic quantities as a by-product of the Gaussianization. Here we show all of them on 2-D data.</p>
-<h3 id="setup">Setup</h3>
+<p>RBIG estimates information-theoretic quantities using the <strong>per-layer TC
+reduction</strong> approach from Laparra et al. (2011, 2020).  Each RBIG layer
+removes statistical dependence; summing these reductions gives the total
+correlation — no Jacobian estimation needed.</p>
+<h3 id="quick-estimates-level-0-data-only">Quick estimates (Level 0 — data only)</h3>
+<p>The simplest API: pass data, get an IT estimate.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">AnnealedRBIG</span><span class="p">,</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">mutual_information_rbig</span><span class="p">,</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">kl_divergence_rbig</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">total_correlation_rbig</span><span class="p">,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">entropy_rbig</span><span class="p">,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">information_summary</span><span class="p">,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="n">N</span> <span class="o">=</span> <span class="mi">1_000</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Two correlated 2-D random vectors</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="n">cov</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cov</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span>  <span class="c1"># x0 ↔ y0</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="n">cov</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">cov</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># x1 ↔ y1</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="n">joint</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="n">X</span> <span class="o">=</span> <span class="n">joint</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># (N, 2)</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="n">Y</span> <span class="o">=</span> <span class="n">joint</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]</span>  <span class="c1"># (N, 2)</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="n">XY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">])</span>  <span class="c1"># (N, 4)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="n">estimate_tc</span><span class="p">,</span> <span class="n">estimate_entropy</span><span class="p">,</span> <span class="n">estimate_mi</span><span class="p">,</span> <span class="n">estimate_kld</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Two correlated 2-D random vectors</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">cov</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cov</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">cov</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">cov</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="n">joint</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">cov</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1_000</span><span class="p">)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">joint</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">joint</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">tc</span> <span class="o">=</span> <span class="n">estimate_tc</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="n">h</span>  <span class="o">=</span> <span class="n">estimate_entropy</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="n">mi</span> <span class="o">=</span> <span class="n">estimate_mi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="n">kl</span> <span class="o">=</span> <span class="n">estimate_kld</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TC(X,Y):    </span><span class="si">{</span><span class="n">tc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;H(X,Y):     </span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MI(X; Y):   </span><span class="si">{</span><span class="n">mi</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KLD(X || Y): </span><span class="si">{</span><span class="n">kl</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="fit-models">Fit models</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">model_x</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">model_y</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">model_xy</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">model_x</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">model_y</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">model_xy</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">XY</span><span class="p">)</span>
+<h3 id="pre-fitted-models-level-1-more-control">Pre-fitted models (Level 1 — more control)</h3>
+<p>Fit models once, then compute multiple measures without re-fitting.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">AnnealedRBIG</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">total_correlation_rbig_reduction</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">entropy_rbig_reduction</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">mutual_information_rbig_reduction</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">model_x</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">model_y</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">model_x</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">model_y</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="n">tc</span> <span class="o">=</span> <span class="n">total_correlation_rbig_reduction</span><span class="p">(</span><span class="n">model_x</span><span class="p">)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="n">h</span>  <span class="o">=</span> <span class="n">entropy_rbig_reduction</span><span class="p">(</span><span class="n">model_x</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="n">mi</span> <span class="o">=</span> <span class="n">mutual_information_rbig_reduction</span><span class="p">(</span><span class="n">model_x</span><span class="p">,</span> <span class="n">model_y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">rbig_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TC(X):    </span><span class="si">{</span><span class="n">tc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;H(X):     </span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MI(X; Y): </span><span class="si">{</span><span class="n">mi</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="total-correlation">Total Correlation</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">tc</span> <span class="o">=</span> <span class="n">total_correlation_rbig</span><span class="p">(</span><span class="n">XY</span><span class="p">)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Correlation: </span><span class="si">{</span><span class="n">tc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+<h3 id="model-level-access-level-2">Model-level access (Level 2)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">joint</span><span class="p">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Per-layer TC values (recorded during fit)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input TC:    </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">tc_per_layer_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residual TC: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">tc_per_layer_</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TC removed:  </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">total_correlation_reduction</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="entropy">Entropy</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">H</span> <span class="o">=</span> <span class="n">entropy_rbig</span><span class="p">(</span><span class="n">model_xy</span><span class="p">,</span> <span class="n">XY</span><span class="p">)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Differential entropy H(X,Y): </span><span class="si">{</span><span class="n">H</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="mutual-information">Mutual Information</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">mi</span> <span class="o">=</span> <span class="n">mutual_information_rbig</span><span class="p">(</span><span class="n">model_x</span><span class="p">,</span> <span class="n">model_y</span><span class="p">,</span> <span class="n">model_xy</span><span class="p">)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mutual Information I(X;Y): </span><span class="si">{</span><span class="n">mi</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="kl-divergence">KL-Divergence</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># How different is X from Y?</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">kld</span> <span class="o">=</span> <span class="n">kl_divergence_rbig</span><span class="p">(</span><span class="n">model_x</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KL(X || Y): </span><span class="si">{</span><span class="n">kld</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="full-summary">Full summary</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">summary</span> <span class="o">=</span> <span class="n">information_summary</span><span class="p">(</span><span class="n">model_xy</span><span class="p">,</span> <span class="n">XY</span><span class="p">)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+<h3 id="change-of-variables-approach-also-available">Change-of-variables approach (also available)</h3>
+<p>The package also supports the standard normalizing-flow density approach
+using <code>log p(x) = log p_Z(f(x)) + log|det J|</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="n">entropy_rbig</span><span class="p">,</span> <span class="n">mutual_information_rbig</span><span class="p">,</span> <span class="n">kl_divergence_rbig</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">model_xy</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">model_xy</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">]))</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">H_cov</span>   <span class="o">=</span> <span class="n">entropy_rbig</span><span class="p">(</span><span class="n">model_xy</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">]))</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">mi_cov</span>  <span class="o">=</span> <span class="n">mutual_information_rbig</span><span class="p">(</span><span class="n">model_x</span><span class="p">,</span> <span class="n">model_y</span><span class="p">,</span> <span class="n">model_xy</span><span class="p">)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">kld_cov</span> <span class="o">=</span> <span class="n">kl_divergence_rbig</span><span class="p">(</span><span class="n">model_x</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="available-it-measures">Available IT measures</h3>
 <table>
 <thead>
 <tr>
 <th>Measure</th>
-<th>Function / Method</th>
-<th>Description</th>
+<th>RBIG-way (recommended)</th>
+<th>Change-of-variables</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Total Correlation</td>
+<td><code>estimate_tc(X)</code></td>
 <td><code>total_correlation_rbig(X)</code></td>
-<td>Multivariate mutual information (redundancy)</td>
 </tr>
 <tr>
-<td>Differential Entropy</td>
+<td>Entropy</td>
+<td><code>estimate_entropy(X)</code></td>
 <td><code>entropy_rbig(model, X)</code></td>
-<td>Entropy of the fitted distribution</td>
 </tr>
 <tr>
 <td>Mutual Information</td>
+<td><code>estimate_mi(X, Y)</code></td>
 <td><code>mutual_information_rbig(m_x, m_y, m_xy)</code></td>
-<td>Dependence between two random vectors</td>
 </tr>
 <tr>
 <td>KL-Divergence</td>
+<td><code>estimate_kld(X, Y)</code></td>
 <td><code>kl_divergence_rbig(model_P, X_Q)</code></td>
-<td>Divergence between two distributions</td>
 </tr>
 <tr>
 <td>Log-Likelihood</td>
+<td>—</td>
 <td><code>model.score_samples(X)</code></td>
-<td>Per-sample log p(x) via change-of-variables</td>
 </tr>
 <tr>
-<td>Mean Log-Likelihood</td>
-<td><code>model.score(X)</code></td>
-<td>Average log-likelihood</td>
-</tr>
-<tr>
-<td>Entropy (model)</td>
-<td><code>model.entropy()</code></td>
-<td>Entropy of the fitted density</td>
-</tr>
-<tr>
-<td>Info Summary</td>
-<td><code>information_summary(model, X)</code></td>
-<td>Dict with entropy, TC, and NLL</td>
+<td>TC Reduction</td>
+<td><code>model.total_correlation_reduction()</code></td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
