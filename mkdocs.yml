@@ -64,9 +64,8 @@ nav:
       - Uniformization: notes/uniformization.md
       - Gaussianization: notes/gaussianization.md
       - Rotation: notes/rotation.md
-      - Normalizing Flows: notes/normalizing_flows.md
+      - Related Methods: notes/related_methods.md
       - Information Theory Measures: notes/information_theory_measures.md
-      - Deep Density Destructors: notes/deep_density_destructors.md
       - Density Estimation: notes/density_estimation.md
       - Gaussian Distribution: notes/gaussian_distribution.md
       - Exponential Distribution: notes/exponential_distribution.md
