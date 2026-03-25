@@ -1,5 +1,47 @@
 # Changelog
 
+## [0.1.12](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.11...rbig-v0.1.12) (2026-03-25)
+
+
+### Features
+
+* add orthogonal mode to ICARotation and PicardRotation ([ca49a71](https://github.com/jejjohnson/rbig/commit/ca49a713560d2795fc30c3031b5f8659c1f63e73))
+
+
+### Bug Fixes
+
+* address PR review comments ([f8c5a3b](https://github.com/jejjohnson/rbig/commit/f8c5a3b8ee5bbed10fe964b0a4fd706b5ae6e25b))
+* change PCARotation default to whiten=False for orthogonality ([649466b](https://github.com/jejjohnson/rbig/commit/649466bdae05dd6e32d9b88b880e4684d3629ea8))
+* correct HSIC normalization and guard ICC against negative MI ([6376186](https://github.com/jejjohnson/rbig/commit/637618658b1fd686a7b604395af6177ac849cd0e))
+* correct pseudoinverse transpose in GaussianRandomProjection.inverse_transform ([ad8c0c4](https://github.com/jejjohnson/rbig/commit/ad8c0c4f3d9d0614bc2162e8d2fb4a3054421c5f))
+* enable MathJax rendering in notebook pages ([9f02a73](https://github.com/jejjohnson/rbig/commit/9f02a733c5b8cdd174b8c28d7e95413a071dc6ae))
+* replace biased spacing-based density with KDE in log_det_jacobian ([74b758c](https://github.com/jejjohnson/rbig/commit/74b758c6510725eacae652c8f2b5c994068f370c))
+
+
+### Documentation
+
+* absorb notebook 08 (INNF demo) into 03 and 04, use hex plots ([a67f846](https://github.com/jejjohnson/rbig/commit/a67f84612277cc47e7ad803928bb595c4b78e136))
+* add Colab badges and install helpers to all notebooks ([a52e53d](https://github.com/jejjohnson/rbig/commit/a52e53ddee2b479187ea0628694b7cf86adde924))
+* add configuration guide for AnnealedRBIG hyperparameters ([2073940](https://github.com/jejjohnson/rbig/commit/2073940da550ce87854eb14f442ed1e3ece44c6b))
+* add cross-links between notebooks and notes ([3ec57c5](https://github.com/jejjohnson/rbig/commit/3ec57c596dcdd2a7574235795604d818280f0863))
+* add image rotations and dimensionality reduction notebooks ([8471241](https://github.com/jejjohnson/rbig/commit/847124137bd8ff07fb7fdc087b6f20a6de6e401e))
+* add quickstart guide with density estimation and IT measures ([f76e810](https://github.com/jejjohnson/rbig/commit/f76e8103277ede193feb974d6300a2520905daa6))
+* add RBF kernel HSIC alongside linear CKA in dependence notebook ([4aa4070](https://github.com/jejjohnson/rbig/commit/4aa40708b51799259e6a17801c4c91e924e5c496))
+* add rotation choices notebook comparing PCA, ICA, and random ([8b4b8fc](https://github.com/jejjohnson/rbig/commit/8b4b8fc91c30c90dbac1223e926792bc6420cad2))
+* add visual roundtrip demos to image rotations notebook ([3510d2c](https://github.com/jejjohnson/rbig/commit/3510d2c7cc439595a2d61eaf0a6c1f5bd3ea8874))
+* consolidate duplicate literature files into notes/literature.md ([f20550d](https://github.com/jejjohnson/rbig/commit/f20550de0bc4f7ed6d0783f23f8acbf98a4dfd54))
+* consolidate notes, enrich notebooks, fix bugs ([5924a1d](https://github.com/jejjohnson/rbig/commit/5924a1d03c998b0036fbfae347bf127123e606b8))
+* cross-link uniformization and marginal_gaussianization notes ([d80685d](https://github.com/jejjohnson/rbig/commit/d80685d2b2a89e48840dbae92dc24e2a10458b11))
+* execute all notebooks and fix runtime errors ([206085f](https://github.com/jejjohnson/rbig/commit/206085f4d46bba9145512c0e5aae489fff8c33e5))
+* merge normalizing_flows and deep_density_destructors into related_methods ([d9753da](https://github.com/jejjohnson/rbig/commit/d9753da3e19076fc77974a6aa470b39b72095420))
+* merge notebooks 01+02 into comprehensive marginal transforms notebook ([df17e8e](https://github.com/jejjohnson/rbig/commit/df17e8edd50c9a28683bffac43b19edb56b757d6))
+* merge pdf_estimation and kernel_density_estimation into density_estimation ([8d22d74](https://github.com/jejjohnson/rbig/commit/8d22d74f5678f551ec4c5655b63f142f10db0e6c))
+* merge RBIG theory into walkthrough notebook, delete intro.md and gaussianization.md ([8d9eea8](https://github.com/jejjohnson/rbig/commit/8d9eea856627de76019719b776d3d4cff72ce6ca))
+* merge uniform_distribution into uniformization and remove exponential_distribution ([bb31f96](https://github.com/jejjohnson/rbig/commit/bb31f961711339d45f5eb6ac3c29c96b017d4e33))
+* organize notes into Algorithm, Components, Foundations, Context ([307f34c](https://github.com/jejjohnson/rbig/commit/307f34cf65b5d766b2a6b91e8fe1db92c86f226f))
+* re-execute all notebooks after PCA/ICA orthogonality changes ([a8cedb3](https://github.com/jejjohnson/rbig/commit/a8cedb35dad268ff334bb1d0dee6b0d0f4ec6b64))
+* use sklearn digits dataset in image rotations notebook ([b6a99a0](https://github.com/jejjohnson/rbig/commit/b6a99a0e059c2cbb69c1c2063535f735ccb91bb4))
+
 ## [0.1.11](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.10...rbig-v0.1.11) (2026-03-24)
 
 
