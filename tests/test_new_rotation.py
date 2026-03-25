@@ -81,6 +81,15 @@ def test_gaussian_random_projection_log_det(simple_5d):
     np.testing.assert_allclose(ldj, 0.0)
 
 
+def test_gaussian_random_projection_inverse(simple_5d):
+    """Inverse transform via pseudoinverse should return correct shape."""
+    r = GaussianRandomProjection(n_components=3, random_state=42)
+    r.fit(simple_5d)
+    Xt = r.transform(simple_5d)
+    Xr = r.inverse_transform(Xt)
+    assert Xr.shape == simple_5d.shape
+
+
 def test_orthogonal_dim_reduction_shape(simple_5d):
     """Dimensionality-reducing: transform works but inverse/ldj raise."""
     r = OrthogonalDimensionalityReduction(n_components=3, random_state=42)

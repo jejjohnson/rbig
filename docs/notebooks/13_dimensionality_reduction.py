@@ -207,10 +207,7 @@ print(f"Input shape:  {X.shape}")
 print(f"Output shape: {Z_gauss.shape}")
 
 # Approximate inverse via pseudoinverse
-# Note: we compute this manually because the built-in inverse_transform
-# may have dimension-ordering issues when K < D.
-pinv = np.linalg.pinv(gauss_proj.matrix_)  # (K, D)
-X_rec_gauss = Z_gauss @ pinv  # (N, K) @ (K, D) -> (N, D)
+X_rec_gauss = gauss_proj.inverse_transform(Z_gauss)
 rec_err_gauss = np.mean((X - X_rec_gauss) ** 2)
 print(f"Reconstruction MSE (pseudoinverse): {rec_err_gauss:.4f}")
 

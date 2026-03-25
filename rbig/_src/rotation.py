@@ -775,8 +775,8 @@ class GaussianRandomProjection(RotationBijector):
         Xr : np.ndarray of shape (n_samples, n_features)
             Approximately recovered original data.
         """
-        # Pseudoinverse: M^+ = (M^T M)^{-1} M^T; here we use pinv(M).T
-        return X @ np.linalg.pinv(self.matrix_).T  # (N, K) @ (K, D) -> (N, D)
+        # Pseudoinverse: M^+ has shape (K, D), so X @ M^+ gives (N, D)
+        return X @ np.linalg.pinv(self.matrix_)  # (N, K) @ (K, D) -> (N, D)
 
     def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
         """Return zeros (approximation; Gaussian projections are not isometric).
