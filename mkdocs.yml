@@ -76,6 +76,7 @@ nav:
       - RBIG Loss & Convergence: notebooks/05_rbig_loss.ipynb
       - Information Theory: notebooks/06_information_theory.ipynb
       - Boundary Issues: notebooks/07_boundary_issues.ipynb
+      - Rotation Choices: notebooks/08_rotation_choices.ipynb
       - "Dependence: 1D": notebooks/09_dependence_1d.ipynb
       - "Dependence: 2D": notebooks/10_dependence_2d.ipynb
       - Real-World IT: notebooks/11_real_world_it.ipynb
