@@ -79,6 +79,8 @@ nav:
       - "Dependence: 1D": notebooks/09_dependence_1d.ipynb
       - "Dependence: 2D": notebooks/10_dependence_2d.ipynb
       - Real-World IT: notebooks/11_real_world_it.ipynb
+      - Image Rotations: notebooks/12_image_rotations.ipynb
+      - Dimensionality Reduction: notebooks/13_dimensionality_reduction.ipynb
   - API Reference: api/reference.md
   - Literature: notes/literature.md
   - Changelog: CHANGELOG.md
