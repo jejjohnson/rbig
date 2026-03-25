@@ -74,97 +74,104 @@ For a full walkthrough with theory, see the [RBIG Walk-Through notebook](noteboo
 
 ## Part 2 — Information Theory Measures
 
-RBIG can estimate classical information-theoretic quantities as a by-product of the Gaussianization. Here we show all of them on 2-D data.
+RBIG estimates information-theoretic quantities using the **per-layer TC
+reduction** approach from Laparra et al. (2011, 2020).  Each RBIG layer
+removes statistical dependence; summing these reductions gives the total
+correlation — no Jacobian estimation needed.
 
-### Setup
+### Quick estimates (Level 0 — data only)
+
+The simplest API: pass data, get an IT estimate.
 
 ```python
 import numpy as np
-from rbig import (
-    AnnealedRBIG,
-    mutual_information_rbig,
-    kl_divergence_rbig,
-    total_correlation_rbig,
-    entropy_rbig,
-    information_summary,
-)
+from rbig import estimate_tc, estimate_entropy, estimate_mi, estimate_kld
 
 rng = np.random.RandomState(42)
-N = 1_000
 
 # Two correlated 2-D random vectors
-mean = np.zeros(4)
 cov = np.eye(4)
-cov[0, 2] = cov[2, 0] = 0.8  # x0 ↔ y0
-cov[1, 3] = cov[3, 1] = 0.5  # x1 ↔ y1
-joint = rng.multivariate_normal(mean, cov, size=N)
+cov[0, 2] = cov[2, 0] = 0.8
+cov[1, 3] = cov[3, 1] = 0.5
+joint = rng.multivariate_normal(np.zeros(4), cov, size=1_000)
+X, Y = joint[:, :2], joint[:, 2:]
 
-X = joint[:, :2]  # (N, 2)
-Y = joint[:, 2:]  # (N, 2)
-XY = np.hstack([X, Y])  # (N, 4)
+tc = estimate_tc(joint, random_state=42)
+h  = estimate_entropy(joint, random_state=42)
+mi = estimate_mi(X, Y, random_state=42)
+kl = estimate_kld(X, Y, random_state=42)
+
+print(f"TC(X,Y):    {tc:.4f} nats")
+print(f"H(X,Y):     {h:.4f} nats")
+print(f"MI(X; Y):   {mi:.4f} nats")
+print(f"KLD(X || Y): {kl:.4f} nats")
 ```
 
-### Fit models
+### Pre-fitted models (Level 1 — more control)
+
+Fit models once, then compute multiple measures without re-fitting.
 
 ```python
-kwargs = dict(n_layers=50, rotation="pca", random_state=42)
+from rbig import (
+    AnnealedRBIG,
+    total_correlation_rbig_reduction,
+    entropy_rbig_reduction,
+    mutual_information_rbig_reduction,
+)
 
+kwargs = dict(n_layers=50, rotation="pca", random_state=42)
 model_x = AnnealedRBIG(**kwargs)
 model_y = AnnealedRBIG(**kwargs)
-model_xy = AnnealedRBIG(**kwargs)
 
 model_x.fit(X)
 model_y.fit(Y)
-model_xy.fit(XY)
+
+tc = total_correlation_rbig_reduction(model_x)
+h  = entropy_rbig_reduction(model_x, X)
+mi = mutual_information_rbig_reduction(model_x, model_y, X, Y, rbig_kwargs=kwargs)
+
+print(f"TC(X):    {tc:.4f} nats")
+print(f"H(X):     {h:.4f} nats")
+print(f"MI(X; Y): {mi:.4f} nats")
 ```
 
-### Total Correlation
+### Model-level access (Level 2)
 
 ```python
-tc = total_correlation_rbig(XY)
-print(f"Total Correlation: {tc:.4f} nats")
+model = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
+model.fit(joint)
+
+# Per-layer TC values (recorded during fit)
+print(f"Input TC:    {model.tc_per_layer_[0]:.4f}")
+print(f"Residual TC: {model.tc_per_layer_[-1]:.4f}")
+print(f"TC removed:  {model.total_correlation_reduction():.4f}")
 ```
 
-### Entropy
+### Change-of-variables approach (also available)
+
+The package also supports the standard normalizing-flow density approach
+using `log p(x) = log p_Z(f(x)) + log|det J|`:
 
 ```python
-H = entropy_rbig(model_xy, XY)
-print(f"Differential entropy H(X,Y): {H:.4f} nats")
-```
+from rbig import entropy_rbig, mutual_information_rbig, kl_divergence_rbig
 
-### Mutual Information
+model_xy = AnnealedRBIG(**kwargs)
+model_xy.fit(np.hstack([X, Y]))
 
-```python
-mi = mutual_information_rbig(model_x, model_y, model_xy)
-print(f"Mutual Information I(X;Y): {mi:.4f} nats")
-```
-
-### KL-Divergence
-
-```python
-# How different is X from Y?
-kld = kl_divergence_rbig(model_x, Y)
-print(f"KL(X || Y): {kld:.4f} nats")
-```
-
-### Full summary
-
-```python
-summary = information_summary(model_xy, XY)
-print(summary)
+H_cov   = entropy_rbig(model_xy, np.hstack([X, Y]))
+mi_cov  = mutual_information_rbig(model_x, model_y, model_xy)
+kld_cov = kl_divergence_rbig(model_x, Y)
 ```
 
 ### Available IT measures
 
-| Measure | Function / Method | Description |
-|---------|-------------------|-------------|
-| Total Correlation | `total_correlation_rbig(X)` | Multivariate mutual information (redundancy) |
-| Differential Entropy | `entropy_rbig(model, X)` | Entropy of the fitted distribution |
-| Mutual Information | `mutual_information_rbig(m_x, m_y, m_xy)` | Dependence between two random vectors |
-| KL-Divergence | `kl_divergence_rbig(model_P, X_Q)` | Divergence between two distributions |
-| Log-Likelihood | `model.score_samples(X)` | Per-sample log p(x) via change-of-variables |
-| Mean Log-Likelihood | `model.score(X)` | Average log-likelihood |
-| Entropy (model) | `model.entropy()` | Entropy of the fitted density |
-| Info Summary | `information_summary(model, X)` | Dict with entropy, TC, and NLL |
+| Measure | RBIG-way (recommended) | Change-of-variables |
+|---------|----------------------|---------------------|
+| Total Correlation | `estimate_tc(X)` | `total_correlation_rbig(X)` |
+| Entropy | `estimate_entropy(X)` | `entropy_rbig(model, X)` |
+| Mutual Information | `estimate_mi(X, Y)` | `mutual_information_rbig(m_x, m_y, m_xy)` |
+| KL-Divergence | `estimate_kld(X, Y)` | `kl_divergence_rbig(model_P, X_Q)` |
+| Log-Likelihood | — | `model.score_samples(X)` |
+| TC Reduction | `model.total_correlation_reduction()` | — |
 
 For detailed examples, see the [Information Theory notebook](notebooks/06_information_theory.ipynb) and [Dependence Detection notebooks](notebooks/09_dependence_1d.ipynb).

@@ -17,15 +17,13 @@
 # # Information Theory Measures with RBIG
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/06_information_theory.ipynb)
 #
-# This notebook demonstrates how to estimate classical information-theoretic
-# quantities using the new `rbig` functional API:
+# This notebook demonstrates two approaches for estimating information-theoretic
+# quantities with RBIG:
 #
-# | Measure | Function |
-# |---|---|
-# | Total Correlation | `total_correlation_rbig(X)` |
-# | Entropy | `marginal_entropy(X)`, `AnnealedRBIG.entropy()` |
-# | Mutual Information | `mutual_information_rbig(model_X, model_Y, model_XY)` |
-# | KL Divergence | `kl_divergence_rbig(model_P, X_Q)` |
+# | Approach | Method | Pros |
+# |---|---|---|
+# | **RBIG-way** (recommended) | Per-layer TC reduction | No Jacobian estimation; more robust |
+# | **Change-of-variables** | `log p(x) = log p_Z(f(x)) + log\|det J\|` | Fast (cached Jacobian); standard NF technique |
 #
 # For mathematical definitions, see the [Information Theory Measures note](../notes/information_theory_measures.md).
 
@@ -277,16 +275,70 @@ print(f"KLD (RBIG):       {kld_rbig:.4f} nats")
 
 # %% [markdown]
 # ---
+# ## RBIG-way Estimation (Per-Layer TC Reduction)
+#
+# The **RBIG-way** approach (Laparra et al. 2011, 2020) avoids Jacobian
+# estimation entirely. Instead, it tracks how much total correlation each
+# layer removes and sums those reductions.
+#
+# The `estimate_*` functions provide the simplest API — just pass data:
+
+# %%
+from rbig import estimate_tc, estimate_entropy, estimate_mi, estimate_kld
+
+# Reuse the correlated data from the MI section above
+rbig_kw = dict(n_layers=30, rotation="pca", patience=10, random_state=seed)
+
+tc_red = estimate_tc(dat_all, **rbig_kw)
+h_red = estimate_entropy(dat_all, **rbig_kw)
+mi_red = estimate_mi(X, Y, **rbig_kw)
+
+print(f"TC  (RBIG-way): {tc_red:.4f} nats")
+print(f"H   (RBIG-way): {h_red:.4f} nats")
+print(f"MI  (RBIG-way): {mi_red:.4f} nats")
+
+# %% [markdown]
+# ### KLD via RBIG-way
+
+# %%
+kld_red = estimate_kld(X_p, X_q, **rbig_kw)
+print(f"KLD (RBIG-way):  {kld_red:.4f} nats")
+print(f"KLD (analytical): {kld_analytical:.4f} nats")
+
+# %% [markdown]
+# ### Comparison: Change-of-Variables vs RBIG-way
+#
+# Both approaches should agree for well-converged models.  The RBIG-way
+# approach is generally more robust because it avoids estimating
+# `log|det J|`, which can introduce bias.
+
+# %%
+from rbig import entropy_rbig_reduction, total_correlation_rbig_reduction
+
+# Compare on the MI data
+model_joint = AnnealedRBIG(**rbig_kw).fit(dat_all)
+
+h_cov = model_joint.entropy()  # change-of-variables
+h_red2 = entropy_rbig_reduction(model_joint, dat_all)  # RBIG-way
+tc_cov = total_correlation_rbig(dat_all)  # single-shot KDE+Gaussian
+tc_red2 = total_correlation_rbig_reduction(model_joint)  # RBIG-way
+
+print(f"{'Measure':<8} {'Change-of-Vars':>14} {'RBIG-way':>10} {'Analytical':>12}")
+print(f"{'H':8} {h_cov:14.4f} {h_red2:10.4f} {H:12.4f}")
+print(f"{'TC':8} {tc_cov:14.4f} {tc_red2:10.4f} {'':>12}")
+
+# %% [markdown]
+# ---
 # ## Summary
 #
-# | Measure | Old API | New API |
+# | Measure | RBIG-way (`estimate_*`) | Change-of-Variables |
 # |---|---|---|
-# | Total Correlation | `RBIG(...).fit(X).mutual_information * log(2)` | `total_correlation_rbig(X)` |
-# | Entropy | `RBIG(...).fit(X).entropy(correction=True) * log(2)` | `AnnealedRBIG(...).fit(X).entropy()` |
-# | Mutual Info | `RBIGMI(...).fit(X,Y).mutual_information() * log(2)` | `mutual_information_rbig(mX, mY, mXY)` |
-# | KL Divergence | `RBIGKLD(...).fit(X,Y).kld * log(2)` | `kl_divergence_rbig(model_P, X_Q)` |
+# | Total Correlation | `estimate_tc(X)` | `total_correlation_rbig(X)` |
+# | Entropy | `estimate_entropy(X)` | `entropy_rbig(model, X)` / `model.entropy()` |
+# | Mutual Info | `estimate_mi(X, Y)` | `mutual_information_rbig(mX, mY, mXY)` |
+# | KL Divergence | `estimate_kld(X, Y)` | `kl_divergence_rbig(model_P, X_Q)` |
 #
-# The new API uses **nats** (natural logarithm) throughout; multiply by
+# All values are in **nats** (natural logarithm); multiply by
 # `np.log2(np.e) ≈ 1.4427` to convert to bits.
 
 # %% [markdown]
