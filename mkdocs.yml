@@ -40,20 +40,28 @@ plugins:
 
 markdown_extensions:
   - admonition
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.details
+  - pymdownx.snippets:
+      base_path: ['.']
   - attr_list
   - md_in_html
-  - pymdownx.arithmatex:
-      generic: true
+  - toc:
+      permalink: true
+      toc_depth: 4
 
 extra_javascript:
   - javascripts/mathjax.js
-  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/custom.css
 
 nav:
   - Home: index.md
@@ -61,31 +69,25 @@ nav:
   - Configuration: configuration.md
   - Notes:
       - Algorithm:
-          - RBIG Algorithm: notes/rbig.md
+          - RBIG Walk-Through: notebooks/03_rbig_walkthrough.ipynb
+          - RBIG Demo: notebooks/04_rbig_demo.ipynb
+          - RBIG Loss & Convergence: notebooks/05_rbig_loss.ipynb
       - Components:
-          - Uniformization: notes/uniformization.md
-          - Marginal Gaussianization: notes/marginal_gaussianization.md
-          - Rotation: notes/rotation.md
+          - Marginal Transforms: notebooks/01_marginal_transforms.ipynb
+          - Boundary Issues: notebooks/07_boundary_issues.ipynb
+          - Rotation Choices: notebooks/08_rotation_choices.ipynb
+          - Image Rotations: notebooks/12_image_rotations.ipynb
+          - Dimensionality Reduction: notebooks/13_dimensionality_reduction.ipynb
+      - Information Theory:
+          - Measures: notebooks/06_information_theory.ipynb
+          - "Dependence: 1D": notebooks/09_dependence_1d.ipynb
+          - "Dependence: 2D": notebooks/10_dependence_2d.ipynb
+          - Real-World IT: notebooks/11_real_world_it.ipynb
       - Foundations:
-          - Information Theory Measures: notes/information_theory_measures.md
           - Density Estimation: notes/density_estimation.md
           - Gaussian Distribution: notes/gaussian_distribution.md
       - Context:
           - Related Methods: notes/related_methods.md
           - Literature Review: notes/literature.md
-  - Notebooks:
-      - Marginal Transforms: notebooks/01_marginal_transforms.ipynb
-      - RBIG Walk-Through: notebooks/03_rbig_walkthrough.ipynb
-      - RBIG Demo: notebooks/04_rbig_demo.ipynb
-      - RBIG Loss & Convergence: notebooks/05_rbig_loss.ipynb
-      - Information Theory: notebooks/06_information_theory.ipynb
-      - Boundary Issues: notebooks/07_boundary_issues.ipynb
-      - Rotation Choices: notebooks/08_rotation_choices.ipynb
-      - "Dependence: 1D": notebooks/09_dependence_1d.ipynb
-      - "Dependence: 2D": notebooks/10_dependence_2d.ipynb
-      - Real-World IT: notebooks/11_real_world_it.ipynb
-      - Image Rotations: notebooks/12_image_rotations.ipynb
-      - Dimensionality Reduction: notebooks/13_dimensionality_reduction.ipynb
   - API Reference: api/reference.md
-  - Literature: notes/literature.md
   - Changelog: CHANGELOG.md
