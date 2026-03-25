@@ -519,23 +519,14 @@ class MarginalGaussianize(BaseTransform):
             Only returned when ``return_transform=True``.
         """
         Xt = self.transform(X)  # Gaussianized output, shape (N, D)
-        n = self.support_.shape[0]  # number of training samples
         log_derivs = np.zeros_like(X, dtype=float)
         for i in range(self.n_features_):
-            support_i = self.support_[:, i]  # sorted training values, shape (n,)
-            spacings = np.diff(support_i)  # gaps between consecutive support points
-            pos_sp = spacings[spacings > 0]
-            min_sp = pos_sp.min() if len(pos_sp) > 0 else 1e-10
-            safe_sp = np.where(spacings > 0, spacings, min_sp)
-            # Pad to n elements: first element uses the first spacing
-            sp_full = np.concatenate([[safe_sp[0]], safe_sp])
-            ranks = np.clip(np.searchsorted(support_i, X[:, i], side="left"), 0, n - 1)
-            local_spacing = sp_full[ranks]  # spacing at each sample's location
-            # Empirical log-density: log f_hat_n(x) ~= -log(N * spacing)
-            log_f_i = -np.log(n * local_spacing)
+            # KDE-based density estimate for feature i
+            kde = stats.gaussian_kde(self.support_[:, i])
+            log_f_i = np.log(np.maximum(kde(X[:, i]), 1e-300))
             # Log standard-normal PDF at Gaussianized value: log phi(z_i)
             log_phi_gi = stats.norm.logpdf(Xt[:, i])
-            # Chain rule: log|dz/dx| = log f_hat_n(x) - log phi(z)
+            # Chain rule: log|dz/dx| = log f(x) - log phi(z)
             log_derivs[:, i] = log_f_i - log_phi_gi
         if return_transform:
             return log_derivs, Xt
