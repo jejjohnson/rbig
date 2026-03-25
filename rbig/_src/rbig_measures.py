@@ -29,6 +29,7 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
+from scipy import stats
 
 from rbig._src.densities import marginal_entropy
 
@@ -170,12 +171,20 @@ def kl_divergence_rbig_reduction(
 
     Z = model_Y.transform(X)
 
-    # Per-marginal KL divergence to N(0,1):
-    #   D(z_d || N(0,1)) = -H(z_d) + E[z_d^2]/2 + log(2π)/2
-    # This captures both shape (negentropy) and location/scale shifts.
-    h_marginals = marginal_entropy(Z)  # shape (n_features,)
-    mean_sq = np.mean(Z**2, axis=0)  # E[z_d^2] = Var + μ², shape (n_features,)
-    kl_marginals = -h_marginals + 0.5 * mean_sq + 0.5 * np.log(2 * np.pi)
+    # Per-marginal KL divergence to N(0,1) via KDE numerical integration
+    # (matches MATLAB ksdensity approach).
+    # D_KL(z_d || N(0,1)) = ∫ p(z) log(p(z)/φ(z)) dz
+    n_grid = 2000
+    kl_marginals = np.zeros(Z.shape[1])
+    for d in range(Z.shape[1]):
+        kde = stats.gaussian_kde(Z[:, d])
+        lo, hi = Z[:, d].min() - 4, Z[:, d].max() + 4
+        z_grid = np.linspace(lo, hi, n_grid)
+        dz = z_grid[1] - z_grid[0]
+        p = kde(z_grid)
+        q = stats.norm.pdf(z_grid)
+        mask = p > 1e-300
+        kl_marginals[d] = max(0.0, np.sum(p[mask] * np.log(p[mask] / q[mask])) * dz)
 
     # TC of Z via RBIG
     kwargs = rbig_kwargs or {}
@@ -297,10 +306,10 @@ def estimate_kld(
 ) -> float:
     """Estimate KL divergence KLD(P_X ‖ P_Y) via RBIG-way TC reduction.
 
-    KLD(P_X ‖ P_Y) ≈ Σ_d J(Z_d) + TC(Z)  where Z = G_Y(X)
+    KLD(P_X ‖ P_Y) ≈ Σ_d D(Z_d ‖ N(0,1)) + TC(Z)  where Z = G_Y(X)
 
     Fits an ``AnnealedRBIG`` model on Y, applies its transform to X,
-    then estimates negentropy + TC of the result.
+    then estimates per-marginal KL to N(0,1) + TC of the result.
 
     Parameters
     ----------

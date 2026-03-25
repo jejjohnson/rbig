@@ -613,6 +613,30 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         check_is_fitted(self)
         return float(self.tc_per_layer_[0] - self.tc_per_layer_[-1])
 
+    def entropy_reduction(self, X: np.ndarray) -> float:
+        """Differential entropy via RBIG-way TC reduction.
+
+        Uses the identity H(X) = Σ_d H(X_d) − TC(X) where marginal
+        entropies are estimated via KDE and TC is obtained from the
+        cumulative per-layer TC reduction (Laparra et al. 2011).
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_features)
+            Data whose entropy is estimated (typically the training data).
+
+        Returns
+        -------
+        h : float
+            Estimated differential entropy in nats.
+        """
+        check_is_fitted(self)
+        from rbig._src.densities import marginal_entropy
+
+        h_marginals = marginal_entropy(X)  # shape (n_features,)
+        tc = self.total_correlation_reduction()
+        return float(np.sum(h_marginals) - tc)
+
     def score_samples_raw_(self) -> np.ndarray:
         """Log-likelihood for the stored training data without recomputing layers.
 
