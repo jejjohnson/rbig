@@ -75,9 +75,13 @@ plt.show()
 # ### Classical measures
 
 # %%
-# Hilbert-Schmidt score: ||X^T Y||_F
-hs_score = np.linalg.norm(x1.T @ y1, "fro")
-hs_norm = hs_score / (np.linalg.norm(x1.T @ x1, "fro") * np.linalg.norm(y1.T @ y1, "fro"))
+# Centered Kernel Alignment (CKA) — normalized linear HSIC, bounded [0, 1]
+# CKA = ||Xc^T Yc||_F^2 / (||Xc^T Xc||_F * ||Yc^T Yc||_F)
+Xc1 = x1 - x1.mean(0)
+Yc1 = y1 - y1.mean(0)
+cka1 = np.linalg.norm(Xc1.T @ Yc1, "fro") ** 2 / (
+    np.linalg.norm(Xc1.T @ Xc1, "fro") * np.linalg.norm(Yc1.T @ Yc1, "fro")
+)
 
 # Spearman on stacked [X, Y]
 stacked = np.hstack([x1, y1])
@@ -87,8 +91,7 @@ spearman_xy = spearman_matrix[:2, 2:]
 spearman_fro = np.linalg.norm(spearman_xy, "fro")
 
 print("Dataset 1 — classical measures:")
-print(f"  HS score:      {hs_score:.4f}")
-print(f"  HS normalized: {hs_norm:.4f}")
+print(f"  CKA (normalized HSIC): {cka1:.4f}")
 print(f"  Spearman cross-block Frobenius: {spearman_fro:.4f}")
 
 # %% [markdown]
@@ -104,7 +107,7 @@ model_y1.fit(y1)
 model_xy1.fit(np.hstack([x1, y1]))
 
 mi1 = mutual_information_rbig(model_x1, model_y1, model_xy1)
-icc1 = np.sqrt(1 - np.exp(-2 * mi1))
+icc1 = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi1)))
 
 print(f"  MI (RBIG): {mi1:.4f} nats")
 print(f"  ICC:       {icc1:.4f}")
@@ -140,8 +143,11 @@ plt.show()
 # ### Classical measures + MI
 
 # %%
-hs_score2 = np.linalg.norm(x2.T @ y2, "fro")
-hs_norm2 = hs_score2 / (np.linalg.norm(x2.T @ x2, "fro") * np.linalg.norm(y2.T @ y2, "fro"))
+Xc2 = x2 - x2.mean(0)
+Yc2 = y2 - y2.mean(0)
+cka2 = np.linalg.norm(Xc2.T @ Yc2, "fro") ** 2 / (
+    np.linalg.norm(Xc2.T @ Xc2, "fro") * np.linalg.norm(Yc2.T @ Yc2, "fro")
+)
 
 spearman2 = stats.spearmanr(np.hstack([x2, y2])).statistic
 spearman_xy2 = spearman2[:2, 2:]
@@ -155,11 +161,10 @@ model_y2.fit(y2)
 model_xy2.fit(np.hstack([x2, y2]))
 
 mi2 = mutual_information_rbig(model_x2, model_y2, model_xy2)
-icc2 = np.sqrt(1 - np.exp(-2 * mi2))
+icc2 = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi2)))
 
 print("Dataset 2 — classical measures:")
-print(f"  HS score:      {hs_score2:.4f}")
-print(f"  HS normalized: {hs_norm2:.4f}")
+print(f"  CKA (normalized HSIC): {cka2:.4f}")
 print(f"  Spearman cross-block Frobenius: {spearman_fro2:.4f}")
 print(f"  MI (RBIG): {mi2:.4f} nats")
 print(f"  ICC:       {icc2:.4f}")
@@ -169,7 +174,7 @@ print(f"  ICC:       {icc2:.4f}")
 #
 # | Metric | Dataset 1 (asymmetric) | Dataset 2 (symmetric, noisy) |
 # |--------|:---------------------:|:---------------------------:|
-# | HS norm | low | low |
+# | CKA (normalized HSIC) | low | low |
 # | Spearman cross-Frobenius | low | low |
 # | MI (RBIG) | **high** | **moderate** |
 # | ICC | **high** | **moderate** |

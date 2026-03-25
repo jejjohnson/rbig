@@ -105,7 +105,7 @@ model_y.fit(y)
 model_xy.fit(np.hstack([x, y]))
 
 mi = mutual_information_rbig(model_x, model_y, model_xy)
-icc = np.sqrt(1 - np.exp(-2 * mi))
+icc = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi)))
 
 print(f"MI (RBIG): {mi:.4f} nats")
 print(f"ICC:       {icc:.4f}")
@@ -129,7 +129,7 @@ model_xyw = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
 model_yw.fit(y_weak)
 model_xyw.fit(np.hstack([x, y_weak]))
 mi_weak = mutual_information_rbig(model_x, model_yw, model_xyw)
-icc_weak = np.sqrt(1 - np.exp(-2 * mi_weak))
+icc_weak = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi_weak)))
 
 print("=== Strong signal: y = (2x)^2 + noise ===")
 print(f"  Pearson:  {pearson_r:+.4f}")

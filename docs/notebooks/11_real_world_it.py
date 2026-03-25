@@ -124,7 +124,7 @@ for i in range(n_stocks):
         model_ij.fit(np.hstack([xi, xj]))
 
         mi_val = mutual_information_rbig(model_i, model_j, model_ij)
-        icc_val = np.sqrt(1 - np.exp(-2 * mi_val))
+        icc_val = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi_val)))
 
         mi_matrix[i, j] = mi_matrix[j, i] = mi_val
         icc_matrix[i, j] = icc_matrix[j, i] = icc_val
@@ -174,7 +174,7 @@ model_g.fit(group)
 model_tg.fit(np.hstack([target, group]))
 
 mi_group = mutual_information_rbig(model_t, model_g, model_tg)
-icc_group = np.sqrt(1 - np.exp(-2 * mi_group))
+icc_group = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi_group)))
 
 print(f"MI(AAPL ; GOOG+AMZN) = {mi_group:.4f} nats, ICC = {icc_group:.4f}")
 
