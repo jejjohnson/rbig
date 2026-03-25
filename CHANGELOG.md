@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.13](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.12...rbig-v0.1.13) (2026-03-25)
+
+
+### Features
+
+* implement RBIG-way information theory measures API ([21fff4b](https://github.com/jejjohnson/rbig/commit/21fff4b680828e7e18fa6d3cd450a67d73d48444)), closes [#85](https://github.com/jejjohnson/rbig/issues/85)
+* implement RBIG-way IT measures (per-layer TC reduction) ([#88](https://github.com/jejjohnson/rbig/issues/88)) ([21fff4b](https://github.com/jejjohnson/rbig/commit/21fff4b680828e7e18fa6d3cd450a67d73d48444))
+
 ## [0.1.12](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.11...rbig-v0.1.12) (2026-03-25)
 
 
