@@ -86,5 +86,5 @@ nav:
       - "Dependence: 2D": notebooks/10_dependence_2d.ipynb
       - Real-World IT: notebooks/11_real_world_it.ipynb
   - API Reference: api/reference.md
-  - Literature: literature.md
+  - Literature: notes/literature.md
   - Changelog: CHANGELOG.md
