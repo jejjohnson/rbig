@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Measuring Dependence: 1D Variables
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/09_dependence_1d.ipynb)
 #
 # Linear correlation measures (Pearson, Spearman, Kendall) fail to capture
 # **nonlinear** relationships between variables. This notebook demonstrates how
@@ -30,6 +31,13 @@
 # | Kendall tau | Partially |
 # | Mutual Information (RBIG) | **Yes** |
 # | ICC (information correlation) | **Yes** |
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 import matplotlib.pyplot as plt

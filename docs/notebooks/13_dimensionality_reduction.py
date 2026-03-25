@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Dimensionality-Reducing Rotations
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/13_dimensionality_reduction.ipynb)
 #
 # Standard RBIG rotations are **square** (D → D) and bijective. But `rbig` also
 # provides rotations that **reduce dimensionality** (D → K, where K < D). These
@@ -33,6 +34,13 @@
 # 6. [GaussianRandomProjection](#gaussianrandomprojection)
 # 7. [Comparison](#comparison)
 # 8. [Summary](#summary)
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %% [markdown]
 # ---

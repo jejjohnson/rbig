@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Boundary Issues in Marginal Uniformization
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/07_boundary_issues.ipynb)
 #
 # This notebook examines what happens when test-time data points fall **outside**
 # the support seen during training (i.e. outside the empirical CDF bounds), and
@@ -25,6 +26,13 @@
 # boundaries.
 #
 # For the underlying theory of the uniformization step, see the [Uniformization note](../notes/uniformization.md).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 # %matplotlib inline

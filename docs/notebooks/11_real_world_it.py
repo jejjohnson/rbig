@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Information Theory with Synthetic Stock-Market Data
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/11_real_world_it.ipynb)
 #
 # This notebook applies RBIG-based information-theoretic measures to
 # **synthetic stock-like financial data** — simulated daily log-returns
@@ -28,6 +29,13 @@
 # example where the true dependence structure is unknown.
 #
 # For definitions of TC, MI, and ICC, see the [Information Theory Measures note](../notes/information_theory_measures.md).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 import matplotlib.pyplot as plt

@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Rotation Choices in RBIG
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/08_rotation_choices.ipynb)
 #
 # After each marginal Gaussianization step, RBIG applies a **rotation** to mix
 # dimensions before the next iteration. The choice of rotation affects
@@ -32,6 +33,13 @@
 # preserve the density and add no cost to the likelihood computation.
 #
 # For the mathematical properties of rotation matrices (orthogonality, Jacobian, decompositions), see the [Rotation note](../notes/rotation.md).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 # %matplotlib inline

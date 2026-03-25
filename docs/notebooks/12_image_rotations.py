@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Image Rotations
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/12_image_rotations.ipynb)
 #
 # RBIG provides specialized rotation transforms for image data. These operate
 # in the **spatial** or **channel** domain of images rather than treating pixels
@@ -33,6 +34,13 @@
 # density estimation.
 #
 # For the general theory of rotation matrices in RBIG, see the [Rotation note](../notes/rotation.md).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 # %matplotlib inline

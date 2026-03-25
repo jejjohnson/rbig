@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Information Theory Measures with RBIG
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/06_information_theory.ipynb)
 #
 # This notebook demonstrates how to estimate classical information-theoretic
 # quantities using the new `rbig` functional API:
@@ -27,6 +28,13 @@
 # | KL Divergence | `kl_divergence_rbig(model_P, X_Q)` |
 #
 # For mathematical definitions, see the [Information Theory Measures note](../notes/information_theory_measures.md).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 import numpy as np

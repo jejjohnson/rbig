@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # RBIG Loss Functions and Convergence
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/05_rbig_loss.ipynb)
 #
 # This notebook explores how `AnnealedRBIG` converges and the information
 # measures that can be used to track training progress:
@@ -29,6 +30,13 @@
 # and utility functions `entropy_reduction` and `total_correlation`.
 #
 # See [Information Theory Measures](../notes/information_theory_measures.md) for definitions of TC and entropy.
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 # %matplotlib inline

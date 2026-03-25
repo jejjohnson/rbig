@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Measuring Dependence: Multivariate (2D) Variables
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/10_dependence_2d.ipynb)
 #
 # This notebook extends the 1D dependence analysis to **multivariate**
 # random vectors $X \in \mathbb{R}^2$ and $Y \in \mathbb{R}^2$.
@@ -24,6 +25,13 @@
 # structures.
 #
 # For MI definitions and the RBIG estimation approach, see the [Information Theory Measures note](../notes/information_theory_measures.md).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 import matplotlib.pyplot as plt

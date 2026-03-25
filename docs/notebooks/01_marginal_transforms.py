@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Marginal Transforms
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/01_marginal_transforms.ipynb)
 #
 # This notebook covers the **marginal transforms** used in the RBIG pipeline —
 # both the theory and all available implementations.
@@ -28,6 +29,13 @@
 # 5. [All Available Methods](#all-available-methods)
 # 6. [Comparison](#comparison)
 # 7. [Summary](#summary)
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %% [markdown]
 # ---

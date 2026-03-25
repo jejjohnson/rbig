@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # RBIG Demo
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/04_rbig_demo.ipynb)
 #
 # This notebook demonstrates the full RBIG workflow using `AnnealedRBIG`:
 #
@@ -25,6 +26,13 @@
 # 5. Estimate log-probabilities
 #
 # For the full theory behind RBIG, see the [RBIG Walk-Through](./03_rbig_walkthrough.ipynb).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 # %matplotlib inline

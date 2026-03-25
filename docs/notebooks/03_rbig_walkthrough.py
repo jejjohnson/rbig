@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # RBIG Walk-Through
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/03_rbig_walkthrough.ipynb)
 #
 # This notebook is a self-contained guide to the **Rotation-Based Iterative
 # Gaussianization (RBIG)** algorithm. It covers the theory, the step-by-step
@@ -32,6 +33,13 @@
 # 8. [Full RBIG Model](#full-rbig-model-with-annealedrbig)
 # 9. [Information Theory Measures](#information-theory-measures)
 # 10. [Summary](#summary)
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %% [markdown]
 # ---
