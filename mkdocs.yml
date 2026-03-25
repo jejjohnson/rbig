@@ -60,15 +60,19 @@ nav:
   - Quickstart: quickstart.md
   - Configuration: configuration.md
   - Notes:
-      - RBIG Algorithm: notes/rbig.md
-      - Marginal Gaussianization: notes/marginal_gaussianization.md
-      - Uniformization: notes/uniformization.md
-      - Rotation: notes/rotation.md
-      - Related Methods: notes/related_methods.md
-      - Information Theory Measures: notes/information_theory_measures.md
-      - Density Estimation: notes/density_estimation.md
-      - Gaussian Distribution: notes/gaussian_distribution.md
-      - Literature Review: notes/literature.md
+      - Algorithm:
+          - RBIG Algorithm: notes/rbig.md
+      - Components:
+          - Uniformization: notes/uniformization.md
+          - Marginal Gaussianization: notes/marginal_gaussianization.md
+          - Rotation: notes/rotation.md
+      - Foundations:
+          - Information Theory Measures: notes/information_theory_measures.md
+          - Density Estimation: notes/density_estimation.md
+          - Gaussian Distribution: notes/gaussian_distribution.md
+      - Context:
+          - Related Methods: notes/related_methods.md
+          - Literature Review: notes/literature.md
   - Notebooks:
       - Marginal Transforms: notebooks/01_marginal_transforms.ipynb
       - RBIG Walk-Through: notebooks/03_rbig_walkthrough.ipynb
