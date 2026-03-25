@@ -1,10 +1,6 @@
 # Uniformization
 
-* Author: J. Emmanuel Johnson
-* Email: jemanjohnson34@gmail.com
-* Date Updated: 11-03-2020
-
-
+> Detailed reference for the uniformization step of [Marginal Gaussianization](marginal_gaussianization.md). This page covers the mathematical derivations (derivative proof, log-Jacobian, density computation via change of variables) in full detail.
 
 ## Forward Transformation
 

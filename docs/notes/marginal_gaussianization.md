@@ -69,7 +69,7 @@ This distribution is very skewed so through-out this tutorial, we will transform
 
 ## Marginal Uniformization
 
-The first step, we map $x_d$ to the uniform domain $U_d$. This is based on the cumulative distribution of the PDF.
+The first step, we map $x_d$ to the uniform domain $U_d$. This is based on the cumulative distribution of the PDF. See [Uniformization](uniformization.md) for the full mathematical derivation (derivative proof, log-Jacobian, and density computation).
 
 $$u = U_d (x_d) = \int_{-\infty}^{x_d} p_d (x_d') \, d x_d'$$
 
