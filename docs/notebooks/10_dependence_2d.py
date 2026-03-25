@@ -75,13 +75,36 @@ plt.show()
 # ### Classical measures
 
 # %%
-# Centered Kernel Alignment (CKA) — normalized linear HSIC, bounded [0, 1]
-# CKA = ||Xc^T Yc||_F^2 / (||Xc^T Xc||_F * ||Yc^T Yc||_F)
-Xc1 = x1 - x1.mean(0)
-Yc1 = y1 - y1.mean(0)
-cka1 = np.linalg.norm(Xc1.T @ Yc1, "fro") ** 2 / (
-    np.linalg.norm(Xc1.T @ Xc1, "fro") * np.linalg.norm(Yc1.T @ Yc1, "fro")
-)
+from sklearn.metrics.pairwise import rbf_kernel
+
+
+def hsic(K, L):
+    """Biased HSIC estimator from centered kernel matrices."""
+    n = K.shape[0]
+    H = np.eye(n) - np.ones((n, n)) / n  # centering matrix
+    Kc = H @ K @ H
+    Lc = H @ L @ H
+    return np.trace(Kc @ Lc) / (n - 1) ** 2
+
+
+def normalized_hsic(K, L):
+    """CKA: HSIC(K,L) / sqrt(HSIC(K,K) * HSIC(L,L)), bounded [0, 1]."""
+    return hsic(K, L) / np.sqrt(hsic(K, K) * hsic(L, L))
+
+
+# --- Linear kernels ---
+K_lin1 = x1 @ x1.T
+L_lin1 = y1 @ y1.T
+cka_lin1 = normalized_hsic(K_lin1, L_lin1)
+
+# --- RBF kernels (median heuristic for length scale) ---
+from scipy.spatial.distance import pdist
+
+sigma_x1 = np.median(pdist(x1, "euclidean"))
+sigma_y1 = np.median(pdist(y1, "euclidean"))
+K_rbf1 = rbf_kernel(x1, gamma=1.0 / (2 * sigma_x1**2))
+L_rbf1 = rbf_kernel(y1, gamma=1.0 / (2 * sigma_y1**2))
+cka_rbf1 = normalized_hsic(K_rbf1, L_rbf1)
 
 # Spearman on stacked [X, Y]
 stacked = np.hstack([x1, y1])
@@ -91,7 +114,8 @@ spearman_xy = spearman_matrix[:2, 2:]
 spearman_fro = np.linalg.norm(spearman_xy, "fro")
 
 print("Dataset 1 — classical measures:")
-print(f"  CKA (normalized HSIC): {cka1:.4f}")
+print(f"  CKA linear:  {cka_lin1:.4f}")
+print(f"  CKA RBF:     {cka_rbf1:.4f}")
 print(f"  Spearman cross-block Frobenius: {spearman_fro:.4f}")
 
 # %% [markdown]
@@ -143,11 +167,17 @@ plt.show()
 # ### Classical measures + MI
 
 # %%
-Xc2 = x2 - x2.mean(0)
-Yc2 = y2 - y2.mean(0)
-cka2 = np.linalg.norm(Xc2.T @ Yc2, "fro") ** 2 / (
-    np.linalg.norm(Xc2.T @ Xc2, "fro") * np.linalg.norm(Yc2.T @ Yc2, "fro")
-)
+# Linear CKA
+K_lin2 = x2 @ x2.T
+L_lin2 = y2 @ y2.T
+cka_lin2 = normalized_hsic(K_lin2, L_lin2)
+
+# RBF CKA (median heuristic)
+sigma_x2 = np.median(pdist(x2, "euclidean"))
+sigma_y2 = np.median(pdist(y2, "euclidean"))
+K_rbf2 = rbf_kernel(x2, gamma=1.0 / (2 * sigma_x2**2))
+L_rbf2 = rbf_kernel(y2, gamma=1.0 / (2 * sigma_y2**2))
+cka_rbf2 = normalized_hsic(K_rbf2, L_rbf2)
 
 spearman2 = stats.spearmanr(np.hstack([x2, y2])).statistic
 spearman_xy2 = spearman2[:2, 2:]
@@ -164,7 +194,8 @@ mi2 = mutual_information_rbig(model_x2, model_y2, model_xy2)
 icc2 = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi2)))
 
 print("Dataset 2 — classical measures:")
-print(f"  CKA (normalized HSIC): {cka2:.4f}")
+print(f"  CKA linear:  {cka_lin2:.4f}")
+print(f"  CKA RBF:     {cka_rbf2:.4f}")
 print(f"  Spearman cross-block Frobenius: {spearman_fro2:.4f}")
 print(f"  MI (RBIG): {mi2:.4f} nats")
 print(f"  ICC:       {icc2:.4f}")
@@ -174,10 +205,15 @@ print(f"  ICC:       {icc2:.4f}")
 #
 # | Metric | Dataset 1 (asymmetric) | Dataset 2 (symmetric, noisy) |
 # |--------|:---------------------:|:---------------------------:|
-# | CKA (normalized HSIC) | low | low |
+# | CKA linear | low | low |
+# | CKA RBF | **moderate–high** | **moderate** |
 # | Spearman cross-Frobenius | low | low |
 # | MI (RBIG) | **high** | **moderate** |
 # | ICC | **high** | **moderate** |
+#
+# The RBF kernel captures nonlinear dependence that the linear kernel misses
+# entirely — similar to how MI outperforms Pearson/Spearman. However, CKA RBF
+# depends on the bandwidth choice, while MI (RBIG) is non-parametric.
 #
 # Again, MI detects nonlinear multivariate dependence that classical
 # matrix-based measures largely miss. Dataset 2 shows lower MI due to
