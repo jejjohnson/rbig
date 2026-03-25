@@ -57,12 +57,10 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Introduction: intro.md
   - Notes:
       - RBIG Algorithm: notes/rbig.md
       - Marginal Gaussianization: notes/marginal_gaussianization.md
       - Uniformization: notes/uniformization.md
-      - Gaussianization: notes/gaussianization.md
       - Rotation: notes/rotation.md
       - Related Methods: notes/related_methods.md
       - Information Theory Measures: notes/information_theory_measures.md
