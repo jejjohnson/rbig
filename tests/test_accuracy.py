@@ -83,10 +83,9 @@ class TestMarginalGaussianizeLogDet:
         log_pz = np.sum(stats.norm.logpdf(Z), axis=1)
         h_estimated = -np.mean(log_pz + ldj)
         h_true = 0.5 * np.log(np.linalg.det(2 * np.pi * np.e * cov))
-        assert abs(h_estimated - h_true) < 0.15, (
-            f"Entropy from log_det_jacobian = {h_estimated:.4f}, "
-            f"true = {h_true:.4f}"
-        )
+        assert (
+            abs(h_estimated - h_true) < 0.15
+        ), f"Entropy from log_det_jacobian = {h_estimated:.4f}, true = {h_true:.4f}"
 
 
 # ---------------------------------------------------------------------------
@@ -193,9 +192,9 @@ class TestEntropyRBIGFunc:
         model.fit(gaussian_2d)
         h_method = model.entropy()
         h_func = entropy_rbig(model, gaussian_2d)
-        assert abs(h_method - h_func) < 0.1, (
-            f"model.entropy() = {h_method:.4f}, " f"entropy_rbig() = {h_func:.4f}"
-        )
+        assert (
+            abs(h_method - h_func) < 0.1
+        ), f"model.entropy() = {h_method:.4f}, entropy_rbig() = {h_func:.4f}"
 
 
 # ---------------------------------------------------------------------------
