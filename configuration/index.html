@@ -13,8 +13,10 @@
       
       
       
-        <link rel="prev" href="../notes/literature/">
+        <link rel="prev" href="../quickstart/">
       
+      
+        <link rel="next" href="../notes/rbig/">
       
       
         
@@ -25,7 +27,7 @@
     
     
       
-        <title>Changelog - rbig</title>
+        <title>Configuration - rbig</title>
       
     
     
@@ -78,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#changelog" class="md-skip">
+        <a href="#configuration-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Changelog
+              Configuration
             
           </span>
         </div>
@@ -259,9 +261,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../configuration/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -366,11 +370,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../CHANGELOG/" class="md-tabs__link">
         
   
   
@@ -486,10 +488,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -505,6 +534,164 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-recommended-defaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start (Recommended Defaults)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#n_layers-int-default100" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        n_layers (int, default=100)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotation-str-defaultpca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rotation (str, default="pca")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patience-int-default10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        patience (int, default=10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tol-float-or-auto-default1e-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tol (float or "auto", default=1e-5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#random_state-int-or-none-defaultnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        random_state (int or None, default=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-list-or-none-defaultnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strategy (list or None, default=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verbose-bool-or-int-defaultfalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        verbose (bool or int, default=False)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnosing-fit-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnosing Fit Quality
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#computational-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computational Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#marginal-transform-choice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marginal Transform Choice
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1513,37 +1700,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Changelog
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
         
   
   
@@ -1559,160 +1719,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#013-2026-03-01" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        0.1.3 (2026-03-01)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.1.3 (2026-03-01)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bug-fixes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bug Fixes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#012-2026-03-01" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        0.1.2 (2026-03-01)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.1.2 (2026-03-01)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#011-2026-03-01" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        0.1.1 (2026-03-01)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.1.1 (2026-03-01)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bug-fixes_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bug Fixes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#010" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        0.1.0
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.1.0">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1744,22 +1750,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#013-2026-03-01" class="md-nav__link">
+  <a href="#quick-start-recommended-defaults" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0.1.3 (2026-03-01)
+        Quick Start (Recommended Defaults)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="0.1.3 (2026-03-01)">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#n_layers-int-default100" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Features
+        n_layers (int, default=100)
       
     </span>
   </a>
@@ -1767,10 +1784,65 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bug-fixes" class="md-nav__link">
+  <a href="#rotation-str-defaultpca" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bug Fixes
+        rotation (str, default="pca")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patience-int-default10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        patience (int, default=10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tol-float-or-auto-default1e-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tol (float or "auto", default=1e-5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#random_state-int-or-none-defaultnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        random_state (int or None, default=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-list-or-none-defaultnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strategy (list or None, default=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verbose-bool-or-int-defaultfalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        verbose (bool or int, default=False)
       
     </span>
   </a>
@@ -1783,97 +1855,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#012-2026-03-01" class="md-nav__link">
+  <a href="#diagnosing-fit-quality" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0.1.2 (2026-03-01)
+        Diagnosing Fit Quality
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="0.1.2 (2026-03-01)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#011-2026-03-01" class="md-nav__link">
+  <a href="#computational-cost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0.1.1 (2026-03-01)
+        Computational Cost
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="0.1.1 (2026-03-01)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bug-fixes_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bug Fixes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#010" class="md-nav__link">
+  <a href="#marginal-transform-choice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0.1.0
+        Marginal Transform Choice
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="0.1.0">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1897,38 +1907,287 @@
   
 
 
-<h1 id="changelog">Changelog</h1>
-<h2 id="013-2026-03-01"><a href="https://github.com/jejjohnson/rbig/compare/rbig-v0.1.2...rbig-v0.1.3">0.1.3</a> (2026-03-01)</h2>
-<h3 id="features">Features</h3>
+<h1 id="configuration-guide">Configuration Guide</h1>
+<p>How to choose hyperparameters for <code>AnnealedRBIG</code>.</p>
+<hr />
+<h2 id="quick-start-recommended-defaults">Quick Start (Recommended Defaults)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnnealedRBIG</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">n_layers</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>    <span class="c1"># generous upper bound</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span>  <span class="c1"># best general-purpose choice</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>     <span class="c1"># early stopping window</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>        <span class="c1"># convergence threshold</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div>
+<p>These defaults work well for most datasets. Read on to understand when and
+how to adjust them.</p>
+<hr />
+<h2 id="parameters">Parameters</h2>
+<h3 id="n_layers-int-default100"><code>n_layers</code> (int, default=100)</h3>
+<p>Maximum number of RBIG layers (iterations). Each layer applies one marginal
+Gaussianization + one rotation.</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th style="text-align: center;">Suggested range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low-dimensional (D ≤ 5), simple structure</td>
+<td style="text-align: center;">20–50</td>
+</tr>
+<tr>
+<td>Moderate (5 &lt; D ≤ 50)</td>
+<td style="text-align: center;">50–100</td>
+</tr>
+<tr>
+<td>High-dimensional (D &gt; 50) or strong nonlinearity</td>
+<td style="text-align: center;">100–200</td>
+</tr>
+</tbody>
+</table>
+<p>In practice, <strong>early stopping via <code>patience</code></strong> usually halts training well
+before <code>n_layers</code> is reached. Setting <code>n_layers</code> too low risks under-fitting;
+setting it high just means unused budget — the computational cost is only
+paid for layers actually fitted.</p>
+<p>Check <code>len(model.layers_)</code> after fitting to see how many layers were used.</p>
+<hr />
+<h3 id="rotation-str-defaultpca"><code>rotation</code> (str, default="pca")</h3>
+<p>Which orthogonal rotation to apply after each marginal Gaussianization step.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Method</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"pca"</code></td>
+<td>PCA (orthogonal rotation, no whitening by default)</td>
+<td><strong>Default.</strong> Diagonalizes the covariance (removes second-order dependence) → fastest convergence in most cases.</td>
+</tr>
+<tr>
+<td><code>"ica"</code></td>
+<td>Independent Component Analysis</td>
+<td>Data with known independent source structure. Slower per layer than PCA.</td>
+</tr>
+<tr>
+<td><code>"random"</code></td>
+<td>Haar-distributed random orthogonal</td>
+<td>Very high-dimensional data (PCA eigendecomposition is <span class="arithmatex">\(O(D^3)\)</span>). Also useful for ensemble averaging of IT estimates.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule of thumb:</strong> Start with <code>"pca"</code>. Only switch to <code>"random"</code> if
+<code>D</code> is large enough that PCA becomes a bottleneck, or if you need
+stochastic diversity across runs.</p>
+<p>See the <a href="../notebooks/08_rotation_choices/">Rotation Choices notebook</a> for
+a visual comparison.</p>
+<hr />
+<h3 id="patience-int-default10"><code>patience</code> (int, default=10)</h3>
+<p>Number of consecutive layers where the total correlation (TC) change is
+below <code>tol</code> before training stops early.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small (3–5)</td>
+<td>Aggressive early stopping. Faster, but may stop too soon on noisy data.</td>
+</tr>
+<tr>
+<td>Default (10)</td>
+<td>Good balance. Tolerates short plateaus before converging.</td>
+</tr>
+<tr>
+<td>Large (20+)</td>
+<td>Conservative. Use when TC curve has long flat regions before dropping again.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tip:</strong> Plot <code>model.tc_per_layer_</code> after fitting. If the curve has a long
+tail of small-but-nonzero TC reductions, increase patience.</p>
+<hr />
+<h3 id="tol-float-or-auto-default1e-5"><code>tol</code> (float or "auto", default=1e-5)</h3>
+<p>Convergence threshold: training stops when <code>|TC(k) − TC(k−1)| &lt; tol</code> for
+<code>patience</code> consecutive layers.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1e-3</code></td>
+<td>Loose. Converges quickly but may leave residual dependence.</td>
+</tr>
+<tr>
+<td><code>1e-5</code> (default)</td>
+<td>Tight. Good for density estimation and IT measures.</td>
+</tr>
+<tr>
+<td><code>1e-7</code></td>
+<td>Very tight. Use for high-precision entropy/MI estimates.</td>
+</tr>
+<tr>
+<td><code>"auto"</code></td>
+<td>Adaptive: sets tol based on number of training samples.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to use <code>"auto"</code>:</strong> When you're unsure about the right tolerance and
+want a data-driven choice. The adaptive lookup scales tol with sample size
+(more samples → tighter tolerance).</p>
+<hr />
+<h3 id="random_state-int-or-none-defaultnone"><code>random_state</code> (int or None, default=None)</h3>
+<p>Seed for stochastic components (ICA initialization, random rotations). Set
+this for <strong>reproducible results</strong>. Has no effect when <code>rotation="pca"</code>
+(PCA is deterministic).</p>
+<hr />
+<h3 id="strategy-list-or-none-defaultnone"><code>strategy</code> (list or None, default=None)</h3>
+<p>Per-layer override for rotation and marginal choices. Each entry can be:</p>
 <ul>
-<li>port demo notebooks to Jupytext percent-format with new rbig API (<a href="https://github.com/jejjohnson/rbig/commit/6fa6ebcef5c887588527161b3a599a9d0d1ef5e3">6fa6ebc</a>)</li>
-<li>port demo notebooks to Jupytext percent-format with new rbig API (<a href="https://github.com/jejjohnson/rbig/commit/a82a5599a87736bedacf68df42017e4d4f3dcf19">a82a559</a>)</li>
+<li>A string: rotation name (e.g., <code>"pca"</code>, <code>"random"</code>)</li>
+<li>A tuple: <code>(rotation_name, marginal_name)</code></li>
 </ul>
-<h3 id="bug-fixes">Bug Fixes</h3>
-<ul>
-<li>address review comments on notebook backend, assertions, and IT estimates (<a href="https://github.com/jejjohnson/rbig/commit/2c5a729f95ec7ac3079296ffd0f6d49f404de055">2c5a729</a>)</li>
-</ul>
-<h2 id="012-2026-03-01"><a href="https://github.com/jejjohnson/rbig/compare/rbig-v0.1.1...rbig-v0.1.2">0.1.2</a> (2026-03-01)</h2>
-<h3 id="features_1">Features</h3>
-<ul>
-<li>port new bijectors, Gaussianizers, rotations, image transforms, metrics, and parametric utilities from jej_vc_snippets (<a href="https://github.com/jejjohnson/rbig/commit/06061b3f131ed03323c0a39f8a06ec3503b086ab">06061b3</a>)</li>
-</ul>
-<h2 id="011-2026-03-01"><a href="https://github.com/jejjohnson/rbig/compare/rbig-v0.1.0...rbig-v0.1.1">0.1.1</a> (2026-03-01)</h2>
-<h3 id="features_2">Features</h3>
-<ul>
-<li>migrate RBIG code to new package structure (<a href="https://github.com/jejjohnson/rbig/commit/31cb29383143bf6b47a11c01d42b2eb5bc66d08a">31cb293</a>)</li>
-<li>migrate RBIG repository to new package structure (<a href="https://github.com/jejjohnson/rbig/commit/e0a977a86b92373b8b2a76b76b7b8c8d2a7b045f">e0a977a</a>)</li>
-<li>migrate RBIG to modern package structure with _src layout (<a href="https://github.com/jejjohnson/rbig/commit/f79ae1a5015aab03c588aa1b4a65460ca2e92671">f79ae1a</a>)</li>
-</ul>
-<h3 id="bug-fixes_1">Bug Fixes</h3>
-<ul>
-<li>address PR review comments on Jacobian, Makefile, typing, and imports (<a href="https://github.com/jejjohnson/rbig/commit/6a65f3e2aac390cf814c64c414a811e53131b825">6a65f3e</a>)</li>
-</ul>
-<h2 id="010"><a href="https://github.com/jejjohnson/rbig/releases/tag/v0.1.0">0.1.0</a></h2>
-<h3 id="features_3">Features</h3>
-<ul>
-<li>Initial release with migrated code from jej_vc_snippets</li>
-</ul>
+<p>The list cycles if shorter than <code>n_layers</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Example: alternate PCA and random rotations</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">AnnealedRBIG</span><span class="p">(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">n_layers</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">strategy</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">],</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
+</code></pre></div>
+<p>This is an advanced feature — the default (<code>None</code>) uses the same rotation
+for every layer, which is fine for nearly all use cases.</p>
+<hr />
+<h3 id="verbose-bool-or-int-defaultfalse"><code>verbose</code> (bool or int, default=False)</h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>False</code> / <code>0</code></td>
+<td>Silent</td>
+</tr>
+<tr>
+<td><code>True</code> / <code>1</code></td>
+<td>Progress bar during <code>fit()</code></td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Progress bars for <code>fit</code>, <code>transform</code>, <code>inverse_transform</code>, and <code>score_samples</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="diagnosing-fit-quality">Diagnosing Fit Quality</h2>
+<p>After fitting, inspect these attributes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># How many layers were actually used?</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Layers: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers_</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Did TC converge?</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">tc_per_layer_</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Layer&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Total Correlation (nats)&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;TC convergence&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Final TC (should be near zero for good fit)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final TC: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">tc_per_layer_</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>len(model.layers_) == n_layers</code></td>
+<td>Hit the layer budget before converging</td>
+<td>Increase <code>n_layers</code></td>
+</tr>
+<tr>
+<td>TC curve still dropping at the end</td>
+<td>Stopped too early</td>
+<td>Increase <code>n_layers</code> or <code>patience</code></td>
+</tr>
+<tr>
+<td>TC curve flat but nonzero</td>
+<td>Residual higher-order dependence</td>
+<td>Try <code>rotation="ica"</code> or increase <code>n_layers</code></td>
+</tr>
+<tr>
+<td>TC oscillates</td>
+<td>Numerical instability (rare)</td>
+<td>Check for constant/duplicate features in input data</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="computational-cost">Computational Cost</h2>
+<p>Each RBIG layer has cost approximately:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Complexity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marginal Gaussianization</td>
+<td><span class="arithmatex">\(O(N \cdot D \cdot \log N)\)</span> — sorting per feature</td>
+</tr>
+<tr>
+<td>PCA rotation</td>
+<td><span class="arithmatex">\(O(N \cdot D^2 + D^3)\)</span> — covariance + eigendecomposition</td>
+</tr>
+<tr>
+<td>Random rotation</td>
+<td><span class="arithmatex">\(O(N \cdot D^2)\)</span> — matrix multiply only</td>
+</tr>
+<tr>
+<td>TC estimation</td>
+<td><span class="arithmatex">\(O(N \cdot D)\)</span> — KDE marginal entropies</td>
+</tr>
+</tbody>
+</table>
+<p>For large <span class="arithmatex">\(D\)</span>, the PCA eigendecomposition dominates. Switching to
+<code>rotation="random"</code> removes the <span class="arithmatex">\(D^3\)</span> term at the cost of more layers.</p>
+<hr />
+<h2 id="marginal-transform-choice">Marginal Transform Choice</h2>
+<p>By default, <code>AnnealedRBIG</code> uses <code>MarginalGaussianize</code> (empirical CDF + probit)
+inside each layer. For custom marginals, use the <code>strategy</code> parameter or
+build your own pipeline with <code>RBIGLayer</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rbig</span><span class="w"> </span><span class="kn">import</span> <span class="n">RBIGLayer</span><span class="p">,</span> <span class="n">SplineGaussianizer</span><span class="p">,</span> <span class="n">PCARotation</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">layer</span> <span class="o">=</span> <span class="n">RBIGLayer</span><span class="p">(</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">marginal</span><span class="o">=</span><span class="n">SplineGaussianizer</span><span class="p">(</span><span class="n">n_quantiles</span><span class="o">=</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">rotation</span><span class="o">=</span><span class="n">PCARotation</span><span class="p">(</span><span class="n">whiten</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">)</span>
+</code></pre></div>
+<p>See the <a href="../notebooks/01_marginal_transforms/">Marginal Transforms notebook</a>
+for a comparison of all 7 available marginal methods.</p>
 
 
 

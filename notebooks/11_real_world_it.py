@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Information Theory with Synthetic Stock-Market Data
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/11_real_world_it.ipynb)
 #
 # This notebook applies RBIG-based information-theoretic measures to
 # **synthetic stock-like financial data** — simulated daily log-returns
@@ -26,6 +27,15 @@
 #
 # This complements notebook 06 (synthetic Gaussian data) with a practical
 # example where the true dependence structure is unknown.
+#
+# For definitions of TC, MI, and ICC, see the [Information Theory Measures note](../notes/information_theory_measures.md).
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 import matplotlib.pyplot as plt
@@ -122,7 +132,7 @@ for i in range(n_stocks):
         model_ij.fit(np.hstack([xi, xj]))
 
         mi_val = mutual_information_rbig(model_i, model_j, model_ij)
-        icc_val = np.sqrt(1 - np.exp(-2 * mi_val))
+        icc_val = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi_val)))
 
         mi_matrix[i, j] = mi_matrix[j, i] = mi_val
         icc_matrix[i, j] = icc_matrix[j, i] = icc_val
@@ -172,7 +182,7 @@ model_g.fit(group)
 model_tg.fit(np.hstack([target, group]))
 
 mi_group = mutual_information_rbig(model_t, model_g, model_tg)
-icc_group = np.sqrt(1 - np.exp(-2 * mi_group))
+icc_group = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi_group)))
 
 print(f"MI(AAPL ; GOOG+AMZN) = {mi_group:.4f} nats, ICC = {icc_group:.4f}")
 
@@ -186,3 +196,11 @@ print(f"MI(AAPL ; GOOG+AMZN) = {mi_group:.4f} nats, ICC = {icc_group:.4f}")
 # - **Group MI** shows that dependence on multiple stocks exceeds pairwise
 #   MI, reflecting collective information.
 # - **ICC** normalizes MI to a [0, 1] scale for easy comparison.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of TC, MI, and ICC
+# - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD on synthetic Gaussian data
+# - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D

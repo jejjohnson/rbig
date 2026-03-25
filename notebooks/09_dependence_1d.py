@@ -15,6 +15,7 @@
 
 # %% [markdown]
 # # Measuring Dependence: 1D Variables
+# [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/09_dependence_1d.ipynb)
 #
 # Linear correlation measures (Pearson, Spearman, Kendall) fail to capture
 # **nonlinear** relationships between variables. This notebook demonstrates how
@@ -30,6 +31,13 @@
 # | Kendall tau | Partially |
 # | Mutual Information (RBIG) | **Yes** |
 # | ICC (information correlation) | **Yes** |
+
+# %% [markdown]
+# > **Colab / fresh environment?** Run the cell below to install `rbig` from
+# > GitHub. Skip if already installed.
+
+# %%
+# !pip install "rbig[all] @ git+https://github.com/jejjohnson/rbig.git" -q
 
 # %%
 import matplotlib.pyplot as plt
@@ -80,6 +88,8 @@ print(f"Kendall:  τ = {kendall_tau:+.4f}  (p = {kendall_p:.3f})")
 # Mutual Information $I(X; Y)$ captures **any** statistical dependence,
 # not just linear or monotonic. We estimate it by fitting three `AnnealedRBIG`
 # models: one on $X$, one on $Y$, and one on the joint $(X, Y)$.
+#
+# See the [Information Theory Measures note](../notes/information_theory_measures.md) for the formal definition of MI.
 
 # %%
 model_x = AnnealedRBIG(
@@ -103,7 +113,7 @@ model_y.fit(y)
 model_xy.fit(np.hstack([x, y]))
 
 mi = mutual_information_rbig(model_x, model_y, model_xy)
-icc = np.sqrt(1 - np.exp(-2 * mi))
+icc = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi)))
 
 print(f"MI (RBIG): {mi:.4f} nats")
 print(f"ICC:       {icc:.4f}")
@@ -127,7 +137,7 @@ model_xyw = AnnealedRBIG(n_layers=50, rotation="pca", random_state=42)
 model_yw.fit(y_weak)
 model_xyw.fit(np.hstack([x, y_weak]))
 mi_weak = mutual_information_rbig(model_x, model_yw, model_xyw)
-icc_weak = np.sqrt(1 - np.exp(-2 * mi_weak))
+icc_weak = np.sqrt(np.maximum(0, 1 - np.exp(-2 * mi_weak)))
 
 print("=== Strong signal: y = (2x)^2 + noise ===")
 print(f"  Pearson:  {pearson_r:+.4f}")
@@ -154,3 +164,11 @@ print(f"  ICC:      {icc_weak:.4f}")
 # MI correctly detects the nonlinear quadratic dependence that linear
 # correlation entirely misses, and correctly shows near-zero dependence
 # when the signal is negligible.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of MI, TC, and ICC
+# - [Measuring Dependence: 2D Variables](./10_dependence_2d.ipynb) — extending MI analysis to multivariate vectors
+# - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD estimation
