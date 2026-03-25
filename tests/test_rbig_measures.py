@@ -15,6 +15,7 @@ from rbig import (
     estimate_mi,
     estimate_tc,
     kl_divergence_rbig_reduction,
+    kl_to_standard_normal,
     mutual_information_rbig_reduction,
     total_correlation_rbig_reduction,
 )
@@ -28,6 +29,44 @@ _FAST = dict(n_layers=30, rotation="pca", patience=5, random_state=42)
 # ---------------------------------------------------------------------------
 # Unit tests (fast, default run)
 # ---------------------------------------------------------------------------
+
+
+class TestKLToStandardNormal:
+    def test_shape(self):
+        rng = np.random.RandomState(42)
+        X = rng.randn(500, 3)
+        kl = kl_to_standard_normal(X)
+        assert kl.shape == (3,)
+
+    def test_standard_normal_near_zero(self):
+        rng = np.random.RandomState(42)
+        X = rng.randn(2000, 2)
+        kl = kl_to_standard_normal(X)
+        assert np.all(kl < 0.05), f"KL to N(0,1) for N(0,1) data = {kl}, expected ≈ 0"
+
+    def test_non_negative(self):
+        rng = np.random.RandomState(42)
+        X = rng.randn(1000, 2) + 1.0
+        kl = kl_to_standard_normal(X)
+        assert np.all(kl >= 0)
+
+    def test_shifted_mean(self):
+        rng = np.random.RandomState(42)
+        mu = 1.0
+        X = rng.randn(5000, 1) + mu
+        kl = kl_to_standard_normal(X)
+        # KL(N(mu, 1) || N(0, 1)) = mu^2 / 2
+        kl_true = mu**2 / 2
+        assert abs(kl[0] - kl_true) < 0.05, f"KL = {kl[0]:.4f}, true = {kl_true:.4f}"
+
+    def test_scaled_variance(self):
+        rng = np.random.RandomState(42)
+        sigma2 = 2.0
+        X = rng.randn(5000, 1) * np.sqrt(sigma2)
+        kl = kl_to_standard_normal(X)
+        # KL(N(0, sigma^2) || N(0, 1)) = 0.5*(sigma^2 - 1 - log(sigma^2))
+        kl_true = 0.5 * (sigma2 - 1 - np.log(sigma2))
+        assert abs(kl[0] - kl_true) < 0.05, f"KL = {kl[0]:.4f}, true = {kl_true:.4f}"
 
 
 class TestTotalCorrelationReduction:

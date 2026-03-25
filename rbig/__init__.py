@@ -19,6 +19,7 @@ from rbig._src.densities import (
     gaussian_entropy,
     generate_batches,
     joint_entropy_gaussian,
+    kl_to_standard_normal,
     marginal_entropy,
     total_correlation,
 )
@@ -176,6 +177,7 @@ __all__ = [
     "kl_divergence_gaussian",
     "kl_divergence_rbig",
     "kl_divergence_rbig_reduction",
+    "kl_to_standard_normal",
     "laplace",
     "lognormal",
     "make_cdf_monotonic",

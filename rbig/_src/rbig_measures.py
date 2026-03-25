@@ -29,9 +29,8 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
-from scipy import stats
 
-from rbig._src.densities import marginal_entropy
+from rbig._src.densities import kl_to_standard_normal, marginal_entropy
 
 # ---------------------------------------------------------------------------
 # Level 1 — pre-fitted models
@@ -171,20 +170,8 @@ def kl_divergence_rbig_reduction(
 
     Z = model_Y.transform(X)
 
-    # Per-marginal KL divergence to N(0,1) via KDE numerical integration
-    # (matches MATLAB ksdensity approach).
-    # D_KL(z_d || N(0,1)) = ∫ p(z) log(p(z)/φ(z)) dz
-    n_grid = 2000
-    kl_marginals = np.zeros(Z.shape[1])
-    for d in range(Z.shape[1]):
-        kde = stats.gaussian_kde(Z[:, d])
-        lo, hi = Z[:, d].min() - 4, Z[:, d].max() + 4
-        z_grid = np.linspace(lo, hi, n_grid)
-        dz = z_grid[1] - z_grid[0]
-        p = kde(z_grid)
-        q = stats.norm.pdf(z_grid)
-        mask = p > 1e-300
-        kl_marginals[d] = max(0.0, np.sum(p[mask] * np.log(p[mask] / q[mask])) * dz)
+    # Per-marginal KL divergence to N(0,1)
+    kl_marginals = kl_to_standard_normal(Z)
 
     # TC of Z via RBIG
     kwargs = rbig_kwargs or {}
