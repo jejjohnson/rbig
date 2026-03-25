@@ -31,6 +31,8 @@
 #
 # All three are **orthonormal** → log\|det J\| = 0, so they add no cost to
 # density estimation.
+#
+# For the general theory of rotation matrices in RBIG, see the [Rotation note](../notes/rotation.md).
 
 # %%
 # %matplotlib inline
@@ -276,3 +278,11 @@ plt.show()
 # - **RandomChannelRotation** — when channel correlation is significant
 #   (RGB, multispectral). Equivalent to a learned 1×1 conv in normalizing
 #   flow architectures (e.g., Glow).
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Rotation Note](../notes/rotation.md) — mathematical properties of rotation matrices in RBIG
+# - [Rotation Choices in RBIG](./08_rotation_choices.ipynb) — comparison of PCA, ICA, and random rotations
+# - [Dimensionality-Reducing Rotations](./13_dimensionality_reduction.ipynb) — rotations that reduce dimensionality

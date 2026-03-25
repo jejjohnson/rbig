@@ -22,6 +22,8 @@
 # We compare classical matrix-based dependence measures with RBIG-based
 # Mutual Information on two synthetic datasets with different nonlinear
 # structures.
+#
+# For MI definitions and the RBIG estimation approach, see the [Information Theory Measures note](../notes/information_theory_measures.md).
 
 # %%
 import matplotlib.pyplot as plt
@@ -175,3 +177,11 @@ print(f"  ICC:       {icc2:.4f}")
 # Again, MI detects nonlinear multivariate dependence that classical
 # matrix-based measures largely miss. Dataset 2 shows lower MI due to
 # the higher noise level, correctly reflecting the weaker signal.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of MI, TC, and ICC
+# - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
+# - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD estimation

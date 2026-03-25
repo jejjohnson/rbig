@@ -30,6 +30,8 @@
 #
 # All three are orthogonal transforms with log-det-Jacobian = 0, so they
 # preserve the density and add no cost to the likelihood computation.
+#
+# For the mathematical properties of rotation matrices (orthogonality, Jacobian, decompositions), see the [Rotation note](../notes/rotation.md).
 
 # %%
 # %matplotlib inline
@@ -222,3 +224,11 @@ for name, model in models.items():
 #
 # These can be passed directly to `RBIGLayer(rotation=...)` for custom
 # pipelines. See the [API Reference](../api/reference.md) for full signatures.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Rotation Note](../notes/rotation.md) — mathematical properties of rotation matrices in RBIG
+# - [Image Rotations](./12_image_rotations.ipynb) — specialized rotations for image data (DCT, Hartley, channel mixing)
+# - [Dimensionality-Reducing Rotations](./13_dimensionality_reduction.ipynb) — rotations that reduce dimensionality

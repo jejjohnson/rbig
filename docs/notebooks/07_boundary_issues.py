@@ -23,6 +23,8 @@
 # The key class is `MarginalKDEGaussianize`, which uses a KDE-estimated CDF and
 # clips output probabilities to `[eps, 1-eps]` to avoid infinite values at the
 # boundaries.
+#
+# For the underlying theory of the uniformization step, see the [Uniformization note](../notes/uniformization.md).
 
 # %%
 # %matplotlib inline
@@ -224,3 +226,11 @@ plt.show()
 #
 # In all cases, the `eps` parameter prevents the probit from diverging and
 # ensures numerically stable downstream computations.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Uniformization Note](../notes/uniformization.md) — theory of the CDF-based uniformization step
+# - [Marginal Gaussianization Note](../notes/marginal_gaussianization.md) — marginal Gaussianization theory
+# - [Marginal Transforms](./01_marginal_transforms.ipynb) — hands-on demo of marginal transform classes

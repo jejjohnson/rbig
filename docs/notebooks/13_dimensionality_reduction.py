@@ -23,6 +23,8 @@
 #
 # **Contents**
 #
+# For the general theory of rotation matrices, see the [Rotation note](../notes/rotation.md).
+#
 # 1. [Theory — Bijectivity and Density Estimation](#theory)
 # 2. [Available Methods](#available-methods)
 # 3. [PCA with Truncation](#pca-with-truncation)
@@ -312,3 +314,11 @@ print("\n(OrthogonalDimRed and RandomOrthProj do not support inverse_transform f
 # (the core RBIG use case), use **square rotations** (K = D). Use
 # dimensionality-reducing rotations for exploration, visualization, or
 # preprocessing before a non-density-estimation task.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Rotation Note](../notes/rotation.md) — mathematical properties of rotation matrices in RBIG
+# - [Rotation Choices in RBIG](./08_rotation_choices.ipynb) — comparison of PCA, ICA, and random rotations
+# - [Image Rotations](./12_image_rotations.ipynb) — specialized rotations for image data (DCT, Hartley, channel mixing)

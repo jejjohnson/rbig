@@ -115,3 +115,9 @@ indices = torch.searchsorted(bin_locations, inputs)
 ```
 
 Both NumPy and PyTorch provide built-in `searchsorted` functions that efficiently find insertion points in sorted arrays.
+
+---
+
+## Notebooks
+
+- [Marginal Transforms](../notebooks/01_marginal_transforms.ipynb) — all 7 marginal Gaussianization methods including KDE and histogram-based CDF estimation

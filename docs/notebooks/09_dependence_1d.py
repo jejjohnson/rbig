@@ -80,6 +80,8 @@ print(f"Kendall:  τ = {kendall_tau:+.4f}  (p = {kendall_p:.3f})")
 # Mutual Information $I(X; Y)$ captures **any** statistical dependence,
 # not just linear or monotonic. We estimate it by fitting three `AnnealedRBIG`
 # models: one on $X$, one on $Y$, and one on the joint $(X, Y)$.
+#
+# See the [Information Theory Measures note](../notes/information_theory_measures.md) for the formal definition of MI.
 
 # %%
 model_x = AnnealedRBIG(
@@ -154,3 +156,11 @@ print(f"  ICC:      {icc_weak:.4f}")
 # MI correctly detects the nonlinear quadratic dependence that linear
 # correlation entirely misses, and correctly shows near-zero dependence
 # when the signal is negligible.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of MI, TC, and ICC
+# - [Measuring Dependence: 2D Variables](./10_dependence_2d.ipynb) — extending MI analysis to multivariate vectors
+# - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD estimation

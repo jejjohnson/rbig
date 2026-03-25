@@ -201,3 +201,11 @@ def logjacobian(self, data=None):
 
     return np.linalg.slogdet(self.W)[1] + np.zeros([1, data.shape[1]])
 ```
+
+---
+
+## Notebooks
+
+- [Rotation Choices](../notebooks/08_rotation_choices.ipynb) — comparing PCA, ICA, and random rotations
+- [Image Rotations](../notebooks/12_image_rotations.ipynb) — DCT, Hartley, and channel-mixing for image data
+- [Dimensionality Reduction](../notebooks/13_dimensionality_reduction.ipynb) — projections with K < D

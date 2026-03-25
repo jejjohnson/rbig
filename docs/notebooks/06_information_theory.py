@@ -25,6 +25,8 @@
 # | Entropy | `marginal_entropy(X)`, `AnnealedRBIG.entropy()` |
 # | Mutual Information | `mutual_information_rbig(model_X, model_Y, model_XY)` |
 # | KL Divergence | `kl_divergence_rbig(model_P, X_Q)` |
+#
+# For mathematical definitions, see the [Information Theory Measures note](../notes/information_theory_measures.md).
 
 # %%
 import numpy as np
@@ -278,3 +280,12 @@ print(f"KLD (RBIG):       {kld_rbig:.4f} nats")
 #
 # The new API uses **nats** (natural logarithm) throughout; multiply by
 # `np.log2(np.e) ≈ 1.4427` to convert to bits.
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of TC, entropy, MI, and KLD
+# - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
+# - [Measuring Dependence: 2D Variables](./10_dependence_2d.ipynb) — MI for multivariate dependence
+# - [Information Theory with Synthetic Stock-Market Data](./11_real_world_it.ipynb) — practical IT application

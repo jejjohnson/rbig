@@ -89,3 +89,12 @@ The KL-Divergence measures the difference between two probability distributions 
 $$D_\text{KL}(p || q) = \int p(x) \log \frac{p(x)}{q(x)} \, dx$$
 
 See [RBIG](rbig.md#kl-divergence) for how RBIG can be used to estimate the KLD.
+
+---
+
+## Notebooks
+
+- [Information Theory](../notebooks/06_information_theory.ipynb) — functional API for TC, entropy, MI, KLD
+- [Dependence: 1D](../notebooks/09_dependence_1d.ipynb) — MI vs linear correlation on scalar variables
+- [Dependence: 2D](../notebooks/10_dependence_2d.ipynb) — MI for multivariate dependence detection
+- [Real-World IT](../notebooks/11_real_world_it.ipynb) — IT measures on synthetic financial data

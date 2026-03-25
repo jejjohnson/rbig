@@ -23,6 +23,8 @@
 # 3. Invert the transform (check for accuracy)
 # 4. Sample new data from the learned distribution
 # 5. Estimate log-probabilities
+#
+# For the full theory behind RBIG, see the [RBIG Walk-Through](./03_rbig_walkthrough.ipynb).
 
 # %%
 # %matplotlib inline
@@ -179,6 +181,8 @@ print(f"Sampled data shape: {data_sampled.shape}")
 # model using the change-of-variables formula:
 #
 # $$\log p(x) = \log p_Z(f(x)) + \log|\det J_f(x)|$$
+#
+# See the [RBIG algorithm note](../notes/rbig.md) for the change-of-variables derivation.
 
 # %%
 t0 = time()
@@ -242,3 +246,11 @@ print(
 # | `.score_samples(X)` | Per-sample log-likelihood via change-of-variables |
 # | `.score(X)` | Mean log-likelihood |
 # | `.entropy()` | Entropy of the fitted distribution (in nats) |
+
+# %% [markdown]
+# ---
+# ## See Also
+#
+# - [RBIG Algorithm Note](../notes/rbig.md) — theory and derivation of the RBIG algorithm
+# - [RBIG Walk-Through](./03_rbig_walkthrough.ipynb) — step-by-step walkthrough of RBIG internals
+# - [Configuration](../notes/configuration.md) — guide to configuring RBIG parameters
