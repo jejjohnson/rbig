@@ -207,7 +207,10 @@ print(f"Input shape:  {X.shape}")
 print(f"Output shape: {Z_gauss.shape}")
 
 # Approximate inverse via pseudoinverse
-X_rec_gauss = gauss_proj.inverse_transform(Z_gauss)
+# Note: we compute this manually because the built-in inverse_transform
+# may have dimension-ordering issues when K < D.
+pinv = np.linalg.pinv(gauss_proj.matrix_)  # (K, D)
+X_rec_gauss = Z_gauss @ pinv  # (N, K) @ (K, D) -> (N, D)
 rec_err_gauss = np.mean((X - X_rec_gauss) ** 2)
 print(f"Reconstruction MSE (pseudoinverse): {rec_err_gauss:.4f}")
 
@@ -272,18 +275,17 @@ plt.show()
 # ### Reconstruction Error
 
 # %%
-reconstructors = {
-    "PCA (K=3)": (pca, Z_pca),
-    "GaussianRandProj": (gauss_proj, Z_gauss),
-}
-
 print(f"{'Method':<22s} {'MSE':>10s} {'Max |err|':>10s}")
 print("-" * 44)
-for name, (model, Z) in reconstructors.items():
-    X_rec = model.inverse_transform(Z)
-    mse = np.mean((X - X_rec) ** 2)
-    max_err = np.abs(X - X_rec).max()
-    print(f"{name:<22s} {mse:>10.4f} {max_err:>10.4f}")
+
+# PCA: built-in inverse (lossy)
+X_rec_pca = pca.inverse_transform(Z_pca)
+mse_pca = np.mean((X - X_rec_pca) ** 2)
+print(f"{'PCA (K=3)':<22s} {mse_pca:>10.4f} {np.abs(X - X_rec_pca).max():>10.4f}")
+
+# GaussianRandProj: manual pseudoinverse
+mse_gauss = np.mean((X - X_rec_gauss) ** 2)
+print(f"{'GaussianRandProj':<22s} {mse_gauss:>10.4f} {np.abs(X - X_rec_gauss).max():>10.4f}")
 
 print("\n(OrthogonalDimRed and RandomOrthProj do not support inverse_transform for K < D)")
 

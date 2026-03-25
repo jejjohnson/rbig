@@ -318,15 +318,17 @@ for name, model in models.items():
 print(f"{'Method':<25s} {'mean log|det J|':>16s}")
 print("-" * 44)
 for name, model in models.items():
-    try:
-        ldj = model.log_det_jacobian(X)
-        print(f"{name:<25s} {ldj.mean():>16.4f}")
-    except AttributeError:
-        try:
-            ldj = model.get_log_det_jacobian(X)
-            print(f"{name:<25s} {ldj.mean():>16.4f}")
-        except AttributeError:
-            print(f"{name:<25s} {'N/A':>16s}")
+    for method in ("log_det_jacobian", "get_log_det_jacobian"):
+        fn = getattr(model, method, None)
+        if fn is not None:
+            try:
+                ldj = fn(X)
+                print(f"{name:<25s} {ldj.mean():>16.4f}")
+                break
+            except (NotImplementedError, AttributeError):
+                continue
+    else:
+        print(f"{name:<25s} {'N/A':>16s}")
 
 # %% [markdown]
 # ---
