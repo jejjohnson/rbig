@@ -83,9 +83,9 @@
 # - **GMM CDF** — parametric mixture, analytic
 # - **Spline CDF** — smooth monotone interpolation
 #
-# See the [Uniformization note](../notes/uniformization.md) for the full
+# See the [Uniformization note](01_marginal_transforms.ipynb) for the full
 # mathematical derivation and the
-# [Marginal Gaussianization note](../notes/marginal_gaussianization.md)
+# [Marginal Gaussianization note](01_marginal_transforms.ipynb)
 # for implementation details.
 
 # %%
