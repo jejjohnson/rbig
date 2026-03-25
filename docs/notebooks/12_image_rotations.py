@@ -100,9 +100,24 @@ plt.tight_layout()
 plt.show()
 
 # %%
-# Verify invertibility
-X_rec = dct.inverse_transform(X_dct)
-print(f"DCT round-trip error: {np.abs(X_gray - X_rec).max():.2e}")
+# Verify invertibility: original → DCT → inverse → reconstructed
+X_rec_dct = dct.inverse_transform(X_dct)
+print(f"DCT round-trip max error: {np.abs(X_gray - X_rec_dct).max():.2e}")
+
+fig, axes = plt.subplots(3, 6, figsize=(14, 6))
+for i in range(6):
+    axes[0, i].imshow(X_gray[i].reshape(H, W), cmap="gray_r")
+    axes[0, i].axis("off")
+    axes[1, i].imshow(X_dct[i].reshape(H, W), cmap="RdBu_r")
+    axes[1, i].axis("off")
+    axes[2, i].imshow(X_rec_dct[i].reshape(H, W), cmap="gray_r")
+    axes[2, i].axis("off")
+axes[0, 0].set_ylabel("Original", fontsize=11)
+axes[1, 0].set_ylabel("DCT coeffs", fontsize=11)
+axes[2, 0].set_ylabel("Reconstructed", fontsize=11)
+plt.suptitle("DCT roundtrip: original → transform → inverse", y=1.02)
+plt.tight_layout()
+plt.show()
 
 # %% [markdown]
 # ### HartleyRotation
@@ -117,19 +132,22 @@ hartley.fit(X_gray)
 X_hartley = hartley.transform(X_gray)
 
 # Self-inverse property: transform twice = identity
-X_double = hartley.transform(X_hartley)
-print(f"Hartley self-inverse error: {np.abs(X_gray - X_double).max():.2e}")
+X_rec_hartley = hartley.inverse_transform(X_hartley)
+print(f"Hartley round-trip max error: {np.abs(X_gray - X_rec_hartley).max():.2e}")
 
 # %%
-fig, axes = plt.subplots(2, 8, figsize=(16, 4))
-for i in range(8):
+fig, axes = plt.subplots(3, 6, figsize=(14, 6))
+for i in range(6):
     axes[0, i].imshow(X_gray[i].reshape(H, W), cmap="gray_r")
     axes[0, i].axis("off")
     axes[1, i].imshow(X_hartley[i].reshape(H, W), cmap="RdBu_r")
     axes[1, i].axis("off")
-axes[0, 0].set_ylabel("Pixels", fontsize=11)
+    axes[2, i].imshow(X_rec_hartley[i].reshape(H, W), cmap="gray_r")
+    axes[2, i].axis("off")
+axes[0, 0].set_ylabel("Original", fontsize=11)
 axes[1, 0].set_ylabel("Hartley", fontsize=11)
-plt.suptitle("HartleyRotation: pixel space → Hartley domain", y=1.02)
+axes[2, 0].set_ylabel("Reconstructed", fontsize=11)
+plt.suptitle("Hartley roundtrip: original → transform → inverse", y=1.02)
 plt.tight_layout()
 plt.show()
 
@@ -199,7 +217,27 @@ print(f"Rotation matrix:\n{chan_rot.rotation_matrix_}")
 # %%
 # Verify invertibility
 X_rgb_rec = chan_rot.inverse_transform(X_chan)
-print(f"RandomChannelRotation round-trip error: {np.abs(X_rgb - X_rgb_rec).max():.2e}")
+print(f"RandomChannelRotation round-trip max error: {np.abs(X_rgb - X_rgb_rec).max():.2e}")
+
+# Visualise: show each channel for one sample (original → rotated → reconstructed)
+sample_idx = 0
+fig, axes = plt.subplots(3, C_rgb, figsize=(10, 8))
+titles_row = ["Original", "After channel rotation", "Reconstructed"]
+data_rows = [
+    images_rgb[sample_idx],
+    X_chan[sample_idx].reshape(C_rgb, H, W),
+    X_rgb_rec[sample_idx].reshape(C_rgb, H, W),
+]
+for row, (label, imgs_row) in enumerate(zip(titles_row, data_rows)):
+    for c in range(C_rgb):
+        axes[row, c].imshow(imgs_row[c], cmap="gray_r")
+        axes[row, c].axis("off")
+        if row == 0:
+            axes[row, c].set_title(f"Ch {c}", fontsize=11)
+    axes[row, 0].set_ylabel(label, fontsize=11)
+plt.suptitle("RandomChannelRotation roundtrip (per-channel view)", y=1.02)
+plt.tight_layout()
+plt.show()
 
 # %% [markdown]
 # ### Channel Correlation Before vs After
