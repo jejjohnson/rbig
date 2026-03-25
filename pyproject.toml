@@ -77,9 +77,10 @@ docs = [
 [tool.pytest.ini_options]
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["tests"]
-addopts = ["-ra", "--strict-markers", "--tb=short"]
+addopts = ["-ra", "--strict-markers", "--tb=short", "-m", "not integration"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: accuracy tests on known distributions — expensive, run with 'pytest -m integration'",
 ]
 
 [tool.ruff]

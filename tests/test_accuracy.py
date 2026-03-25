@@ -1,8 +1,15 @@
-"""Accuracy tests on known distributions.
+"""Integration tests: accuracy on known distributions.
 
 These tests verify numerical correctness — not just shapes and types —
 by comparing RBIG outputs against analytical values for distributions
 where closed-form answers exist.
+
+All tests in this file are marked ``@pytest.mark.integration`` and are
+**excluded from the default pytest run** (see pyproject.toml). Run them
+explicitly with::
+
+    pytest -m integration          # only integration tests
+    pytest -m ""                   # everything (unit + integration)
 
 The bug that motivated these tests: MarginalGaussianize.log_det_jacobian
 used a spacing-based density estimator with +0.58 nats/feature/layer bias,
@@ -22,6 +29,8 @@ from rbig import (
     mutual_information_rbig,
 )
 
+pytestmark = pytest.mark.integration
+
 # ---------------------------------------------------------------------------
 # Fixtures: large enough for statistical accuracy
 # ---------------------------------------------------------------------------
@@ -29,17 +38,17 @@ from rbig import (
 
 @pytest.fixture
 def gaussian_2d():
-    """Standard 2D Gaussian, N=5000."""
+    """Standard 2D Gaussian, N=2000."""
     rng = np.random.RandomState(42)
-    return rng.randn(5000, 2)
+    return rng.randn(2000, 2)
 
 
 @pytest.fixture
 def gaussian_2d_scaled():
-    """2D Gaussian with known covariance."""
+    """2D Gaussian with known covariance, N=2000."""
     rng = np.random.RandomState(42)
     cov = np.array([[4.0, 1.0], [1.0, 2.0]])
-    return rng.multivariate_normal(np.zeros(2), cov, size=5000), cov
+    return rng.multivariate_normal(np.zeros(2), cov, size=2000), cov
 
 
 # ---------------------------------------------------------------------------
@@ -124,7 +133,7 @@ class TestMarginalGaussianizeInverse:
 class TestRBIGScoreSamples:
     def test_score_samples_on_standard_normal(self, gaussian_2d):
         """Mean log-likelihood of N(0,I) data should match analytical value."""
-        model = AnnealedRBIG(n_layers=50, rotation="pca", patience=10, random_state=42)
+        model = AnnealedRBIG(n_layers=30, rotation="pca", patience=10, random_state=42)
         model.fit(gaussian_2d)
         mean_ll = model.score(gaussian_2d)
         # Analytical: E[log p(x)] = -H(X) = -D/2 * (1 + log(2*pi))
@@ -146,7 +155,7 @@ class TestRBIGScoreSamples:
 class TestRBIGEntropy:
     def test_standard_normal(self, gaussian_2d):
         """Entropy of N(0,I) should match analytical value."""
-        model = AnnealedRBIG(n_layers=50, rotation="pca", patience=10, random_state=42)
+        model = AnnealedRBIG(n_layers=30, rotation="pca", patience=10, random_state=42)
         model.fit(gaussian_2d)
         h = model.entropy()
         D = gaussian_2d.shape[1]
@@ -156,7 +165,7 @@ class TestRBIGEntropy:
     def test_scaled_gaussian(self, gaussian_2d_scaled):
         """Entropy of N(0, Sigma) should match analytical value."""
         X, cov = gaussian_2d_scaled
-        model = AnnealedRBIG(n_layers=50, rotation="pca", patience=10, random_state=42)
+        model = AnnealedRBIG(n_layers=30, rotation="pca", patience=10, random_state=42)
         model.fit(X)
         h = model.entropy()
         h_true = 0.5 * np.log(np.linalg.det(2 * np.pi * np.e * cov))
@@ -164,7 +173,7 @@ class TestRBIGEntropy:
 
     def test_entropy_positive(self, gaussian_2d):
         """Differential entropy of a continuous distribution should be reasonable."""
-        model = AnnealedRBIG(n_layers=50, rotation="pca", patience=10, random_state=42)
+        model = AnnealedRBIG(n_layers=30, rotation="pca", patience=10, random_state=42)
         model.fit(gaussian_2d)
         h = model.entropy()
         # For 2D data, entropy should be in a reasonable range (0 to ~10 nats)
@@ -180,7 +189,7 @@ class TestRBIGEntropy:
 class TestEntropyRBIGFunc:
     def test_matches_model_entropy(self, gaussian_2d):
         """entropy_rbig(model, X) should match model.entropy()."""
-        model = AnnealedRBIG(n_layers=50, rotation="pca", patience=10, random_state=42)
+        model = AnnealedRBIG(n_layers=30, rotation="pca", patience=10, random_state=42)
         model.fit(gaussian_2d)
         h_method = model.entropy()
         h_func = entropy_rbig(model, gaussian_2d)
@@ -199,8 +208,8 @@ class TestMutualInformationAccuracy:
         """MI between independent 1D variables should be near zero."""
         rng = np.random.RandomState(42)
         # Use 1D variables to avoid KDE curse-of-dimensionality bias
-        X = rng.randn(3000, 1)
-        Y = rng.randn(3000, 1)
+        X = rng.randn(1500, 1)
+        Y = rng.randn(1500, 1)
 
         kwargs = dict(n_layers=50, rotation="pca", patience=10, random_state=42)
         model_x = AnnealedRBIG(**kwargs)

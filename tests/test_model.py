@@ -60,17 +60,6 @@ def test_rbig_entropy(simple_2d):
     assert isinstance(h, float)
 
 
-def test_rbig_entropy_accuracy():
-    """Entropy of standard Gaussian should match the analytical value."""
-    rng = np.random.RandomState(42)
-    X = rng.randn(5000, 2)
-    model = AnnealedRBIG(n_layers=50, rotation="pca", patience=10, random_state=42)
-    model.fit(X)
-    h_rbig = model.entropy()
-    h_true = X.shape[1] * 0.5 * (1 + np.log(2 * np.pi))
-    np.testing.assert_allclose(h_rbig, h_true, atol=0.1)
-
-
 def test_rbig_sample(simple_2d):
     model = AnnealedRBIG(n_layers=5, rotation="pca")
     model.fit(simple_2d)
