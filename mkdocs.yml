@@ -67,8 +67,7 @@ nav:
       - Normalizing Flows: notes/normalizing_flows.md
       - Information Theory Measures: notes/information_theory_measures.md
       - Deep Density Destructors: notes/deep_density_destructors.md
-      - Kernel Density Estimation: notes/kernel_density_estimation.md
-      - PDF Estimation: notes/pdf_estimation.md
+      - Density Estimation: notes/density_estimation.md
       - Gaussian Distribution: notes/gaussian_distribution.md
       - Exponential Distribution: notes/exponential_distribution.md
       - Uniform Distribution: notes/uniform_distribution.md

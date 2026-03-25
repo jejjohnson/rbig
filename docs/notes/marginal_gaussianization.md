@@ -162,7 +162,7 @@ An alternative approach to marginal Gaussianization uses the quantile transform,
 
 ## KDE Transform
 
-An alternative to histogram-based CDF estimation is to use Kernel Density Estimation (KDE) for a smoother estimate of the marginal PDF. See [Kernel Density Estimation](kernel_density_estimation.md) for resources.
+An alternative to histogram-based CDF estimation is to use Kernel Density Estimation (KDE) for a smoother estimate of the marginal PDF. See [Kernel Density Estimation](density_estimation.md#kernel-density-estimation) for resources.
 
 ## Spline Functions
 
