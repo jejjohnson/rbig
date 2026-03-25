@@ -90,7 +90,7 @@ class RBIGLayer:
     """
 
     marginal: MarginalGaussianize = field(default_factory=MarginalGaussianize)
-    rotation: PCARotation = field(default_factory=PCARotation)
+    rotation: PCARotation = field(default_factory=lambda: PCARotation(whiten=False))
 
     def fit(self, X: np.ndarray, y=None) -> RBIGLayer:
         """Fit the marginal and rotation transforms to data X.

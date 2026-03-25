@@ -261,4 +261,4 @@ print(
 #
 # - [RBIG Algorithm Note](../notes/rbig.md) — theory and derivation of the RBIG algorithm
 # - [RBIG Walk-Through](./03_rbig_walkthrough.ipynb) — step-by-step walkthrough of RBIG internals
-# - [Configuration](../notes/configuration.md) — guide to configuring RBIG parameters
+# - [Configuration](../configuration.md) — guide to configuring RBIG parameters

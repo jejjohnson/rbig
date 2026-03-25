@@ -292,6 +292,15 @@ class ICARotation(BaseTransform):
             self.K_ = K  # whitening matrix, shape (K, D)
             self.W_ = W  # unmixing matrix, shape (K, K)
             self.n_features_in_ = X.shape[1]
+            if (
+                self.orthogonal
+                and self.n_components is not None
+                and self.n_components != X.shape[1]
+            ):
+                raise ValueError(
+                    "orthogonal=True requires n_components=None or "
+                    "n_components=n_features"
+                )
         except ImportError:
             from sklearn.decomposition import FastICA
 
@@ -303,6 +312,15 @@ class ICARotation(BaseTransform):
             )
             self.ica_.fit(X)
             self.K_ = None  # signals that FastICA path is active
+            if (
+                self.orthogonal
+                and self.n_components is not None
+                and self.n_components != X.shape[1]
+            ):
+                raise ValueError(
+                    "orthogonal=True requires n_components=None or "
+                    "n_components=n_features"
+                ) from None
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
@@ -1086,6 +1104,15 @@ class PicardRotation(RotationBijector):
             self.K_ = K  # pre-whitening matrix, shape (K, D)
             self.W_ = W  # ICA unmixing matrix, shape (K, K)
             self.use_picard_ = True
+            if (
+                self.orthogonal
+                and self.n_components is not None
+                and self.n_components != X.shape[1]
+            ):
+                raise ValueError(
+                    "orthogonal=True requires n_components=None or "
+                    "n_components=n_features"
+                )
         except (ImportError, TypeError):
             from sklearn.decomposition import FastICA
 
@@ -1098,6 +1125,15 @@ class PicardRotation(RotationBijector):
             self.ica_.fit(X)
             self.K_ = None
             self.use_picard_ = False
+            if (
+                self.orthogonal
+                and self.n_components is not None
+                and self.n_components != X.shape[1]
+            ):
+                raise ValueError(
+                    "orthogonal=True requires n_components=None or "
+                    "n_components=n_features"
+                ) from None
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:

@@ -88,7 +88,7 @@ plt.show()
 
 # %%
 rotations = {
-    "PCA": PCARotation(whiten=True),
+    "PCA": PCARotation(whiten=False),
     "ICA": ICARotation(random_state=seed),
     "Random": RandomRotation(random_state=seed),
 }
@@ -207,8 +207,11 @@ for name, model in models.items():
 # | **Random** | No data dependence, cheap | Very high-dimensional data where PCA/ICA is expensive; ensemble averaging |
 #
 # In practice, **PCA is the recommended default**. It tends to converge in
-# fewer layers because whitening explicitly removes second-order dependence,
-# leaving only higher-order structure for subsequent layers to handle.
+# fewer layers because the data-dependent orthogonal rotation decorrelates
+# the features, leaving mainly higher-order structure for subsequent layers
+# to handle. If you also want unit-variance components, you can optionally
+# enable whitening via `PCARotation(whiten=True)`, but this is not the
+# library default for `rotation="pca"`.
 #
 # Random rotations may need more layers but are useful when:
 #

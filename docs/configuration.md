@@ -51,7 +51,7 @@ Which orthogonal rotation to apply after each marginal Gaussianization step.
 
 | Value | Method | When to use |
 |-------|--------|------------|
-| `"pca"` | PCA with whitening | **Default.** Removes second-order dependence explicitly → fastest convergence in most cases. |
+| `"pca"` | PCA (orthogonal rotation, no whitening by default) | **Default.** Diagonalizes the covariance (removes second-order dependence) → fastest convergence in most cases. |
 | `"ica"` | Independent Component Analysis | Data with known independent source structure. Slower per layer than PCA. |
 | `"random"` | Haar-distributed random orthogonal | Very high-dimensional data (PCA eigendecomposition is $O(D^3)$). Also useful for ensemble averaging of IT estimates. |
 

@@ -225,4 +225,4 @@ plt.show()
 #
 # - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of TC, entropy, and MI
 # - [RBIG Algorithm Note](../notes/rbig.md) — theory and derivation of the RBIG algorithm
-# - [Configuration](../notes/configuration.md) — guide to configuring RBIG parameters
+# - [Configuration](../configuration.md) — guide to configuring RBIG parameters

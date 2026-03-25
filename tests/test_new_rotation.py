@@ -5,6 +5,7 @@ import pytest
 
 from rbig import (
     GaussianRandomProjection,
+    ICARotation,
     OrthogonalDimensionalityReduction,
     PicardRotation,
     RandomOrthogonalProjection,
@@ -135,8 +136,22 @@ def test_picard_rotation_log_det_non_square(simple_5d):
 
 
 def test_picard_rotation_orthogonal_log_det_zero(simple_5d):
-    """orthogonal=True gives log_det = 0 regardless of n_components."""
-    r = PicardRotation(n_components=3, random_state=42, orthogonal=True)
+    """orthogonal=True with square transform gives log_det = 0."""
+    r = PicardRotation(n_components=None, random_state=42, orthogonal=True)
     r.fit(simple_5d)
     ldj = r.get_log_det_jacobian(simple_5d)
     np.testing.assert_allclose(ldj, 0.0)
+
+
+def test_ica_orthogonal_non_square_raises(simple_5d):
+    """ICARotation(orthogonal=True, n_components=3) raises on non-square fit."""
+    r = ICARotation(n_components=3, random_state=42, orthogonal=True)
+    with pytest.raises(ValueError, match="orthogonal=True requires"):
+        r.fit(simple_5d)
+
+
+def test_picard_orthogonal_non_square_raises(simple_5d):
+    """PicardRotation(orthogonal=True, n_components=3) raises on non-square fit."""
+    r = PicardRotation(n_components=3, random_state=42, orthogonal=True)
+    with pytest.raises(ValueError, match="orthogonal=True requires"):
+        r.fit(simple_5d)
