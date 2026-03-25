@@ -19,8 +19,18 @@ window.MathJax = {
 };
 
 document$.subscribe(() => {
-  MathJax.startup.output.clearCache()
-  MathJax.typesetClear()
-  MathJax.texReset()
-  MathJax.typesetPromise()
+  if (!window.MathJax || !MathJax.startup || !MathJax.startup.promise) {
+    return;
+  }
+
+  MathJax.startup.promise
+    .then(() => {
+      MathJax.startup?.output?.clearCache?.();
+      MathJax.typesetClear?.();
+      MathJax.texReset?.();
+      MathJax.typesetPromise?.();
+    })
+    .catch(() => {
+      // Silently ignore MathJax startup errors to avoid breaking navigation
+    });
 })
