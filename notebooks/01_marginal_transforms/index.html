@@ -816,10 +816,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#what-is-marginal-gaussianization" class="md-nav__link">
+  <a href="#why-marginal-gaussianization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is Marginal Gaussianization?
+        Why Marginal Gaussianization?
       
     </span>
   </a>
@@ -838,10 +838,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#why-diagonal-jacobian" class="md-nav__link">
+  <a href="#log-determinant-jacobian" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Diagonal Jacobian?
+        Log-Determinant Jacobian
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boundary-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundary Issues
       
     </span>
   </a>
@@ -1004,7 +1015,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#log-determinant-jacobian" class="md-nav__link">
+  <a href="#log-determinant-jacobian_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Log-determinant Jacobian
@@ -1027,6 +1038,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1672,10 +1700,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#what-is-marginal-gaussianization" class="md-nav__link">
+  <a href="#why-marginal-gaussianization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is Marginal Gaussianization?
+        Why Marginal Gaussianization?
       
     </span>
   </a>
@@ -1694,10 +1722,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#why-diagonal-jacobian" class="md-nav__link">
+  <a href="#log-determinant-jacobian" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Diagonal Jacobian?
+        Log-Determinant Jacobian
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boundary-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundary Issues
       
     </span>
   </a>
@@ -1860,7 +1899,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#log-determinant-jacobian" class="md-nav__link">
+  <a href="#log-determinant-jacobian_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Log-determinant Jacobian
@@ -1883,6 +1922,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2634,18 +2690,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="marginal-transforms">Marginal Transforms<a class="anchor-link" href="#marginal-transforms">¶</a></h1><p><a href="https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/01_marginal_transforms.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
-<p>This notebook covers the <strong>marginal transforms</strong> used in the RBIG pipeline —
-both the theory and all available implementations.</p>
-<p><strong>Contents</strong></p>
-<ol>
-<li><a href="#theory">Theory</a></li>
-<li><a href="#data">Data</a></li>
-<li><a href="#step-1--marginal-uniformization">Step 1 — Marginal Uniformization</a></li>
-<li><a href="#step-2--marginal-gaussianization">Step 2 — Marginal Gaussianization</a></li>
-<li><a href="#all-available-methods">All Available Methods</a></li>
-<li><a href="#comparison">Comparison</a></li>
-<li><a href="#summary">Summary</a></li>
-</ol>
+<p>Marginal Gaussianization is the first building block of the RBIG algorithm.
+It transforms each feature <strong>independently</strong> to a standard Gaussian — a
+necessary preprocessing step before rotation can mix the dimensions.</p>
+<p>This notebook covers:</p>
+<ul>
+<li><strong>Why</strong> marginal transforms matter for density estimation and normalizing flows</li>
+<li><strong>How</strong> the two-step pipeline (CDF → uniform → probit → Gaussian) works</li>
+<li><strong>All 7 implementations</strong> available in <code>rbig</code>, with a head-to-head comparison</li>
+</ul>
 </div>
 </div>
 </div>
@@ -2698,9 +2751,12 @@ GitHub. Skip if already installed.</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="theory">Theory<a class="anchor-link" href="#theory">¶</a></h2><h3 id="what-is-marginal-gaussianization">What is Marginal Gaussianization?<a class="anchor-link" href="#what-is-marginal-gaussianization">¶</a></h3><p>Marginal Gaussianization is a <strong>dimension-wise</strong> (feature-independent)
-transform whose Jacobian is a diagonal matrix. It maps each feature of a
-$d$-dimensional random variable to a standard Gaussian independently.</p>
+<h2 id="theory">Theory<a class="anchor-link" href="#theory">¶</a></h2><h3 id="why-marginal-gaussianization">Why Marginal Gaussianization?<a class="anchor-link" href="#why-marginal-gaussianization">¶</a></h3><p>Many statistical methods assume Gaussian data. Marginal Gaussianization makes
+that assumption true — at least marginally — by applying an invertible,
+dimension-wise transform. Because each dimension is handled independently, the
+Jacobian is <strong>diagonal</strong>, making the log-determinant cheap to compute
+($O(D)$ instead of $O(D^3)$). This is critical for density estimation in
+normalizing flows.</p>
 <h3 id="the-pipeline">The Pipeline<a class="anchor-link" href="#the-pipeline">¶</a></h3><p>For each dimension $d$, the transform is a two-step composition:</p>
 <p>$$x_d \xrightarrow{F_d} u_d \xrightarrow{\Phi^{-1}} z_d$$</p>
 <ol>
@@ -2713,23 +2769,70 @@ uniform to Gaussian:</p>
 <p>$$z_d = \Phi^{-1}(u_d)$$</p>
 </li>
 </ol>
-<h3 id="why-diagonal-jacobian">Why Diagonal Jacobian?<a class="anchor-link" href="#why-diagonal-jacobian">¶</a></h3><p>Because each dimension is transformed independently, the Jacobian is diagonal:</p>
+<h3 id="log-determinant-jacobian">Log-Determinant Jacobian<a class="anchor-link" href="#log-determinant-jacobian">¶</a></h3><p>The key property is that the derivative of the CDF is the PDF: $dF/dx = f(x)$.
+Combined with the probit step, the full log-determinant Jacobian is:</p>
 <p>$$\log|\det J| = \sum_{d=1}^{D} \log\left|\frac{dz_d}{dx_d}\right|$$</p>
-<p>This makes the log-determinant cheap to compute ($O(D)$ instead of $O(D^3)$),
-which is critical for density estimation in normalizing flows.</p>
+<p>This diagonal structure means we only need per-dimension derivatives — no
+matrix determinants.</p>
+<h3 id="boundary-issues">Boundary Issues<a class="anchor-link" href="#boundary-issues">¶</a></h3><p>At test time, points outside the training support can cause the probit to
+diverge ($\Phi^{-1}(0) = -\infty$, $\Phi^{-1}(1) = +\infty$). Two
+strategies exist:</p>
+<ul>
+<li><strong>Clip to boundaries</strong> — map outliers to $[\epsilon, 1-\epsilon]$
+(simple, used by <code>MarginalGaussianize</code>)</li>
+<li><strong>KDE tails</strong> — use a smooth KDE whose tails extend beyond the training
+range (used by <code>MarginalKDEGaussianize</code>)</li>
+</ul>
+<p>See the <a href="07_boundary_issues.ipynb">Boundary Issues notebook</a> for a detailed
+comparison.</p>
 <h3 id="cdf-estimation-methods">CDF Estimation Methods<a class="anchor-link" href="#cdf-estimation-methods">¶</a></h3><p>The key design choice is <strong>how to estimate $F_d$</strong>. Different estimators trade
 off smoothness, accuracy, and speed:</p>
-<ul>
-<li><strong>Empirical CDF</strong> (rank-based) — fast, non-parametric, piecewise-constant</li>
-<li><strong>KDE CDF</strong> — smooth, bandwidth-dependent</li>
-<li><strong>Quantile transform</strong> — rank-based with interpolation</li>
-<li><strong>GMM CDF</strong> — parametric mixture, analytic</li>
-<li><strong>Spline CDF</strong> — smooth monotone interpolation</li>
-</ul>
-<p>See the <a href="../notes/uniformization.md">Uniformization note</a> for the full
-mathematical derivation and the
-<a href="../notes/marginal_gaussianization.md">Marginal Gaussianization note</a>
-for implementation details.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>CDF Method</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MarginalUniformize</code></td>
+<td>Empirical (rank)</td>
+<td>Uniformization step</td>
+</tr>
+<tr>
+<td><code>MarginalGaussianize</code></td>
+<td>Empirical + probit</td>
+<td>Default in <code>RBIGLayer</code></td>
+</tr>
+<tr>
+<td><code>MarginalKDEGaussianize</code></td>
+<td>KDE + probit</td>
+<td>Smooth CDF, small data</td>
+</tr>
+<tr>
+<td><code>QuantileGaussianizer</code></td>
+<td>Quantile (sklearn)</td>
+<td>Large data</td>
+</tr>
+<tr>
+<td><code>KDEGaussianizer</code></td>
+<td>KDE + probit (bijector)</td>
+<td>Analytic Jacobian</td>
+</tr>
+<tr>
+<td><code>GMMGaussianizer</code></td>
+<td>GMM CDF + probit</td>
+<td>Multimodal marginals</td>
+</tr>
+<tr>
+<td><code>SplineGaussianizer</code></td>
+<td>PCHIP spline</td>
+<td>Smooth + fast + accurate</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -2815,7 +2918,8 @@ plt.style.use("seaborn-v0_8-paper")</div>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h2 id="data">Data<a class="anchor-link" href="#data">¶</a></h2><p>We use a <strong>Gamma(4)</strong> distribution — a skewed, non-Gaussian marginal that
-clearly shows the effect of each transform.</p>
+clearly shows the effect of each transform. Its asymmetry makes it easy to
+see whether the output is truly Gaussian.</p>
 </div>
 </div>
 </div>
@@ -2890,9 +2994,12 @@ plt.show()</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="step-1-marginal-uniformization">Step 1 — Marginal Uniformization<a class="anchor-link" href="#step-1-marginal-uniformization">¶</a></h2><p><code>MarginalUniformize</code> uses the empirical CDF (rank-based with Hazen
-continuity correction) to map each marginal to Uniform[0, 1].</p>
+<h2 id="step-1-marginal-uniformization">Step 1 — Marginal Uniformization<a class="anchor-link" href="#step-1-marginal-uniformization">¶</a></h2><p>The first step maps each marginal to a Uniform[0, 1] distribution using the
+empirical CDF. <code>MarginalUniformize</code> uses a rank-based estimator with Hazen
+continuity correction:</p>
 <p>$$u = \hat{F}_n(x) = \frac{\text{rank}(x) + 0.5}{N}$$</p>
+<p>This is useful on its own (e.g., for copula models) and is the intermediate
+step inside every Gaussianizer.</p>
 </div>
 </div>
 </div>
@@ -3015,6 +3122,8 @@ print(f"Mean |round-trip error|: {np.abs(X - X_rt).mean():.2e}")</div>
 <hr/>
 <h2 id="step-2-marginal-gaussianization">Step 2 — Marginal Gaussianization<a class="anchor-link" href="#step-2-marginal-gaussianization">¶</a></h2><p><code>MarginalGaussianize</code> combines the empirical CDF with the probit transform
 $\Phi^{-1}$ in a single step: $z = \Phi^{-1}(\hat{F}_n(x))$.</p>
+<p>Why probit? Because $\Phi^{-1}$ maps Uniform[0,1] exactly to $\mathcal{N}(0,1)$
+— so if the CDF estimate is accurate, the output is Gaussian by construction.</p>
 </div>
 </div>
 </div>
@@ -3170,7 +3279,7 @@ print(
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>log |det J| — min: -3.029, max: 6.394, mean: -0.014
+<pre>log |det J| — min: -1.633, max: 2.844, mean: -0.602
 </pre>
 </div>
 </div>
@@ -3187,7 +3296,9 @@ print(
 <hr/>
 <h2 id="all-available-methods">All Available Methods<a class="anchor-link" href="#all-available-methods">¶</a></h2><p>Beyond the two core transforms above, <code>rbig</code> provides several alternative
 marginal Gaussianizers. Each estimates the CDF differently, offering different
-tradeoffs in smoothness, speed, and accuracy.</p>
+tradeoffs in smoothness, speed, and accuracy. The right choice depends on your
+data size, whether you need an analytic Jacobian, and how smooth you want the
+transform to be.</p>
 </div>
 </div>
 </div>
@@ -3696,7 +3807,13 @@ for name, model in models.items():
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Method                     mean log|det J|
 --------------------------------------------
-MarginalGaussianize                -0.0141
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>MarginalGaussianize                -0.6018
 MarginalKDEGaussianize                 N/A
 QuantileGaussianizer               -0.8976
 </pre>
@@ -3794,6 +3911,11 @@ SplineGaussianizer                 -0.5580
 </table>
 <p>All transforms follow the scikit-learn API: <code>.fit(X)</code>, <code>.transform(X)</code>,
 <code>.inverse_transform(Z)</code>.</p>
+<h3 id="references">References<a class="anchor-link" href="#references">¶</a></h3><ul>
+<li>Quantile Transformation — <a href="https://stats.stackexchange.com/questions/325570/quantile-transformation-with-gaussian-distribution-sklearn-implementation">sklearn</a> | <a href="https://github.com/MilesCranmer/differentiable_quantile_transform">PyTorch</a></li>
+<li>KDE — <a href="../notes/density_estimation.md#kernel-density-estimation">Density Estimation</a></li>
+<li>Splines — <a href="https://github.com/bayesiains/nsf">Neural Spline Flows</a> | <a href="https://github.com/tensorflow/probability/blob/master/tensorflow_probability/python/bijectors/rational_quadratic_spline.py">TF Probability</a></li>
+</ul>
 </div>
 </div>
 </div>

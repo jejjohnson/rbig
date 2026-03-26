@@ -17,14 +17,11 @@
 # # Measuring Dependence: Multivariate (2D) Variables
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/10_dependence_2d.ipynb)
 #
-# This notebook extends the 1D dependence analysis to **multivariate**
-# random vectors $X \in \mathbb{R}^2$ and $Y \in \mathbb{R}^2$.
+# When both $X$ and $Y$ are **vectors** (not scalars), measuring dependence
+# becomes harder. Kernel methods like CKA are popular but bandwidth-sensitive.
+# This notebook shows that RBIG-based MI provides a non-parametric alternative
+# that captures multivariate nonlinear dependence.
 #
-# We compare classical matrix-based dependence measures with RBIG-based
-# Mutual Information on two synthetic datasets with different nonlinear
-# structures.
-#
-# For MI definitions and the RBIG estimation approach, see the [Information Theory Measures note](../notes/information_theory_measures.md).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -231,6 +228,7 @@ print(f"  ICC:       {icc2:.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of MI, TC, and ICC
-# - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
-# - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD estimation
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of MI and TC
+# - [Measuring Dependence: 1D Variables](09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
+# - [Real-World IT](11_real_world_it.ipynb) — IT measures on synthetic financial data
+#

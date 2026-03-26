@@ -1237,6 +1237,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="See Also">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1895,6 +1912,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="See Also">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2646,30 +2680,35 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="information-theory-measures-with-rbig">Information Theory Measures with RBIG<a class="anchor-link" href="#information-theory-measures-with-rbig">¶</a></h1><p><a href="https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/06_information_theory.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
-<p>This notebook demonstrates <strong>two approaches</strong> for estimating information-theoretic
-quantities with RBIG, and compares both against analytical values on Gaussian data.</p>
+<p>A key advantage of RBIG is that information-theoretic quantities fall out
+naturally from the Gaussianization process. This notebook demonstrates
+<strong>two approaches</strong> for estimating them, and compares both against analytical
+values on Gaussian data where ground truth is available.</p>
+<figure align="center">
+<img alt="IT measures" src="../pics/rbig_it/Fig_1.png" width="500"/>
+<figcaption>Information Theory measures computable via RBIG.</figcaption>
+</figure>
 <table>
 <thead>
 <tr>
 <th>Approach</th>
-<th>Method</th>
-<th>Key idea</th>
+<th>How it works</th>
+<th>Pros</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Change-of-variables</strong></td>
-<td>$\log p(x) = \log p_Z(f(x)) + \log\lvert\det J\rvert$</td>
-<td>Standard normalizing-flow density estimation</td>
+<td>Fit a full RBIG model, use the learned density</td>
+<td>Single model, exact density</td>
 </tr>
 <tr>
-<td><strong>RBIG-way</strong> (Laparra et al. 2011, 2020)</td>
-<td>Per-layer TC reduction</td>
-<td>No Jacobian needed; sums dependence removed per layer</td>
+<td><strong>RBIG-way</strong></td>
+<td>Sum per-layer TC reductions</td>
+<td>No Jacobian needed, more stable</td>
 </tr>
 </tbody>
 </table>
-<p>For mathematical definitions, see the <a href="../notes/information_theory_measures.md">Information Theory Measures note</a>.</p>
 </div>
 </div>
 </div>
@@ -2793,6 +2832,10 @@ from rbig import (
 <hr/>
 <h2 id="shared-data-setup">Shared Data Setup<a class="anchor-link" href="#shared-data-setup">¶</a></h2><p>We use correlated Gaussian data throughout so we can compare all estimates
 against <strong>closed-form analytical values</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> <code>n_samples</code> is kept small for fast execution; increase it
+(e.g. 10 000+) for closer agreement with analytical values.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -2817,7 +2860,7 @@ against <strong>closed-form analytical values</strong>.</p>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">5_000</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1_000</span>
 <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># dimensionality per block</span>
 
 <span class="c1"># Joint covariance for [X, Y] with cross-correlations</span>
@@ -2839,11 +2882,11 @@ against <strong>closed-form analytical values</strong>.</p>
 <span class="n">X_shifted</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mu_shift</span><span class="p">,</span> <span class="n">CX</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
 
 <span class="c1"># Common RBIG settings</span>
-<span class="n">rbig_kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">rbig_kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">n_layers</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">"pca"</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-3">seed = 42
 rng = np.random.RandomState(seed)
-n_samples = 5_000
+n_samples = 1_000
 d = 2  # dimensionality per block
 
 # Joint covariance for [X, Y] with cross-correlations
@@ -2865,7 +2908,7 @@ mu_shift = np.array([0.5, 0.0])
 X_shifted = rng.multivariate_normal(mu_shift, CX, size=n_samples)
 
 # Common RBIG settings
-rbig_kw = dict(n_layers=50, rotation="pca", patience=10, random_state=seed)</div>
+rbig_kw = dict(n_layers=20, rotation="pca", patience=10, random_state=seed)</div>
 </div>
 </div>
 </div>
@@ -2879,7 +2922,12 @@ rbig_kw = dict(n_layers=50, rotation="pca", patience=10, random_state=seed)</div
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="1-total-correlation">1. Total Correlation<a class="anchor-link" href="#1-total-correlation">¶</a></h2><p>$$\mathrm{TC}(X) = \sum_i H(X_i) - H(X)$$</p>
+<h2 id="1-total-correlation">1. Total Correlation<a class="anchor-link" href="#1-total-correlation">¶</a></h2><p>Total correlation measures the overall statistical dependence among all
+dimensions of a random vector — how far the joint distribution is from
+being fully independent:</p>
+<p>$$\mathrm{TC}(X) = \sum_i H(X_i) - H(X) = D_\text{KL}\left[ p(\mathbf{x}) \| \prod_d p(x_d) \right]$$</p>
+<p>TC is zero if and only if all dimensions are independent. In 2D, TC equals
+the mutual information.</p>
 </div>
 </div>
 </div>
@@ -2991,8 +3039,8 @@ print(f"TC(XY) change-of-vars: {tc_cov_XY:.4f} nats")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>TC(X)  change-of-vars: -0.0031 nats
-TC(XY) change-of-vars: 0.6537 nats
+<pre>TC(X)  change-of-vars: -0.0059 nats
+TC(XY) change-of-vars: 0.6094 nats
 </pre>
 </div>
 </div>
@@ -3049,8 +3097,8 @@ print(f"TC(XY) RBIG-way: {tc_rbig_XY:.4f} nats")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>TC(X)  RBIG-way: -0.0032 nats
-TC(XY) RBIG-way: 0.6581 nats
+<pre>TC(X)  RBIG-way: -0.0062 nats
+TC(XY) RBIG-way: 0.6201 nats
 </pre>
 </div>
 </div>
@@ -3065,7 +3113,10 @@ TC(XY) RBIG-way: 0.6581 nats
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="2-entropy">2. Entropy<a class="anchor-link" href="#2-entropy">¶</a></h2><p>$$H(X) = \frac{1}{2}\log\lvert 2\pi e\,\Sigma \rvert$$</p>
+<h2 id="2-entropy">2. Entropy<a class="anchor-link" href="#2-entropy">¶</a></h2><p>Entropy measures the uncertainty of a random variable — the expected
+information content:</p>
+<p>$$H(X) = -\int p(x) \log p(x) \, dx$$</p>
+<p>For Gaussian data: $H(X) = \frac{1}{2}\log\lvert 2\pi e\,\Sigma \rvert$</p>
 <p><strong>RBIG-way</strong>: $H(X) = \sum_d H(X_d) - \mathrm{TC}(X)$ — marginal entropies minus
 the RBIG-accumulated total correlation (no Jacobian needed).</p>
 <p><strong>Change-of-variables</strong>: $H(X) = -\mathbb{E}[\log p(x)]$ using the normalizing-flow
@@ -3187,8 +3238,8 @@ print(f"H(XY) change-of-vars: {H_XY_cov:.4f} nats")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>H(X)  change-of-vars: 2.8498 nats
-H(XY) change-of-vars: 4.8116 nats
+<pre>H(X)  change-of-vars: 2.8450 nats
+H(XY) change-of-vars: 4.7623 nats
 </pre>
 </div>
 </div>
@@ -3245,8 +3296,8 @@ print(f"H(XY) RBIG-way: {H_XY_rbig:.4f} nats")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>H(X)  RBIG-way: 2.8516 nats
-H(XY) RBIG-way: 5.0246 nats
+<pre>H(X)  RBIG-way: 2.8369 nats
+H(XY) RBIG-way: 4.9964 nats
 </pre>
 </div>
 </div>
@@ -3261,7 +3312,10 @@ H(XY) RBIG-way: 5.0246 nats
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="3-mutual-information">3. Mutual Information<a class="anchor-link" href="#3-mutual-information">¶</a></h2><p>$$\mathrm{MI}(X;Y) = H(X) + H(Y) - H(X,Y)$$</p>
+<h2 id="3-mutual-information">3. Mutual Information<a class="anchor-link" href="#3-mutual-information">¶</a></h2><p>Mutual information quantifies how much knowing $X$ tells you about $Y$
+(and vice versa). It is zero if and only if $X$ and $Y$ are independent —
+unlike linear correlation, MI captures <strong>all</strong> forms of dependence:</p>
+<p>$$\mathrm{MI}(X;Y) = H(X) + H(Y) - H(X,Y)$$</p>
 <p><strong>RBIG-way</strong>: $\mathrm{MI}(X;Y) = \mathrm{TC}([G_X(X),\, G_Y(Y)])$ —
 Gaussianize each block independently, then measure the TC of the concatenation.</p>
 </div>
@@ -3370,7 +3424,7 @@ print(f"MI(X;Y) change-of-vars: {mi_cov:.4f} nats")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>MI(X;Y) change-of-vars: 0.8739 nats
+<pre>MI(X;Y) change-of-vars: 0.8795 nats
 </pre>
 </div>
 </div>
@@ -3423,7 +3477,7 @@ print(f"MI(X;Y) RBIG-way: {mi_rbig:.4f} nats")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>MI(X;Y) RBIG-way: 0.6624 nats
+<pre>MI(X;Y) RBIG-way: 0.6325 nats
 </pre>
 </div>
 </div>
@@ -3438,7 +3492,9 @@ print(f"MI(X;Y) RBIG-way: {mi_rbig:.4f} nats")</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<h2 id="4-kl-divergence">4. KL Divergence<a class="anchor-link" href="#4-kl-divergence">¶</a></h2><p>$$\mathrm{KL}(P \| Q) = \int p(x) \log\frac{p(x)}{q(x)}\,dx$$</p>
+<h2 id="4-kl-divergence">4. KL Divergence<a class="anchor-link" href="#4-kl-divergence">¶</a></h2><p>KL-divergence measures how one probability distribution $P$ differs from a
+reference distribution $Q$. It is asymmetric and always non-negative:</p>
+<p>$$\mathrm{KL}(P \| Q) = \int p(x) \log\frac{p(x)}{q(x)}\,dx$$</p>
 <p><strong>RBIG-way</strong>: $\mathrm{KL}(P_X \| P_Y) = \sum_d D(Z_d \| \mathcal{N}(0,1)) + \mathrm{TC}(Z)$
 where $Z = G_Y(X)$ — apply Y's Gaussianization to X's samples, then measure
 per-marginal KL to standard Gaussian plus the TC of Z.</p>
@@ -3550,7 +3606,7 @@ print(f"KLD change-of-vars: {kld_cov:.4f} nats")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>KLD change-of-vars: 0.1578 nats
+<pre>KLD change-of-vars: 0.4802 nats
 </pre>
 </div>
 </div>
@@ -3603,7 +3659,7 @@ print(f"KLD RBIG-way: {kld_rbig:.4f} nats")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>KLD RBIG-way: 0.1237 nats
+<pre>KLD RBIG-way: 0.1123 nats
 </pre>
 </div>
 </div>
@@ -3671,12 +3727,12 @@ print(f"{'KLD':12} {kld_true:12.4f} {kld_cov:16.4f} {kld_rbig:12.4f}")</div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Measure        Analytical   Change-of-Vars     RBIG-way
 --------------------------------------------------------
-TC(X)              0.0000          -0.0031      -0.0032
-TC(X,Y)            0.6547           0.6537       0.6581
-H(X)               2.8379           2.8498       2.8516
-H(X,Y)             5.0211           4.8116       5.0246
-MI(X;Y)            0.6547           0.8739       0.6624
-KLD                0.1250           0.1578       0.1237
+TC(X)              0.0000          -0.0059      -0.0062
+TC(X,Y)            0.6547           0.6094       0.6201
+H(X)               2.8379           2.8450       2.8369
+H(X,Y)             5.0211           4.7623       4.9964
+MI(X;Y)            0.6547           0.8795       0.6325
+KLD                0.1250           0.4802       0.1123
 </pre>
 </div>
 </div>
@@ -3692,10 +3748,14 @@ KLD                0.1250           0.1578       0.1237
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h2 id="see-also">See Also<a class="anchor-link" href="#see-also">¶</a></h2><ul>
-<li><a href="../notes/information_theory_measures.md">Information Theory Measures</a> — formal definitions of TC, entropy, MI, and KLD</li>
-<li><a href="./09_dependence_1d.ipynb">Measuring Dependence: 1D Variables</a> — MI for detecting nonlinear dependence in 1D</li>
-<li><a href="./10_dependence_2d.ipynb">Measuring Dependence: 2D Variables</a> — MI for multivariate dependence</li>
-<li><a href="./11_real_world_it.ipynb">Information Theory with Synthetic Stock-Market Data</a> — practical IT application</li>
+<li><a href="09_dependence_1d.ipynb">Measuring Dependence: 1D Variables</a> — MI for detecting nonlinear dependence in 1D</li>
+<li><a href="10_dependence_2d.ipynb">Measuring Dependence: 2D Variables</a> — MI for multivariate dependence</li>
+<li><a href="11_real_world_it.ipynb">Information Theory with Synthetic Stock-Market Data</a> — IT measures on financial data</li>
+</ul>
+<h3 id="references">References<a class="anchor-link" href="#references">¶</a></h3><ul>
+<li>Nonlinear Extraction of "Independent Components" of elliptically symmetric
+densities using radial Gaussianization — Lyu &amp; Simoncelli (2008) —
+<a href="https://www.cns.nyu.edu/pub/lcv/lyu08a.pdf">PDF</a></li>
 </ul>
 </div>
 </div>

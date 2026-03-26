@@ -2390,13 +2390,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="boundary-issues-in-marginal-uniformization">Boundary Issues in Marginal Uniformization<a class="anchor-link" href="#boundary-issues-in-marginal-uniformization">¶</a></h1><p><a href="https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/07_boundary_issues.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
-<p>This notebook examines what happens when test-time data points fall <strong>outside</strong>
-the support seen during training (i.e. outside the empirical CDF bounds), and
-how the new <code>rbig</code> API handles these boundary conditions.</p>
-<p>The key class is <code>MarginalKDEGaussianize</code>, which uses a KDE-estimated CDF and
-clips output probabilities to <code>[eps, 1-eps]</code> to avoid infinite values at the
-boundaries.</p>
-<p>For the underlying theory of the uniformization step, see the <a href="../notes/uniformization.md">Uniformization note</a>.</p>
+<p>When test-time samples fall outside the training support, the empirical CDF
+returns 0 or 1 and the probit diverges to $\pm\infty$. This notebook compares
+two strategies for handling these boundary issues.</p>
 </div>
 </div>
 </div>
@@ -3192,9 +3188,7 @@ ensures numerically stable downstream computations.</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h2 id="see-also">See Also<a class="anchor-link" href="#see-also">¶</a></h2><ul>
-<li><a href="../notes/uniformization.md">Uniformization Note</a> — theory of the CDF-based uniformization step</li>
-<li><a href="../notes/marginal_gaussianization.md">Marginal Gaussianization Note</a> — marginal Gaussianization theory</li>
-<li><a href="./01_marginal_transforms.ipynb">Marginal Transforms</a> — hands-on demo of marginal transform classes</li>
+<li><a href="01_marginal_transforms.ipynb">Marginal Transforms</a> — full theory and all available CDF estimation methods</li>
 </ul>
 </div>
 </div>

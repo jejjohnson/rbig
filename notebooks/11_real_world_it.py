@@ -17,18 +17,11 @@
 # # Information Theory with Synthetic Stock-Market Data
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/11_real_world_it.ipynb)
 #
-# This notebook applies RBIG-based information-theoretic measures to
-# **synthetic stock-like financial data** — simulated daily log-returns
-# designed to mimic major tech stocks. We estimate:
+# This notebook applies RBIG information-theoretic measures to a realistic
+# scenario: measuring statistical dependence among stock returns. We generate
+# synthetic correlated log-returns with nonlinear structure, then use TC, MI,
+# and ICC to quantify multivariate and pairwise dependence.
 #
-# - **Total Correlation** — overall multivariate dependence
-# - **Mutual Information** — pairwise and group dependence between stocks
-# - **ICC** — normalized information correlation coefficient
-#
-# This complements notebook 06 (synthetic Gaussian data) with a practical
-# example where the true dependence structure is unknown.
-#
-# For definitions of TC, MI, and ICC, see the [Information Theory Measures note](../notes/information_theory_measures.md).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -201,6 +194,7 @@ print(f"MI(AAPL ; GOOG+AMZN) = {mi_group:.4f} nats, ICC = {icc_group:.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](../notes/information_theory_measures.md) — formal definitions of TC, MI, and ICC
-# - [Information Theory Measures with RBIG](./06_information_theory.ipynb) — TC, entropy, MI, and KLD on synthetic Gaussian data
-# - [Measuring Dependence: 1D Variables](./09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of TC and MI
+# - [Measuring Dependence: 1D](09_dependence_1d.ipynb) — MI for detecting nonlinear dependence
+# - [Measuring Dependence: 2D](10_dependence_2d.ipynb) — MI for multivariate dependence
+#

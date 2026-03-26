@@ -2380,12 +2380,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="measuring-dependence-multivariate-2d-variables">Measuring Dependence: Multivariate (2D) Variables<a class="anchor-link" href="#measuring-dependence-multivariate-2d-variables">¶</a></h1><p><a href="https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/10_dependence_2d.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
-<p>This notebook extends the 1D dependence analysis to <strong>multivariate</strong>
-random vectors $X \in \mathbb{R}^2$ and $Y \in \mathbb{R}^2$.</p>
-<p>We compare classical matrix-based dependence measures with RBIG-based
-Mutual Information on two synthetic datasets with different nonlinear
-structures.</p>
-<p>For MI definitions and the RBIG estimation approach, see the <a href="../notes/information_theory_measures.md">Information Theory Measures note</a>.</p>
+<p>When both $X$ and $Y$ are <strong>vectors</strong> (not scalars), measuring dependence
+becomes harder. Kernel methods like CKA are popular but bandwidth-sensitive.
+This notebook shows that RBIG-based MI provides a non-parametric alternative
+that captures multivariate nonlinear dependence.</p>
 </div>
 </div>
 </div>
@@ -2811,8 +2809,8 @@ print(f"  ICC:       {icc1:.4f}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>  MI (RBIG): 54.5359 nats
-  ICC:       1.0000
+<pre>  MI (RBIG): 3.0600 nats
+  ICC:       0.9989
 </pre>
 </div>
 </div>
@@ -3009,8 +3007,8 @@ print(f"  ICC:       {icc2:.4f}")</div>
   CKA linear:  0.0121
   CKA RBF:     0.1946
   Spearman cross-block Frobenius: 0.0551
-  MI (RBIG): 73.4005 nats
-  ICC:       1.0000
+  MI (RBIG): 1.5795 nats
+  ICC:       0.9785
 </pre>
 </div>
 </div>
@@ -3078,9 +3076,9 @@ the higher noise level, correctly reflecting the weaker signal.</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h2 id="see-also">See Also<a class="anchor-link" href="#see-also">¶</a></h2><ul>
-<li><a href="../notes/information_theory_measures.md">Information Theory Measures</a> — formal definitions of MI, TC, and ICC</li>
-<li><a href="./09_dependence_1d.ipynb">Measuring Dependence: 1D Variables</a> — MI for detecting nonlinear dependence in 1D</li>
-<li><a href="./06_information_theory.ipynb">Information Theory Measures with RBIG</a> — TC, entropy, MI, and KLD estimation</li>
+<li><a href="06_information_theory.ipynb">Information Theory Measures</a> — formal definitions of MI, TC, and ICC</li>
+<li><a href="09_dependence_1d.ipynb">Measuring Dependence: 1D Variables</a> — MI for detecting nonlinear dependence in 1D</li>
+<li><a href="11_real_world_it.ipynb">Real-World IT</a> — IT measures on synthetic financial data</li>
 </ul>
 </div>
 </div>

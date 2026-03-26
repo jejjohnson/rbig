@@ -2424,40 +2424,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="image-rotations">Image Rotations<a class="anchor-link" href="#image-rotations">¶</a></h1><p><a href="https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/12_image_rotations.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
-<p>RBIG provides specialized rotation transforms for image data. These operate
-in the <strong>spatial</strong> or <strong>channel</strong> domain of images rather than treating pixels
-as generic features.</p>
-<p>All image rotations expect data in <strong>flattened</strong> format <code>(N, C·H·W)</code> and
-reshape internally to <code>(N, C, H, W)</code> for computation.</p>
-<table>
-<thead>
-<tr>
-<th>Class</th>
-<th>Domain</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>DCTRotation</code></td>
-<td>Spatial (per-channel)</td>
-<td>Type-II orthonormal 2-D Discrete Cosine Transform</td>
-</tr>
-<tr>
-<td><code>HartleyRotation</code></td>
-<td>Spatial (per-channel)</td>
-<td>Real-valued 2-D Discrete Hartley Transform (self-inverse)</td>
-</tr>
-<tr>
-<td><code>RandomChannelRotation</code></td>
-<td>Channel (per-pixel)</td>
-<td>Random orthogonal 1×1 convolution mixing channels</td>
-</tr>
-</tbody>
-</table>
-<p>All three are <strong>orthonormal</strong> → log|det J| = 0, so they add no cost to
-density estimation.</p>
-<p>For the general theory of rotation matrices in RBIG, see the <a href="../notes/rotation.md">Rotation note</a>.</p>
+<p>Standard PCA/ICA rotations treat features as a flat vector. For image data,
+<code>rbig</code> provides <strong>domain-specific rotations</strong> that exploit spatial and channel
+structure: DCT for frequency-domain decorrelation, Hartley as a self-inverse
+alternative, and channel mixing for multi-channel data.</p>
 </div>
 </div>
 </div>
@@ -3347,7 +3317,7 @@ plt.show()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>/tmp/ipykernel_3044710/2495139092.py:32: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+<pre>/tmp/ipykernel_3159710/2495139092.py:32: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
   plt.tight_layout()
 </pre>
 </div>
@@ -3448,9 +3418,8 @@ flow architectures (e.g., Glow).</li>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h2 id="see-also">See Also<a class="anchor-link" href="#see-also">¶</a></h2><ul>
-<li><a href="../notes/rotation.md">Rotation Note</a> — mathematical properties of rotation matrices in RBIG</li>
-<li><a href="./08_rotation_choices.ipynb">Rotation Choices in RBIG</a> — comparison of PCA, ICA, and random rotations</li>
-<li><a href="./13_dimensionality_reduction.ipynb">Dimensionality-Reducing Rotations</a> — rotations that reduce dimensionality</li>
+<li><a href="08_rotation_choices.ipynb">Rotation Choices</a> — comparison of PCA, ICA, and random rotations</li>
+<li><a href="13_dimensionality_reduction.ipynb">Dimensionality-Reducing Rotations</a> — projections with K &lt; D</li>
 </ul>
 </div>
 </div>

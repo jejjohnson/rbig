@@ -2312,41 +2312,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="measuring-dependence-1d-variables">Measuring Dependence: 1D Variables<a class="anchor-link" href="#measuring-dependence-1d-variables">¶</a></h1><p><a href="https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/09_dependence_1d.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
-<p>Linear correlation measures (Pearson, Spearman, Kendall) fail to capture
-<strong>nonlinear</strong> relationships between variables. This notebook demonstrates how
-RBIG-based Mutual Information (MI) detects dependence that traditional
-metrics miss entirely.</p>
-<p>We compare:</p>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Captures nonlinear dependence?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pearson correlation</td>
-<td>No</td>
-</tr>
-<tr>
-<td>Spearman correlation</td>
-<td>Partially</td>
-</tr>
-<tr>
-<td>Kendall tau</td>
-<td>Partially</td>
-</tr>
-<tr>
-<td>Mutual Information (RBIG)</td>
-<td><strong>Yes</strong></td>
-</tr>
-<tr>
-<td>ICC (information correlation)</td>
-<td><strong>Yes</strong></td>
-</tr>
-</tbody>
-</table>
+<p>Pearson, Spearman, and Kendall correlations are blind to nonlinear dependence.
+This notebook demonstrates how RBIG-based Mutual Information detects
+relationships that classical measures miss entirely.</p>
 </div>
 </div>
 </div>
@@ -2589,7 +2557,7 @@ Kendall:  τ = -0.0020  (p = 0.924)
 <h2 id="mutual-information-via-rbig">Mutual Information via RBIG<a class="anchor-link" href="#mutual-information-via-rbig">¶</a></h2><p>Mutual Information $I(X; Y)$ captures <strong>any</strong> statistical dependence,
 not just linear or monotonic. We estimate it by fitting three <code>AnnealedRBIG</code>
 models: one on $X$, one on $Y$, and one on the joint $(X, Y)$.</p>
-<p>See the <a href="../notes/information_theory_measures.md">Information Theory Measures note</a> for the formal definition of MI.</p>
+<p>See the <a href="06_information_theory.ipynb">Information Theory Measures note</a> for the formal definition of MI.</p>
 </div>
 </div>
 </div>
@@ -2674,8 +2642,8 @@ print(f"ICC:       {icc:.4f}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>MI (RBIG): 26.1151 nats
-ICC:       1.0000
+<pre>MI (RBIG): 0.8989 nats
+ICC:       0.9134
 </pre>
 </div>
 </div>
@@ -2778,14 +2746,14 @@ print(f"  ICC:      {icc_weak:.4f}")</div>
 <pre>=== Strong signal: y = (2x)^2 + noise ===
   Pearson:  +0.0991
   Spearman: +0.0089
-  MI:       26.1151 nats
-  ICC:      1.0000
+  MI:       0.8989 nats
+  ICC:      0.9134
 
 === Weak signal: y = 0.01*(2x)^2 + noise ===
   Pearson:  +0.0282
   Spearman: +0.0397
-  MI:       16.0692 nats
-  ICC:      1.0000
+  MI:       0.0054 nats
+  ICC:      0.1033
 </pre>
 </div>
 </div>
@@ -2845,9 +2813,8 @@ when the signal is negligible.</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
 <h2 id="see-also">See Also<a class="anchor-link" href="#see-also">¶</a></h2><ul>
-<li><a href="../notes/information_theory_measures.md">Information Theory Measures</a> — formal definitions of MI, TC, and ICC</li>
-<li><a href="./10_dependence_2d.ipynb">Measuring Dependence: 2D Variables</a> — extending MI analysis to multivariate vectors</li>
-<li><a href="./06_information_theory.ipynb">Information Theory Measures with RBIG</a> — TC, entropy, MI, and KLD estimation</li>
+<li><a href="06_information_theory.ipynb">Information Theory Measures</a> — formal definitions of MI, TC, and ICC</li>
+<li><a href="10_dependence_2d.ipynb">Measuring Dependence: 2D Variables</a> — extending MI and ICC to multivariate vectors</li>
 </ul>
 </div>
 </div>
