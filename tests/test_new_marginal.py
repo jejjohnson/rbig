@@ -191,3 +191,67 @@ class TestMarginalUniformizeHistogramCDF:
         assert hasattr(uni, "pdf_values_")
         assert len(uni.cdf_support_) == 2
         assert len(uni.cdf_values_) == 2
+
+
+# ── Coverage gap tests ────────────────────────────────────────────────────
+
+
+def test_marginal_uniformize_constant_feature():
+    """MarginalUniformize with one constant column doesn't crash."""
+    rng = np.random.default_rng(42)
+    X = rng.standard_normal((100, 2))
+    X[:, 1] = 5.0  # constant column
+    uni = MarginalUniformize(pdf_extension=10.0)
+    uni.fit(X)
+    U = uni.transform(X)
+    assert U.shape == X.shape
+    assert np.all(np.isfinite(U))
+
+
+def test_marginal_uniformize_inverse_no_extension():
+    """MarginalUniformize(pdf_extension=0.0) roundtrip via inverse_transform."""
+    rng = np.random.default_rng(42)
+    X = rng.standard_normal((200, 2))
+    uni = MarginalUniformize(pdf_extension=0.0).fit(X)
+    U = uni.transform(X)
+    Xr = uni.inverse_transform(U)
+    assert Xr.shape == X.shape
+    assert np.all(np.isfinite(Xr))
+    np.testing.assert_allclose(Xr, X, atol=0.5)
+
+
+def test_kde_gaussianizer_inverse_transform():
+    """KDEGaussianizer inverse_transform returns finite values with correct shape."""
+    rng = np.random.default_rng(42)
+    X = rng.standard_normal((50, 2))
+    t = KDEGaussianizer()
+    t.fit(X)
+    Xt = t.transform(X)
+    Xr = t.inverse_transform(Xt)
+    assert Xr.shape == X.shape
+    assert np.all(np.isfinite(Xr))
+
+
+def test_gmm_gaussianizer_inverse_transform():
+    """GMMGaussianizer inverse_transform returns finite values with correct shape."""
+    rng = np.random.default_rng(42)
+    X = rng.standard_normal((50, 2))
+    t = GMMGaussianizer(n_components=3)
+    t.fit(X)
+    Xt = t.transform(X)
+    Xr = t.inverse_transform(Xt)
+    assert Xr.shape == X.shape
+    assert np.all(np.isfinite(Xr))
+
+
+def test_spline_gaussianizer_inverse_roundtrip():
+    """SplineGaussianizer inverse_transform approximately recovers input."""
+    rng = np.random.default_rng(42)
+    X = rng.standard_normal((50, 2))
+    t = SplineGaussianizer()
+    t.fit(X)
+    Xt = t.transform(X)
+    Xr = t.inverse_transform(Xt)
+    assert Xr.shape == X.shape
+    assert np.all(np.isfinite(Xr))
+    np.testing.assert_allclose(Xr, X, atol=1e-3)
