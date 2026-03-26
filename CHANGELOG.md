@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.14](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.13...rbig-v0.1.14) (2026-03-26)
+
+
+### Bug Fixes
+
+* **docs:** render LaTeX equations in Jupyter notebooks ([47c930b](https://github.com/jejjohnson/rbig/commit/47c930b352ef6d8e94887510e90174ecd2c7072d))
+* **docs:** render LaTeX equations in Jupyter notebooks ([#91](https://github.com/jejjohnson/rbig/issues/91)) ([47c930b](https://github.com/jejjohnson/rbig/commit/47c930b352ef6d8e94887510e90174ecd2c7072d))
+
+
+### Documentation
+
+* consolidate notes into notebooks ([#93](https://github.com/jejjohnson/rbig/issues/93)) ([1ac3ee4](https://github.com/jejjohnson/rbig/commit/1ac3ee44be5219bdee369204f6d2b5a54eb4993d))
+* consolidate standalone notes into their corresponding notebooks ([1ac3ee4](https://github.com/jejjohnson/rbig/commit/1ac3ee44be5219bdee369204f6d2b5a54eb4993d))
+
 ## [0.1.13](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.12...rbig-v0.1.13) (2026-03-25)
 
 
