@@ -18,25 +18,40 @@
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/08_rotation_choices.ipynb)
 #
 # After each marginal Gaussianization step, RBIG applies a **rotation** to mix
-# dimensions before the next iteration. The choice of rotation affects
-# convergence speed and the quality of the learned representation.
+# dimensions before the next iteration. Without rotation, marginal Gaussianization
+# alone cannot remove *joint* dependence — it only fixes the marginals. The
+# rotation exposes new dependence structure for the next round to attack.
 #
-# This notebook compares the three built-in rotation options:
+# The choice of rotation affects convergence speed and quality. This notebook
+# compares the three built-in options and provides the mathematical background.
 #
-# | Rotation | Class | `AnnealedRBIG` string | Description |
-# |----------|-------|----------------------|-------------|
-# | **PCA** | `PCARotation(whiten=False)` | `"pca"` | PCA eigenvector rotation (orthogonal) |
-# | **ICA** | `ICARotation(orthogonal=True)` | `"ica"` | ICA rotation only — skips whitening (orthogonal) |
-# | **Random** | `RandomRotation` | `"random"` | Haar-uniform random orthogonal matrix via QR |
+
+# %% [markdown]
+# ---
+# ## Mathematical Background
 #
-# All three are **orthogonal** transforms with log|det J| = 0, so they
-# preserve volume and add no cost to the likelihood computation.
+# A rotation matrix $\mathbf{R}$ is an orthogonal matrix ($\mathbf{R}^\top \mathbf{R} = \mathbf{I}$)
+# that preserves lengths and angles.
 #
-# By default, both `PCARotation` and `ICARotation` use their orthogonal modes.
-# Set `whiten=True` (PCA) or `orthogonal=False` (ICA) to include the
-# non-orthogonal scaling/whitening step.
+# **Forward / Inverse:**
 #
-# For the mathematical properties of rotation matrices (orthogonality, Jacobian, decompositions), see the [Rotation note](../notes/rotation.md).
+# $$\mathbf{z} = \mathbf{R} \cdot \mathbf{x}
+# \qquad\text{and}\qquad
+# \mathbf{x} = \mathbf{R}^\top \cdot \mathbf{z}$$
+#
+# **Why the Jacobian is free:** The determinant of an orthogonal matrix is $\pm 1$
+# (+1 for proper rotations), so $\log|\det(\mathbf{R})| = 0$. This means the
+# rotation step adds **zero cost** to the log-likelihood computation — only the
+# marginal Gaussianization contributes to the Jacobian.
+#
+# **Available options in `rbig`:**
+#
+# | Rotation | How it works | Data-dependent? |
+# |----------|-------------|-----------------|
+# | **PCA** | Eigenvectors of the covariance matrix | Yes |
+# | **ICA** | Maximizes non-Gaussianity of projections | Yes |
+# | **Random** | Haar-distributed orthogonal matrix | No |
+#
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -244,6 +259,6 @@ for name, model in models.items():
 # ---
 # ## See Also
 #
-# - [Rotation Note](../notes/rotation.md) — mathematical properties of rotation matrices in RBIG
-# - [Image Rotations](./12_image_rotations.ipynb) — specialized rotations for image data (DCT, Hartley, channel mixing)
-# - [Dimensionality-Reducing Rotations](./13_dimensionality_reduction.ipynb) — rotations that reduce dimensionality
+# - [Image Rotations](12_image_rotations.ipynb) — specialized rotations for image data (DCT, Hartley, channel mixing)
+# - [Dimensionality-Reducing Rotations](13_dimensionality_reduction.ipynb) — rotations that reduce dimensionality
+#

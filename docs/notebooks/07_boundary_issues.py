@@ -17,15 +17,10 @@
 # # Boundary Issues in Marginal Uniformization
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/07_boundary_issues.ipynb)
 #
-# This notebook examines what happens when test-time data points fall **outside**
-# the support seen during training (i.e. outside the empirical CDF bounds), and
-# how the new `rbig` API handles these boundary conditions.
+# When test-time samples fall outside the training support, the empirical CDF
+# returns 0 or 1 and the probit diverges to $\pm\infty$. This notebook compares
+# two strategies for handling these boundary issues.
 #
-# The key class is `MarginalKDEGaussianize`, which uses a KDE-estimated CDF and
-# clips output probabilities to `[eps, 1-eps]` to avoid infinite values at the
-# boundaries.
-#
-# For the underlying theory of the uniformization step, see the [Uniformization note](../notes/uniformization.md).
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -239,6 +234,5 @@ plt.show()
 # ---
 # ## See Also
 #
-# - [Uniformization Note](../notes/uniformization.md) — theory of the CDF-based uniformization step
-# - [Marginal Gaussianization Note](../notes/marginal_gaussianization.md) — marginal Gaussianization theory
-# - [Marginal Transforms](./01_marginal_transforms.ipynb) — hands-on demo of marginal transform classes
+# - [Marginal Transforms](01_marginal_transforms.ipynb) — full theory and all available CDF estimation methods
+#

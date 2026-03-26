@@ -89,7 +89,7 @@ Common selection methods include Scott's rule ($h = 1.06 \hat{\sigma} N^{-1/5}$)
 
 ### Role in RBIG
 
-In the RBIG pipeline, KDE is one option for estimating the marginal CDF $F_d(x_d)$ during the [uniformization](uniformization.md) step.
+In the RBIG pipeline, KDE is one option for estimating the marginal CDF $F_d(x_d)$ during the [uniformization](../notebooks/01_marginal_transforms.ipynb) step.
 
 ### Resources
 

@@ -17,23 +17,11 @@
 # # Dimensionality-Reducing Rotations
 # [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/rbig/blob/main/docs/notebooks/13_dimensionality_reduction.ipynb)
 #
-# Standard RBIG rotations are **square** (D → D) and bijective. But `rbig` also
-# provides rotations that **reduce dimensionality** (D → K, where K < D). These
-# are useful for high-dimensional data where full RBIG is too expensive, but they
-# come with important trade-offs.
+# Sometimes you want fewer output dimensions than input dimensions. These
+# rotations project data from $D$ dimensions to $K < D$, trading bijectivity
+# for computational savings and feature extraction. This notebook compares
+# four approaches and their tradeoffs.
 #
-# **Contents**
-#
-# For the general theory of rotation matrices, see the [Rotation note](../notes/rotation.md).
-#
-# 1. [Theory — Bijectivity and Density Estimation](#theory)
-# 2. [Available Methods](#available-methods)
-# 3. [PCA with Truncation](#pca-with-truncation)
-# 4. [OrthogonalDimensionalityReduction](#orthogonaldimensionalityreduction)
-# 5. [RandomOrthogonalProjection](#randomorthogonalprojection)
-# 6. [GaussianRandomProjection](#gaussianrandomprojection)
-# 7. [Comparison](#comparison)
-# 8. [Summary](#summary)
 
 # %% [markdown]
 # > **Colab / fresh environment?** Run the cell below to install `rbig` from
@@ -327,6 +315,6 @@ print("\n(OrthogonalDimRed and RandomOrthProj do not support inverse_transform f
 # ---
 # ## See Also
 #
-# - [Rotation Note](../notes/rotation.md) — mathematical properties of rotation matrices in RBIG
-# - [Rotation Choices in RBIG](./08_rotation_choices.ipynb) — comparison of PCA, ICA, and random rotations
-# - [Image Rotations](./12_image_rotations.ipynb) — specialized rotations for image data (DCT, Hartley, channel mixing)
+# - [Rotation Choices](08_rotation_choices.ipynb) — comparison of PCA, ICA, and random rotations
+# - [Image Rotations](12_image_rotations.ipynb) — specialized rotations for image data
+#
