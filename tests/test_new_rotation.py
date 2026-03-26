@@ -194,10 +194,12 @@ def test_ica_rotation_fastica_fallback(simple_2d):
     from unittest.mock import patch
     import warnings
 
+    from sklearn.exceptions import ConvergenceWarning
+
     with patch.dict(sys.modules, {"picard": None}):
         r = ICARotation(random_state=42)
         with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
+            warnings.simplefilter("ignore", ConvergenceWarning)
             r.fit(simple_2d)
         Xt = r.transform(simple_2d)
         assert Xt.shape == simple_2d.shape
@@ -210,10 +212,12 @@ def test_ica_rotation_fastica_transform_inverse(simple_2d):
     from unittest.mock import patch
     import warnings
 
+    from sklearn.exceptions import ConvergenceWarning
+
     with patch.dict(sys.modules, {"picard": None}):
         r = ICARotation(random_state=42)
         with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
+            warnings.simplefilter("ignore", ConvergenceWarning)
             r.fit(simple_2d)
         Xt = r.transform(simple_2d)
         Xr = r.inverse_transform(Xt)
@@ -227,10 +231,12 @@ def test_ica_rotation_fastica_log_det(simple_2d):
     from unittest.mock import patch
     import warnings
 
+    from sklearn.exceptions import ConvergenceWarning
+
     with patch.dict(sys.modules, {"picard": None}):
         r = ICARotation(random_state=42)
         with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
+            warnings.simplefilter("ignore", ConvergenceWarning)
             r.fit(simple_2d)
         ldj = r.log_det_jacobian(simple_2d)
         assert ldj.shape == (simple_2d.shape[0],)

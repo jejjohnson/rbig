@@ -152,7 +152,7 @@ def test_von_mises_shape():
 
 def test_logit_transform_log_det_jacobian():
     """LogitTransform.log_det_jacobian returns correct shape for data in (0,1)."""
-    from rbig._src.parametric import LogitTransform
+    from rbig import LogitTransform
 
     rng = np.random.default_rng(42)
     X = rng.uniform(0.01, 0.99, size=(50, 3))
@@ -166,7 +166,7 @@ def test_logit_transform_log_det_jacobian():
 
 def test_boxcox_fit_non_positive():
     """BoxCoxTransform with non-positive data sets lambda=0 for those features."""
-    from rbig._src.parametric import BoxCoxTransform
+    from rbig import BoxCoxTransform
 
     rng = np.random.default_rng(42)
     X = rng.standard_normal(size=(100, 2))  # contains negatives
@@ -177,7 +177,7 @@ def test_boxcox_fit_non_positive():
 
 def test_boxcox_inverse_transform():
     """BoxCoxTransform roundtrip: fit, transform, inverse_transform."""
-    from rbig._src.parametric import BoxCoxTransform
+    from rbig import BoxCoxTransform
 
     rng = np.random.default_rng(42)
     X = np.abs(rng.standard_normal(size=(100, 2))) + 0.1  # positive data
@@ -189,7 +189,7 @@ def test_boxcox_inverse_transform():
 
 def test_boxcox_log_det_jacobian():
     """BoxCoxTransform.log_det_jacobian returns finite array of correct shape."""
-    from rbig._src.parametric import BoxCoxTransform
+    from rbig import BoxCoxTransform
 
     rng = np.random.default_rng(42)
     X = np.abs(rng.standard_normal(size=(80, 3))) + 0.1  # positive
@@ -201,7 +201,7 @@ def test_boxcox_log_det_jacobian():
 
 def test_boxcox_log_det_jacobian_lambda_zero():
     """BoxCoxTransform.log_det_jacobian with lambda=0 (non-positive data)."""
-    from rbig._src.parametric import BoxCoxTransform
+    from rbig import BoxCoxTransform
 
     rng = np.random.default_rng(42)
     X = rng.standard_normal(size=(60, 2))  # contains negatives
@@ -214,7 +214,7 @@ def test_boxcox_log_det_jacobian_lambda_zero():
 
 def test_quantile_transform_non_positive():
     """QuantileTransform handles data containing negatives."""
-    from rbig._src.parametric import QuantileTransform
+    from rbig import QuantileTransform
 
     rng = np.random.default_rng(42)
     X = rng.standard_normal(size=(200, 2))  # has negatives
