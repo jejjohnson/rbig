@@ -159,6 +159,6 @@ print(f"  ICC:      {icc_weak:.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of MI, TC, and ICC
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of MI and TC
 # - [Measuring Dependence: 2D Variables](10_dependence_2d.ipynb) — extending MI and ICC to multivariate vectors
 #

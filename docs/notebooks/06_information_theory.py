@@ -23,7 +23,7 @@
 # values on Gaussian data where ground truth is available.
 #
 # <figure align="center">
-# <img src="../pics/rbig_it/Fig_1.png" alt="IT measures" width="500">
+# <img src="pics/rbig_it/Fig_1.png" alt="IT measures" width="500">
 # <figcaption>Information Theory measures computable via RBIG.</figcaption>
 # </figure>
 #
@@ -63,6 +63,10 @@ from rbig import (
 #
 # We use correlated Gaussian data throughout so we can compare all estimates
 # against **closed-form analytical values**.
+#
+# > **Note:** `n_samples` is kept small for fast execution; increase it
+# > (e.g. 10 000+) for closer agreement with analytical values.
+#
 
 # %%
 seed = 42

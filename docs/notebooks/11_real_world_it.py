@@ -194,7 +194,7 @@ print(f"MI(AAPL ; GOOG+AMZN) = {mi_group:.4f} nats, ICC = {icc_group:.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of TC, MI, and ICC
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of TC and MI
 # - [Measuring Dependence: 1D](09_dependence_1d.ipynb) — MI for detecting nonlinear dependence
 # - [Measuring Dependence: 2D](10_dependence_2d.ipynb) — MI for multivariate dependence
 #

@@ -228,7 +228,7 @@ print(f"  ICC:       {icc2:.4f}")
 # ---
 # ## See Also
 #
-# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of MI, TC, and ICC
+# - [Information Theory Measures](06_information_theory.ipynb) — formal definitions of MI and TC
 # - [Measuring Dependence: 1D Variables](09_dependence_1d.ipynb) — MI for detecting nonlinear dependence in 1D
 # - [Real-World IT](11_real_world_it.ipynb) — IT measures on synthetic financial data
 #
