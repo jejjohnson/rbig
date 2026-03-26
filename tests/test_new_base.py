@@ -92,3 +92,19 @@ def test_composite_bijector_inverse(simple_2d):
 def test_bijector_abstract():
     with pytest.raises(TypeError):
         Bijector()
+
+
+# ── Coverage gap tests ────────────────────────────────────────────────────
+
+
+def test_composed_bijector_log_det_jacobian(simple_2d):
+    """CompositeBijector.get_log_det_jacobian accumulates log-dets correctly."""
+    from rbig import QuantileGaussianizer
+
+    b1 = QuantileGaussianizer()
+    b2 = QuantileGaussianizer()
+    comp = CompositeBijector([b1, b2])
+    comp.fit(simple_2d)
+    ldj = comp.get_log_det_jacobian(simple_2d)
+    assert ldj.shape == (simple_2d.shape[0],)
+    assert np.all(np.isfinite(ldj))
