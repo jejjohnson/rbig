@@ -380,7 +380,7 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")
 # entropy reduction at each layer gives us a natural estimator.
 #
 # <figure align="center">
-# <img src="pics/rbig_it/Fig_1.png" width="500">
+# <img src="../pics/rbig_it/Fig_1.png" width="500">
 # <figcaption>Information Theory measures computable via RBIG.</figcaption>
 # </figure>
 #
@@ -393,7 +393,7 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")
 # ### Mutual Information
 #
 # <figure align="center">
-# <img src="pics/rbig_it/mi.png" alt="MI using RBIG" width="500">
+# <img src="../pics/rbig_it/mi.png" alt="MI using RBIG" width="500">
 # </figure>
 #
 # Given two random vectors $\mathbf{X}$ and $\mathbf{Y}$, we first Gaussianize
@@ -407,7 +407,7 @@ print(f"Full RBIG mean absolute reconstruction error: {residual_full:.4e}")
 # ### KL-Divergence
 #
 # <figure align="center">
-# <img src="pics/rbig_it/kld.png" width="500">
+# <img src="../pics/rbig_it/kld.png" width="500">
 # </figure>
 #
 # We estimate KL-divergence by applying the Gaussianization learned on
