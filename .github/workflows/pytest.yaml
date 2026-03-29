@@ -34,7 +34,7 @@ jobs:
         run: uv run pytest tests/ -v --cov=./rbig --cov-report=xml:./coverage.xml
 
       - name: Upload code coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
