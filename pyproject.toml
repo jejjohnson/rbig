@@ -39,7 +39,7 @@ Documentation = "https://jejjohnson.github.io/rbig"
 image = ["PyWavelets>=1.6"]
 xarray = ["xarray>=2024.1"]
 test = [
-    "pytest>=8.0.0",
+    "pytest>=9.0.3",
     "pytest-cov>=5.0.0",
     "pytest-pretty>=1.2.0",
     "pytest-xdist>=3.5.0",
