@@ -31,6 +31,7 @@ from scipy import stats
 from scipy.special import ndtri
 
 from rbig._src.base import BaseTransform, Bijector
+from rbig._src.spline import RQSpline
 
 
 def make_cdf_monotonic(cdf: np.ndarray) -> np.ndarray:
@@ -1295,50 +1296,46 @@ class GMMGaussianizer(Bijector):
 
 
 class SplineGaussianizer(Bijector):
-    """Gaussianize each marginal using monotone PCHIP spline interpolation.
+    """Gaussianize each marginal using a monotonic rational-quadratic spline.
 
-    Estimates the marginal CDF from empirical quantiles and fits a
-    shape-preserving (monotone) cubic Hermite spline (PCHIP) from
-    original-space quantile values to the corresponding Gaussian quantiles.
-    The forward transform is::
+    Each feature is Gaussianized with an independent :class:`RQSpline` -- the
+    shared 1D rational-quadratic spline primitive that also backs the
+    SIG/GIS layers.  The forward transform is::
 
-        z = S(x)
+        z = g(x)
 
-    where ``S`` is the fitted :class:`scipy.interpolate.PchipInterpolator`
-    mapping data values to standard-normal quantiles.  Because PCHIP
-    preserves monotonicity, the mapping is guaranteed to be invertible.
+    where ``g`` composes a KDE-estimated CDF with the Gaussian quantile
+    function.  The spline is monotone by construction (positive knot
+    derivatives) and its inverse is analytic, so the mapping is exactly
+    invertible.
 
     Parameters
     ----------
     n_quantiles : int, default 200
-        Number of quantile nodes used to fit the splines.  Capped at
-        ``n_samples`` when fewer training samples are available.
+        Number of spline knots.  Capped at ``n_samples`` when fewer training
+        samples are available.  (Maps to :class:`RQSpline`'s ``n_knots``.)
     eps : float, default 1e-6
-        Clipping margin applied to the Gaussian quantile grid to keep
-        the spline endpoints finite (avoids +/-inf at boundary quantiles).
+        Clipping margin applied to CDF values before the probit, keeping the
+        target knots finite.
 
     Attributes
     ----------
-    splines_ : list of scipy.interpolate.PchipInterpolator
-        Forward splines (x -> z) per feature, mapping original-space
-        values to standard-normal quantiles.
-    inv_splines_ : list of scipy.interpolate.PchipInterpolator
-        Inverse splines (z -> x) per feature, mapping Gaussian quantiles
-        back to original-space values.
+    splines_ : list of RQSpline
+        One fitted rational-quadratic spline per feature, each mapping
+        original-space values to standard-normal values (and back).
     n_features_ : int
         Number of feature dimensions seen during ``fit``.
 
     Notes
     -----
-    The log-det-Jacobian uses the analytic first derivative of the spline::
+    The log-det-Jacobian uses the analytic spline derivative returned by the
+    forward pass::
 
-        log|dz/dx| = log|S'(x)|
+        log|dz/dx| = log|g'(x)|
 
-    where ``S'`` is the first derivative of the PCHIP forward spline,
-    evaluated via ``spline(x, 1)`` (the derivative-order argument).
-
-    Duplicate x-values (arising from discrete or constant features) are
-    removed before fitting to ensure strict monotonicity.
+    Between knots ``g`` is a rational-quadratic interpolant; outside the
+    outermost knots it extends linearly, so both the transform and its
+    inverse are finite and analytic everywhere.
 
     References
     ----------
@@ -1366,12 +1363,11 @@ class SplineGaussianizer(Bijector):
         self.eps = eps
 
     def fit(self, X: np.ndarray, y=None) -> SplineGaussianizer:
-        """Fit forward and inverse PCHIP splines for each feature.
+        """Fit one rational-quadratic spline per feature.
 
-        For each dimension, ``n_quantiles`` evenly-spaced probability levels
-        are mapped to their empirical quantile values in the data, and the
-        corresponding Gaussian quantile values ``Phi^{-1}(p)`` are computed.
-        PCHIP interpolants are then fitted in both directions.
+        For each dimension an :class:`RQSpline` is fitted with up to
+        ``n_quantiles`` knots, estimating the marginal CDF by KDE and placing
+        the target knots at the corresponding Gaussian quantiles.
 
         Parameters
         ----------
@@ -1383,27 +1379,13 @@ class SplineGaussianizer(Bijector):
         self : SplineGaussianizer
             Fitted bijector instance.
         """
-        from scipy.interpolate import PchipInterpolator
-
-        self.splines_ = []
-        self.inv_splines_ = []
         self.n_features_ = X.shape[1]
-        # Use at most n_samples quantile nodes
-        n_q = min(self.n_quantiles, X.shape[0])
-        # Probability grid: n_q evenly-spaced points in [0, 1]
-        quantiles = np.linspace(0, 1, n_q)
-        # Corresponding Gaussian quantiles Phi^{-1}(p), clipped away from +/-inf
-        g_q = ndtri(np.clip(quantiles, self.eps, 1 - self.eps))
-        for i in range(self.n_features_):
-            xi_sorted = np.sort(X[:, i])
-            # Empirical quantile values at each probability level
-            x_q = np.quantile(xi_sorted, quantiles)
-            # Remove duplicate x values so PchipInterpolator gets a strictly
-            # increasing sequence (duplicates arise with discrete/tied data).
-            x_q_u, idx = np.unique(x_q, return_index=True)
-            g_q_u = g_q[idx]
-            self.splines_.append(PchipInterpolator(x_q_u, g_q_u))
-            self.inv_splines_.append(PchipInterpolator(g_q_u, x_q_u))
+        # One shared RQ-spline primitive per feature dimension.  The same
+        # primitive backs the SIG/GIS layers (see rbig._src.spline).
+        self.splines_ = [
+            RQSpline(n_knots=self.n_quantiles, eps=self.eps).fit(X[:, i])
+            for i in range(self.n_features_)
+        ]
         return self
 
     def transform(self, X: np.ndarray) -> np.ndarray:
@@ -1421,8 +1403,8 @@ class SplineGaussianizer(Bijector):
         """
         Xt = np.zeros_like(X, dtype=float)
         for i in range(self.n_features_):
-            # Evaluate the forward PCHIP spline at the input values
-            Xt[:, i] = self.splines_[i](X[:, i])
+            # Forward RQ-spline Gaussianization for feature i
+            Xt[:, i], _ = self.splines_[i].forward(X[:, i])
         return Xt
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
@@ -1440,8 +1422,8 @@ class SplineGaussianizer(Bijector):
         """
         Xt = np.zeros_like(X, dtype=float)
         for i in range(self.n_features_):
-            # Evaluate the inverse PCHIP spline at the Gaussian values
-            Xt[:, i] = self.inv_splines_[i](X[:, i])
+            # Analytic inverse of the RQ spline for feature i
+            Xt[:, i], _ = self.splines_[i].inverse(X[:, i])
         return Xt
 
     def get_log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
@@ -1466,6 +1448,7 @@ class SplineGaussianizer(Bijector):
         """
         log_det = np.zeros(X.shape[0])
         for i in range(self.n_features_):
-            deriv = self.splines_[i](X[:, i], 1)  # first derivative
-            log_det += np.log(np.maximum(np.abs(deriv), 1e-300))
+            # Analytic log|dz/dx| from the RQ spline forward pass
+            _, log_dz = self.splines_[i].forward(X[:, i])
+            log_det += log_dz
         return log_det
