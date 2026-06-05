@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import itertools
+
 import numpy as np
 import pytest
 
@@ -62,22 +64,31 @@ def test_directions_orthonormal(rng, k):
     np.testing.assert_allclose(A.T @ A, np.eye(k), atol=1e-8)
 
 
-def test_objective_improves(rng):
+def test_objective_strictly_improves(rng):
     X = _non_gaussian_data(rng)
     Z = rng.standard_normal((2000, 4))
     _, history = max_sliced_wasserstein_directions(
-        X, Z, 2, max_iter=50, random_state=0, return_history=True
+        X, Z, 2, max_iter=80, random_state=0, return_history=True
     )
-    # The K-SWD maximization should never make the objective worse.
-    assert history[-1] >= history[0] - 1e-9
-    assert len(history) >= 1
+    # The optimizer must actually move: a no-op (returning the initial frame)
+    # would leave history at length 1 with no gain.
+    assert len(history) > 1
+    assert history[-1] > history[0] + 1e-3
+    # Monotone ascent: every accepted iterate improves the objective.
+    assert all(b >= a - 1e-9 for a, b in itertools.pairwise(history))
 
 
 def test_finds_more_non_gaussian_direction_than_random(rng):
     X = _non_gaussian_data(rng)
     Z = rng.standard_normal((2000, 4))
-    A_opt = max_sliced_wasserstein_directions(X, Z, 1, max_iter=80, random_state=0)
-    A_rand = random_orthogonal_directions(4, 1, random_state=1)
-    swd_opt = wasserstein_1d(X @ A_opt[:, 0], Z @ A_opt[:, 0])
-    swd_rand = wasserstein_1d(X @ A_rand[:, 0], Z @ A_rand[:, 0])
-    assert swd_opt >= swd_rand
+    # Averaged over several random initializations, the optimized direction
+    # is meaningfully more non-Gaussian than a random one.
+    swd_opt, swd_rand = [], []
+    for seed in range(5):
+        A_opt = max_sliced_wasserstein_directions(
+            X, Z, 1, max_iter=80, random_state=seed
+        )
+        A_rand = random_orthogonal_directions(4, 1, random_state=seed)
+        swd_opt.append(wasserstein_1d(X @ A_opt[:, 0], Z @ A_opt[:, 0]))
+        swd_rand.append(wasserstein_1d(X @ A_rand[:, 0], Z @ A_rand[:, 0]))
+    assert np.mean(swd_opt) > np.mean(swd_rand) + 0.05

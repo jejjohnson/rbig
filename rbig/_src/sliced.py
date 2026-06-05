@@ -242,6 +242,16 @@ class _BaseSliced(TransformerMixin, BaseEstimator):
         n, d = X.shape
         if n < 2:
             raise ValueError(f"Need at least 2 samples, got {n}.")
+        if self.whiten and n <= d:
+            # PCA(whiten=True) keeps only min(n_samples, n_features) (and at
+            # most n_samples - 1) components, so wide data yields a
+            # rank-deficient, non-square whitening that breaks the bijection
+            # (inverse_transform / sample would mismatch shapes).
+            raise ValueError(
+                f"whiten=True requires n_samples > n_features for a full-rank "
+                f"square whitening; got n_samples={n}, n_features={d}. "
+                f"Pass whiten=False for wide data."
+            )
         self.n_features_in_ = d
         rng = np.random.default_rng(self.random_state)
         k = self._resolve_directions(d)
@@ -291,6 +301,12 @@ class _BaseSliced(TransformerMixin, BaseEstimator):
 
             if crit.update(R_val, log_det=log_det_val):
                 break
+
+        # Keep only the prefix up to the best validation iterate.  Any layers
+        # appended after the metric peaked (during the patience window) only
+        # make the selected stopping metric worse, so they are discarded.
+        if crit.best_iter_ >= 0:
+            self.layers_ = self.layers_[: crit.best_iter_ + 1]
 
         self.stopping_criterion_ = crit
         self.n_layers_ = len(self.layers_)

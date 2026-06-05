@@ -172,8 +172,12 @@ def max_sliced_wasserstein_directions(
     eye = np.eye(d)
 
     for _ in range(max_iter):
-        # Skew-symmetric generator; the "+" sign ascends the objective.
-        W = grad @ A.T - A @ grad.T
+        # Skew-symmetric Cayley generator.  With G the gradient of the
+        # *maximization* objective, the path C(tau) = (I + tau/2 W)^{-1}
+        # (I - tau/2 W) has dF/dtau|_0 = +||W||_F^2 / 2 -- i.e. it ascends
+        # the K-SWD -- precisely when W = A G^T - G A^T.  The opposite sign
+        # (G A^T - A G^T) descends; see Wen & Yin (2013).
+        W = A @ grad.T - grad @ A.T
         norm_w = np.linalg.norm(W)
         if norm_w < tol:
             break

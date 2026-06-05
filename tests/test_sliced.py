@@ -135,6 +135,29 @@ def test_gis_no_whiten(banana):
     np.testing.assert_allclose(Xr, banana, atol=1e-4)
 
 
+def test_wide_data_whiten_rejected(rng):
+    # More features than samples: whitening cannot be square/full-rank.
+    X = rng.standard_normal((8, 20))
+    with pytest.raises(ValueError, match="n_samples > n_features"):
+        GIS(n_layers=3, random_state=0).fit(X)
+
+
+def test_wide_data_no_whiten_ok(rng):
+    # With whitening disabled, wide data still fits and round-trips.
+    X = rng.standard_normal((8, 20))
+    model = GIS(n_layers=3, whiten=False, direction_method="random", random_state=0)
+    model.fit(X)
+    Xr = model.inverse_transform(model.transform(X))
+    np.testing.assert_allclose(Xr, X, atol=1e-4)
+
+
+def test_layers_trimmed_to_best_iter(banana):
+    # Early stopping must discard the non-improving patience-window layers.
+    model = GIS(n_layers=60, patience=4, random_state=0).fit(banana)
+    assert len(model.layers_) == model.stopping_criterion_.best_iter_ + 1
+    assert model.n_layers_ == len(model.layers_)
+
+
 # ── SIG ──────────────────────────────────────────────────────────────────────
 
 
