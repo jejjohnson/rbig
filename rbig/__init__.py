@@ -101,6 +101,8 @@ from rbig._src.rotation import (
     RandomOrthogonalProjection,
     RandomRotation,
 )
+from rbig._src.sliced import GIS, SIG, SIGLayer
+from rbig._src.spline import RQSpline
 from rbig._src.xarray_image import matrix_to_xr_image, xr_apply_rbig, xr_image_to_matrix
 from rbig._src.xarray_st import (
     XarrayRBIG,
@@ -111,6 +113,8 @@ from rbig._src.xarray_st import (
 from rbig._version import __version__
 
 __all__ = [
+    "GIS",
+    "SIG",
     "AnnealedRBIG",
     "BaseITMeasure",
     "BaseTransform",
@@ -139,10 +143,12 @@ __all__ = [
     "QuantileGaussianizer",
     "QuantileTransform",
     "RBIGLayer",
+    "RQSpline",
     "RandomChannelRotation",
     "RandomOrthogonalProjection",
     "RandomRotation",
     "RotationBijector",
+    "SIGLayer",
     "SplineGaussianizer",
     "Tanh",
     "WaveletTransform",
