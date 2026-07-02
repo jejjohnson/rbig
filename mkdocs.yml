@@ -83,6 +83,13 @@ nav:
           - "Dependence: 1D": notebooks/09_dependence_1d.ipynb
           - "Dependence: 2D": notebooks/10_dependence_2d.ipynb
           - Real-World IT: notebooks/11_real_world_it.ipynb
+      - Sliced Gaussianization:
+          - Theory — RBIG vs SIG/GIS: notes/sliced_iterative_gaussianization.md
+          - GIS Demo: notebooks/14_sliced_gaussianization.ipynb
+          - SIG vs RBIG Convergence: notebooks/15_sig_vs_rbig_convergence.ipynb
+          - Density Estimation Quality: notebooks/16_gis_density_estimation.ipynb
+          - Sampling Quality: notebooks/17_sig_sampling_quality.ipynb
+          - Boundary Behavior: notebooks/18_sig_boundary_behavior.ipynb
       - Foundations:
           - Density Estimation: notes/density_estimation.md
           - Gaussian Distribution: notes/gaussian_distribution.md
