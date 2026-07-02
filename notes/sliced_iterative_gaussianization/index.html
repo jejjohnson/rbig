@@ -1,0 +1,2477 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Rotation-Based Iterative Gaussianization — density estimation, IT measures, and generative modeling">
+      
+      
+        <meta name="author" content="J. Emmanuel Johnson">
+      
+      
+      
+        <link rel="prev" href="../../notebooks/11_real_world_it/">
+      
+      
+        <link rel="next" href="../../notebooks/14_sliced_gaussianization/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>Theory — RBIG vs SIG/GIS - rbig</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sliced-iterative-gaussianization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="rbig" class="md-header__button md-logo" aria-label="rbig" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            rbig
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Theory — RBIG vs SIG/GIS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/jejjohnson/rbig" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jejjohnson/rbig
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quickstart
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../notebooks/03_rbig_walkthrough/" class="md-tabs__link">
+          
+  
+  
+  Notes
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../api/reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../CHANGELOG/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="rbig" class="md-nav__button md-logo" aria-label="rbig" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    rbig
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/jejjohnson/rbig" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jejjohnson/rbig
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Algorithm
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/03_rbig_walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RBIG Walk-Through
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/04_rbig_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RBIG Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/05_rbig_loss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RBIG Loss & Convergence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Components
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/01_marginal_transforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marginal Transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/07_boundary_issues/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boundary Issues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/08_rotation_choices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rotation Choices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/12_image_rotations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image Rotations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/13_dimensionality_reduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dimensionality Reduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Information Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Information Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/06_information_theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Measures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/09_dependence_1d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependence: 1D
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/10_dependence_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependence: 2D
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/11_real_world_it/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real-World IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sliced Gaussianization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sliced Gaussianization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory — RBIG vs SIG/GIS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory — RBIG vs SIG/GIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-gaussianization-as-a-normalizing-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup: Gaussianization as a Normalizing Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-sliced-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Sliced Layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-directions-max-k-swd-on-the-stiefel-manifold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Directions: Max K-SWD on the Stiefel Manifold
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Directions: Max K-SWD on the Stiefel Manifold">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1d-wasserstein-distance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1D Wasserstein distance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-k-swd-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The K-SWD objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cayley-retraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cayley retraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-1d-transform-rational-quadratic-spline-gaussianization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 1D Transform: Rational-Quadratic Spline Gaussianization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gis-gaussianization-via-iterative-slicing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GIS: Gaussianization via Iterative Slicing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sig-sliced-iterative-gaussianization-generative-orientation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIG: Sliced Iterative Gaussianization (generative orientation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stopping-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stopping Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbig-vs-gis-vs-sig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBIG vs GIS vs SIG
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/14_sliced_gaussianization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/15_sig_vs_rbig_convergence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SIG vs RBIG Convergence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/16_gis_density_estimation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Density Estimation Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/17_sig_sampling_quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sampling Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/18_sig_boundary_behavior/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boundary Behavior
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../density_estimation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Density Estimation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gaussian_distribution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gaussian Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Context
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Context
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../related_methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../literature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-gaussianization-as-a-normalizing-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup: Gaussianization as a Normalizing Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-sliced-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Sliced Layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-directions-max-k-swd-on-the-stiefel-manifold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Directions: Max K-SWD on the Stiefel Manifold
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Directions: Max K-SWD on the Stiefel Manifold">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1d-wasserstein-distance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1D Wasserstein distance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-k-swd-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The K-SWD objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cayley-retraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cayley retraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-1d-transform-rational-quadratic-spline-gaussianization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 1D Transform: Rational-Quadratic Spline Gaussianization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gis-gaussianization-via-iterative-slicing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GIS: Gaussianization via Iterative Slicing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sig-sliced-iterative-gaussianization-generative-orientation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIG: Sliced Iterative Gaussianization (generative orientation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stopping-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stopping Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbig-vs-gis-vs-sig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBIG vs GIS vs SIG
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="sliced-iterative-gaussianization">Sliced Iterative Gaussianization<a class="headerlink" href="#sliced-iterative-gaussianization" title="Permanent link">&para;</a></h1>
+<p>This page derives the <strong>Sliced Iterative Gaussianization</strong> family of
+Dai &amp; Seljak (2020) — the <code>GIS</code> and <code>SIG</code> estimators in <code>rbig</code> — and compares
+it in detail with classic <strong>Rotation-Based Iterative Gaussianization</strong> (RBIG,
+<code>AnnealedRBIG</code>).</p>
+<p><strong>Paper</strong>: <a href="https://arxiv.org/abs/2007.00674">Sliced Iterative Normalizing Flows (Dai &amp; Seljak, 2020)</a></p>
+<p><strong>Reference implementations</strong>:
+<a href="https://github.com/biweidai/SINF">SINF (official, PyTorch)</a> ·
+<a href="https://github.com/minaskar/sinflow">sinflow (NumPy/SciPy)</a></p>
+<hr />
+<h2 id="setup-gaussianization-as-a-normalizing-flow">Setup: Gaussianization as a Normalizing Flow<a class="headerlink" href="#setup-gaussianization-as-a-normalizing-flow" title="Permanent link">&para;</a></h2>
+<p>All iterative Gaussianization methods construct an invertible map
+<span class="arithmatex">\(f: \mathbb{R}^D \to \mathbb{R}^D\)</span> such that</p>
+<div class="arithmatex">\[\mathbf{z} = f(\mathbf{x}) \sim \mathcal{N}(\mathbf{0}, \mathbf{I}_D)\]</div>
+<p>for data <span class="arithmatex">\(\mathbf{x} \sim p_\text{data}\)</span>. Once fitted, the map defines a
+<strong>normalizing flow</strong>: the model density follows from the
+change-of-variables formula</p>
+<div class="arithmatex">\[\log p(\mathbf{x}) = \log \mathcal{N}\big(f(\mathbf{x}); \mathbf{0}, \mathbf{I}\big) + \log \left| \det \mathbf{J}_f(\mathbf{x}) \right|\]</div>
+<p>and sampling follows from the inverse map</p>
+<div class="arithmatex">\[\mathbf{x} = f^{-1}(\mathbf{z}), \qquad \mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I}_D).\]</div>
+<p>The map is built greedily as a composition of <span class="arithmatex">\(L\)</span> simple layers,</p>
+<div class="arithmatex">\[f = f_L \circ f_{L-1} \circ \cdots \circ f_1,\]</div>
+<p>where each layer removes some of the remaining non-Gaussianity. The methods
+differ in <strong>what a layer does</strong> and <strong>how it is chosen</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Layer</th>
+<th>How directions are chosen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RBIG</td>
+<td>Rotate <strong>all</strong> <span class="arithmatex">\(D\)</span> dims, then marginally Gaussianize <strong>all</strong> <span class="arithmatex">\(D\)</span> dims</td>
+<td>Fixed family (PCA / ICA / random)</td>
+</tr>
+<tr>
+<td>GIS / SIG</td>
+<td>Gaussianize only <span class="arithmatex">\(K \le D\)</span> <strong>projected slices</strong>, leave the rest untouched</td>
+<td><strong>Learned</strong> — maximize sliced non-Gaussianity on the Stiefel manifold</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="the-sliced-layer">The Sliced Layer<a class="headerlink" href="#the-sliced-layer" title="Permanent link">&para;</a></h2>
+<p>A single sliced layer (class <code>SIGLayer</code>) is parameterized by an orthonormal
+frame <span class="arithmatex">\(\mathbf{A} \in \mathbb{R}^{D \times K}\)</span> with <span class="arithmatex">\(\mathbf{A}^\top \mathbf{A} = \mathbf{I}_K\)</span>
+and <span class="arithmatex">\(K\)</span> monotone scalar maps <span class="arithmatex">\(g_1, \dots, g_K\)</span> (rational-quadratic splines,
+see below). Decompose <span class="arithmatex">\(\mathbf{x}\)</span> into its component in the span of
+<span class="arithmatex">\(\mathbf{A}\)</span> and the orthogonal residual:</p>
+<div class="arithmatex">\[\mathbf{x} = \underbrace{\mathbf{A}\mathbf{A}^\top \mathbf{x}}_{\text{sliced part}} + \underbrace{(\mathbf{I} - \mathbf{A}\mathbf{A}^\top)\,\mathbf{x}}_{\text{residual (untouched)}}.\]</div>
+<p>The layer Gaussianizes each projected coordinate and leaves the residual
+alone:</p>
+<div class="arithmatex">\[f(\mathbf{x}) = (\mathbf{I} - \mathbf{A}\mathbf{A}^\top)\,\mathbf{x} + \mathbf{A}\, g\!\big(\mathbf{A}^\top \mathbf{x}\big), \qquad g(\mathbf{u}) = \big(g_1(u_1), \dots, g_K(u_K)\big).\]</div>
+<p><strong>Log-determinant.</strong> Complete <span class="arithmatex">\(\mathbf{A}\)</span> to an orthonormal basis
+<span class="arithmatex">\(\mathbf{Q} = [\mathbf{A}, \mathbf{A}_\perp]\)</span>. In that basis the layer acts as
+<span class="arithmatex">\((g_1, \dots, g_K, \text{id}, \dots, \text{id})\)</span>, and orthogonal changes of
+basis contribute nothing to the Jacobian, so</p>
+<div class="arithmatex">\[\log \left| \det \mathbf{J}_f(\mathbf{x}) \right| = \sum_{k=1}^{K} \log g_k'\!\big(\mathbf{a}_k^\top \mathbf{x}\big).\]</div>
+<p>Each <span class="arithmatex">\(g_k\)</span> is strictly monotone, so the layer is exactly invertible:</p>
+<div class="arithmatex">\[f^{-1}(\mathbf{z}) = (\mathbf{I} - \mathbf{A}\mathbf{A}^\top)\,\mathbf{z} + \mathbf{A}\, g^{-1}\!\big(\mathbf{A}^\top \mathbf{z}\big).\]</div>
+<p>RBIG is recovered as the special case <span class="arithmatex">\(K = D\)</span> with <span class="arithmatex">\(\mathbf{A}\)</span> a full
+rotation matrix chosen by PCA/ICA/random instead of by optimization.</p>
+<hr />
+<h2 id="finding-directions-max-k-swd-on-the-stiefel-manifold">Finding Directions: Max K-SWD on the Stiefel Manifold<a class="headerlink" href="#finding-directions-max-k-swd-on-the-stiefel-manifold" title="Permanent link">&para;</a></h2>
+<p>The core novelty of SIG/GIS is <em>where to slice</em>. The layer should
+Gaussianize the directions along which the current data is <strong>most
+non-Gaussian</strong>. Non-Gaussianity along a direction <span class="arithmatex">\(\mathbf{a}\)</span> is measured by
+the 1-Wasserstein distance between the projected data and a projected
+Gaussian reference.</p>
+<h3 id="1d-wasserstein-distance">1D Wasserstein distance<a class="headerlink" href="#1d-wasserstein-distance" title="Permanent link">&para;</a></h3>
+<p>For two 1D samples with sorted order statistics <span class="arithmatex">\(x_{(i)}\)</span> and <span class="arithmatex">\(z_{(i)}\)</span>
+(<span class="arithmatex">\(i = 1, \dots, N\)</span>), the 1-Wasserstein (earth mover's) distance has the
+closed form</p>
+<div class="arithmatex">\[W_1(x, z) = \frac{1}{N} \sum_{i=1}^{N} \left| x_{(i)} - z_{(i)} \right| = \int_0^1 \left| F_x^{-1}(q) - F_z^{-1}(q) \right| dq,\]</div>
+<p>i.e. sorting both samples and averaging the absolute quantile differences
+(<code>wasserstein_1d</code> in <code>rbig._src.stiefel</code>).</p>
+<h3 id="the-k-swd-objective">The K-SWD objective<a class="headerlink" href="#the-k-swd-objective" title="Permanent link">&para;</a></h3>
+<p>Given the current data <span class="arithmatex">\(\mathbf{X} \in \mathbb{R}^{N \times D}\)</span> and a target
+sample <span class="arithmatex">\(\mathbf{Z}\)</span> (standard Gaussian draws for GIS), the <strong>K-Sliced
+Wasserstein Distance</strong> of a frame <span class="arithmatex">\(\mathbf{A} = [\mathbf{a}_1, \dots, \mathbf{a}_K]\)</span> is</p>
+<div class="arithmatex">\[\mathcal{F}(\mathbf{A}) = \frac{1}{K} \sum_{k=1}^{K} W_1\!\big(\mathbf{X}\mathbf{a}_k,\; \mathbf{Z}\mathbf{a}_k\big),\]</div>
+<p>maximized subject to the orthonormality constraint</p>
+<div class="arithmatex">\[\mathbf{A} \in \mathrm{St}(D, K) = \left\{ \mathbf{A} \in \mathbb{R}^{D \times K} : \mathbf{A}^\top \mathbf{A} = \mathbf{I}_K \right\},\]</div>
+<p>the <strong>Stiefel manifold</strong>. Orthonormality matters: it keeps the layer's
+log-determinant simple (previous section) and prevents the <span class="arithmatex">\(K\)</span> slices from
+collapsing onto one direction.</p>
+<p>The Euclidean (sub)gradient of the matched-sorted objective w.r.t. one
+column is</p>
+<div class="arithmatex">\[\nabla_{\mathbf{a}_k} W_1 = \frac{1}{N} \sum_{i=1}^{N} \operatorname{sign}\!\big(p_{(i)} - q_{(i)}\big)\big(\mathbf{x}_{(i)} - \mathbf{z}_{(i)}\big),\]</div>
+<p>where <span class="arithmatex">\(p_{(i)} = \mathbf{x}_{(i)}^\top \mathbf{a}_k\)</span> and
+<span class="arithmatex">\(q_{(i)} = \mathbf{z}_{(i)}^\top \mathbf{a}_k\)</span> are the sorted projections and
+<span class="arithmatex">\(\mathbf{x}_{(i)}, \mathbf{z}_{(i)}\)</span> the correspondingly re-ordered samples.</p>
+<h3 id="cayley-retraction">Cayley retraction<a class="headerlink" href="#cayley-retraction" title="Permanent link">&para;</a></h3>
+<p>To ascend <span class="arithmatex">\(\mathcal{F}\)</span> while staying exactly on <span class="arithmatex">\(\mathrm{St}(D, K)\)</span>, <code>rbig</code>
+uses the curvilinear search of Wen &amp; Yin (2013). With Euclidean gradient
+<span class="arithmatex">\(\mathbf{G} = \nabla_\mathbf{A} \mathcal{F}\)</span>, form the skew-symmetric generator</p>
+<div class="arithmatex">\[\mathbf{W} = \mathbf{A}\mathbf{G}^\top - \mathbf{G}\mathbf{A}^\top \qquad (\mathbf{W}^\top = -\mathbf{W}),\]</div>
+<p>and move along the <strong>Cayley transform</strong> path</p>
+<div class="arithmatex">\[\mathbf{A}(\tau) = \left( \mathbf{I} + \tfrac{\tau}{2} \mathbf{W} \right)^{-1} \left( \mathbf{I} - \tfrac{\tau}{2} \mathbf{W} \right) \mathbf{A}.\]</div>
+<p>Because the Cayley transform of a skew-symmetric matrix is orthogonal,
+<span class="arithmatex">\(\mathbf{A}(\tau)^\top \mathbf{A}(\tau) = \mathbf{I}_K\)</span> holds <strong>exactly</strong> for every
+step size <span class="arithmatex">\(\tau\)</span> — no re-projection needed. The path satisfies
+<span class="arithmatex">\(\frac{d}{d\tau} \mathcal{F}(\mathbf{A}(\tau))\big|_{\tau=0} = \tfrac{1}{2}\|\mathbf{W}\|_F^2 \ge 0\)</span>,
+so it is an ascent direction. The step size <span class="arithmatex">\(\tau\)</span> is chosen by backtracking
+line search (halve <span class="arithmatex">\(\tau\)</span> until the objective improves), and iteration stops
+when <span class="arithmatex">\(\|\mathbf{W}\|_F\)</span> or the improvement falls below tolerance
+(<code>max_sliced_wasserstein_directions</code>).</p>
+<p>A cheaper alternative (<code>direction_method="random"</code>) draws a random
+orthonormal frame by QR decomposition of a Gaussian matrix — the sliced
+analogue of RBIG's random rotations.</p>
+<hr />
+<h2 id="the-1d-transform-rational-quadratic-spline-gaussianization">The 1D Transform: Rational-Quadratic Spline Gaussianization<a class="headerlink" href="#the-1d-transform-rational-quadratic-spline-gaussianization" title="Permanent link">&para;</a></h2>
+<p>Each slice is Gaussianized by the classic composition of an estimated
+marginal CDF with the Gaussian quantile function (probit):</p>
+<div class="arithmatex">\[z = g(x) = \Phi^{-1}\!\big(\hat{F}(x)\big),\]</div>
+<p>which maps <span class="arithmatex">\(x \sim \hat{F}\)</span> to <span class="arithmatex">\(z \sim \mathcal{N}(0, 1)\)</span> exactly when
+<span class="arithmatex">\(\hat{F}\)</span> is the true CDF. Its derivative — the quantity that enters the
+log-determinant — is</p>
+<div class="arithmatex">\[g'(x) = \frac{\hat{f}(x)}{\phi\big(g(x)\big)},\]</div>
+<p>with <span class="arithmatex">\(\hat{f}\)</span> the density estimate and <span class="arithmatex">\(\phi\)</span> the standard normal PDF.
+Since <span class="arithmatex">\(\hat f &gt; 0\)</span>, the map is strictly increasing and hence invertible.</p>
+<p>Rather than evaluating this transform pointwise (and inverting it
+numerically), <code>rbig</code> bakes it into a <strong>monotonic rational-quadratic (RQ)
+spline</strong> (Durkan et al. 2019; class <code>RQSpline</code>):</p>
+<ol>
+<li>Estimate <span class="arithmatex">\(\hat{F}\)</span> with a Gaussian KDE and place <span class="arithmatex">\(M\)</span> knots <span class="arithmatex">\(x_m\)</span> on a
+   regular grid over the data support.</li>
+<li>Set the latent knots to the exact Gaussianization targets
+   <span class="arithmatex">\(y_m = \Phi^{-1}(\hat{F}(x_m))\)</span> (CDF values clipped away from <span class="arithmatex">\(\{0, 1\}\)</span>
+   to keep the probit finite).</li>
+<li>Set the knot derivatives to the analytic values
+   <span class="arithmatex">\(d_m = \hat{f}(x_m) / \phi(y_m)\)</span>, clipped below by <code>alpha</code>
+   (<code>min_derivative</code>) so slopes never vanish.</li>
+</ol>
+<p>Within bin <span class="arithmatex">\(m\)</span>, with width <span class="arithmatex">\(w = x_{m+1} - x_m\)</span>, height <span class="arithmatex">\(h = y_{m+1} - y_m\)</span>,
+slope <span class="arithmatex">\(s = h/w\)</span>, and local coordinate <span class="arithmatex">\(\xi = (x - x_m)/w \in [0, 1]\)</span>, the RQ
+interpolant is</p>
+<div class="arithmatex">\[g(x) = y_m + \frac{h\left[ s\xi^2 + d_m \xi(1 - \xi) \right]}{s + (d_{m+1} + d_m - 2s)\,\xi(1 - \xi)},\]</div>
+<p>with derivative</p>
+<div class="arithmatex">\[g'(x) = \frac{s^2 \left[ d_{m+1}\xi^2 + 2s\xi(1 - \xi) + d_m(1 - \xi)^2 \right]}{\left[ s + (d_{m+1} + d_m - 2s)\,\xi(1-\xi) \right]^2} &gt; 0.\]</div>
+<p>The inverse solves a quadratic in <span class="arithmatex">\(\xi\)</span> <strong>analytically</strong>, so
+<span class="arithmatex">\(g^{-1}(g(x)) = x\)</span> to numerical precision — no iterative root finding.
+Outside the outermost knots the spline extends <strong>linearly</strong> with the
+boundary derivative, so both <span class="arithmatex">\(g\)</span> and <span class="arithmatex">\(g^{-1}\)</span> are defined and smooth on all
+of <span class="arithmatex">\(\mathbb{R}\)</span>. This is what gives GIS/SIG graceful out-of-support
+behavior: a test point beyond the training range gets a finite, linearly
+extrapolated latent value and a finite log-density, whereas an empirical-CDF
+transform saturates at <span class="arithmatex">\(\Phi^{-1}(0^+/1^-) \to \mp\infty\)</span> and must be clipped.</p>
+<p>The same primitive backs <code>SplineGaussianizer</code>, so raw feature dimensions
+(RBIG-style marginal steps) and projected slices (GIS/SIG) share one
+implementation — only the 1D data fed in differs.</p>
+<hr />
+<h2 id="gis-gaussianization-via-iterative-slicing">GIS: Gaussianization via Iterative Slicing<a class="headerlink" href="#gis-gaussianization-via-iterative-slicing" title="Permanent link">&para;</a></h2>
+<p><code>GIS</code> maps <strong>data → Gaussian</strong>, oriented toward density estimation. The fit
+is greedy:</p>
+<ol>
+<li>Split <span class="arithmatex">\(\mathbf{X}\)</span> into train/validation parts.</li>
+<li>Optionally <strong>whiten</strong> (<code>PCARotation(whiten=True)</code>) — centers, rotates to
+   principal axes and rescales to unit variance. Whitening removes all
+   second-order structure up front so layers spend capacity on higher-order
+   structure only; its log-determinant (<span class="arithmatex">\(-\tfrac{1}{2}\sum_j \log \lambda_j\)</span>,
+   constant in <span class="arithmatex">\(\mathbf{x}\)</span>) is included in <code>score_samples</code>.</li>
+<li>Repeat, <strong>appending</strong> layers (<span class="arithmatex">\(\ell = 1, 2, \dots\)</span>):<ul>
+<li>Draw a fresh Gaussian target <span class="arithmatex">\(\mathbf{Z}_\ell\)</span>, find
+  <span class="arithmatex">\(\mathbf{A}_\ell = \arg\max \mathcal{F}\)</span> (Stiefel) or draw it at random.</li>
+<li>Fit <span class="arithmatex">\(K\)</span> RQ splines on the projections of the current train
+  representation; transform train and validation, accumulating the
+  validation log-determinant.</li>
+<li>Update the stopping criterion on the validation representation; stop
+  when it fails to improve for <code>patience</code> consecutive layers.</li>
+</ul>
+</li>
+<li>Keep only the layer prefix up to the best validation iterate.</li>
+</ol>
+<p>Each layer strictly reduces (in expectation) the sliced non-Gaussianity: it
+makes <span class="arithmatex">\(K\)</span> one-dimensional marginals of the representation exactly standard
+normal, while an orthogonal <span class="arithmatex">\((D - K)\)</span>-dimensional subspace passes through
+untouched, to be attacked by later layers along new learned directions.</p>
+<p><strong>Density estimation</strong> then follows from the change of variables through the
+whitener and all layers:</p>
+<div class="arithmatex">\[\log p(\mathbf{x}) = \sum_{j=1}^{D} \log \phi\big(z_j\big) + \log|\det \mathbf{J}_\text{whiten}| + \sum_{\ell=1}^{L} \sum_{k=1}^{K} \log g'_{\ell,k}\big(\mathbf{a}_{\ell,k}^\top \mathbf{x}^{(\ell-1)}\big),\]</div>
+<p>where <span class="arithmatex">\(\mathbf{x}^{(\ell)}\)</span> is the representation after <span class="arithmatex">\(\ell\)</span> layers and
+<span class="arithmatex">\(\mathbf{z} = \mathbf{x}^{(L)}\)</span>.</p>
+<h2 id="sig-sliced-iterative-gaussianization-generative-orientation">SIG: Sliced Iterative Gaussianization (generative orientation)<a class="headerlink" href="#sig-sliced-iterative-gaussianization-generative-orientation" title="Permanent link">&para;</a></h2>
+<p><code>SIG</code> targets the <strong>Gaussian → data</strong> direction: draw
+<span class="arithmatex">\(\mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\)</span> and push it through the
+inverse flow (<code>sample</code> / <code>inverse_transform</code>) to generate data-like samples.</p>
+<p>In <code>rbig</code>, <code>SIG</code> builds the <em>same</em> invertible flow as <code>GIS</code> (every fitted
+layer is exactly invertible, so the two directions are two views of one
+bijection) and differs in configuration and intent:</p>
+<ul>
+<li><strong>Stopping signal.</strong> <code>SIG</code> defaults to <code>stopping_metric="swd"</code> — the
+  sliced Wasserstein distance between the current representation and a
+  Gaussian reference. Sample quality is what a generative model cares
+  about, and SWD tracks it directly and cheaply. <code>GIS</code> defaults to
+  <code>stopping_metric="log_likelihood"</code>, the density-estimation criterion.</li>
+<li><strong>Headline methods.</strong> <code>SIG.sample(n)</code> and <code>SIG.inverse_transform(Z)</code>
+  versus <code>GIS.transform(X)</code> and <code>GIS.score_samples(X)</code>.</li>
+</ul>
+<p>In the original paper the two algorithms are also distinguished by the
+direction in which layers are <em>constructed</em> (SIG prepends layers, matching
+samples to data; GIS appends layers, matching data to Gaussian). Because
+each <code>rbig</code> layer is an exact bijection fitted on the current data
+representation, constructing in the forward direction and inverting yields
+the same family of flows; <code>rbig</code> therefore shares one fitting path
+(<code>_BaseSliced</code>) for both estimators.</p>
+<hr />
+<h2 id="stopping-criteria">Stopping Criteria<a class="headerlink" href="#stopping-criteria" title="Permanent link">&para;</a></h2>
+<p>All three iterative models share <code>StoppingCriterion</code>
+(<code>rbig._src.convergence</code>), which tracks a validation metric with a
+<code>patience</code> window:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+<th>Cost</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"log_likelihood"</code></td>
+<td><span class="arithmatex">\(\frac{1}{N}\sum_i \big[\log \mathcal{N}(\mathbf{z}_i) + \log\|\det \mathbf{J}(\mathbf{x}_i)\|\big]\)</span> on held-out data</td>
+<td>needs accumulated log-det</td>
+<td>Most principled; directly the density-estimation objective. Default for <code>GIS</code>.</td>
+</tr>
+<tr>
+<td><code>"swd"</code></td>
+<td>Mean <span class="arithmatex">\(W_1\)</span> over random 1D projections between the representation and a Gaussian sample</td>
+<td>cheap (<span class="arithmatex">\(O(N \log N)\)</span> per projection)</td>
+<td>Measures remaining non-Gaussianity; tracks sample quality. Default for <code>SIG</code>.</td>
+</tr>
+<tr>
+<td><code>"total_correlation"</code></td>
+<td><span class="arithmatex">\(\sum_j H(z_j) - H(\mathbf{z})\)</span> residual redundancy</td>
+<td>histogram entropies</td>
+<td>The classic RBIG signal (<span class="arithmatex">\(\Delta\)</span> multi-information per layer).</td>
+</tr>
+</tbody>
+</table>
+<p>Early stopping keeps the prefix of layers up to the best validation score —
+layers added during the patience window are discarded.</p>
+<hr />
+<h2 id="rbig-vs-gis-vs-sig">RBIG vs GIS vs SIG<a class="headerlink" href="#rbig-vs-gis-vs-sig" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>RBIG</strong> (<code>AnnealedRBIG</code>)</th>
+<th><strong>GIS</strong> (<code>GIS</code>)</th>
+<th><strong>SIG</strong> (<code>SIG</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Reference</strong></td>
+<td>Laparra et al. (2011)</td>
+<td>Dai &amp; Seljak (2020)</td>
+<td>Dai &amp; Seljak (2020)</td>
+</tr>
+<tr>
+<td><strong>Direction of construction</strong></td>
+<td>data → Gaussian</td>
+<td>data → Gaussian</td>
+<td>Gaussian → data (paper); shared flow in <code>rbig</code></td>
+</tr>
+<tr>
+<td><strong>Primary use</strong></td>
+<td>Density / IT measures</td>
+<td>Density estimation</td>
+<td>Sampling / generation</td>
+</tr>
+<tr>
+<td><strong>Layer</strong></td>
+<td>Full rotation + <span class="arithmatex">\(D\)</span> marginal Gaussianizations</td>
+<td><span class="arithmatex">\(K \le D\)</span> learned slices + RQ splines</td>
+<td>same as GIS</td>
+</tr>
+<tr>
+<td><strong>Direction choice</strong></td>
+<td>PCA / ICA / random (fixed family)</td>
+<td>Max K-SWD on Stiefel manifold (learned)</td>
+<td>learned (K-SWD)</td>
+</tr>
+<tr>
+<td><strong>Dims transformed per layer</strong></td>
+<td>all <span class="arithmatex">\(D\)</span></td>
+<td><span class="arithmatex">\(K\)</span> (default <span class="arithmatex">\(D/2\)</span>)</td>
+<td><span class="arithmatex">\(K\)</span> (default <span class="arithmatex">\(D/2\)</span>)</td>
+</tr>
+<tr>
+<td><strong>1D transform</strong></td>
+<td>Histogram/KDE CDF + probit</td>
+<td>RQ spline (analytic inverse, linear tails)</td>
+<td>RQ spline</td>
+</tr>
+<tr>
+<td><strong>Out-of-support behavior</strong></td>
+<td>CDF clipping → saturated probit</td>
+<td>Linear tail extrapolation, finite log-density</td>
+<td>same as GIS</td>
+</tr>
+<tr>
+<td><strong>Per-layer cost</strong></td>
+<td><span class="arithmatex">\(O(D^3)\)</span> (PCA/ICA) <span class="arithmatex">\(+ O(ND)\)</span> marginals</td>
+<td>Stiefel iterations: <span class="arithmatex">\(O(T\,(N \log N)K + T\,D^3)\)</span> Cayley solves</td>
+<td>same as GIS</td>
+</tr>
+<tr>
+<td><strong>Layers needed</strong></td>
+<td>Many cheap layers (50–100+)</td>
+<td>Few expensive layers (targeted)</td>
+<td>few expensive layers</td>
+</tr>
+<tr>
+<td><strong>Stopping (default)</strong></td>
+<td>Total-correlation change</td>
+<td>Validation log-likelihood</td>
+<td>Sliced Wasserstein distance</td>
+</tr>
+<tr>
+<td><strong>Whitening</strong></td>
+<td>Via first PCA rotation</td>
+<td>Explicit <code>whiten=True</code> pre-transform</td>
+<td><code>whiten=True</code></td>
+</tr>
+<tr>
+<td><strong>Strengths</strong></td>
+<td>Simple, robust, well-studied IT estimators; exact rotations are free (log-det 0)</td>
+<td>Targeted directions → faster convergence per layer in high-D; smooth analytic inverse; finite OOD densities</td>
+<td>Direct control of sample quality; cheap SWD stopping</td>
+</tr>
+<tr>
+<td><strong>Weaknesses</strong></td>
+<td>Untargeted rotations waste layers in high-D; boundary saturation</td>
+<td>Stiefel optimization adds per-layer cost; K-SWD is non-convex (local optima)</td>
+<td>same as GIS; log-likelihood not the stopping target</td>
+</tr>
+<tr>
+<td><strong>When to use</strong></td>
+<td>IT measures (entropy, TC, MI); low/moderate D; well-tested baselines</td>
+<td>Density estimation, especially higher-D or when few layers desired</td>
+<td>Generative sampling, sample-quality-driven workflows</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule of thumb.</strong> RBIG spends many cheap, untargeted layers; GIS/SIG spend
+few expensive, targeted ones. When <span class="arithmatex">\(D\)</span> is small, RBIG's simplicity often
+wins. As <span class="arithmatex">\(D\)</span> grows, random/PCA rotations touch informative directions ever
+more rarely (a random direction is nearly orthogonal to any fixed structure
+in high-D), while the Stiefel search finds them directly — this is where
+sliced methods shine. For information-theoretic measures, prefer RBIG: its
+estimators (<code>rbig_measures</code>) are built on the total-correlation reduction
+accounting.</p>
+<hr />
+<h2 id="api-summary">API Summary<a class="headerlink" href="#api-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Class / function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shared 1D RQ spline</td>
+<td><code>rbig.RQSpline</code></td>
+</tr>
+<tr>
+<td>1-Wasserstein distance</td>
+<td><code>rbig._src.stiefel.wasserstein_1d</code></td>
+</tr>
+<tr>
+<td>Stiefel K-SWD optimizer</td>
+<td><code>rbig._src.stiefel.max_sliced_wasserstein_directions</code></td>
+</tr>
+<tr>
+<td>Random orthonormal frame</td>
+<td><code>rbig._src.stiefel.random_orthogonal_directions</code></td>
+</tr>
+<tr>
+<td>One sliced layer</td>
+<td><code>rbig.SIGLayer</code></td>
+</tr>
+<tr>
+<td>Data → Gaussian model</td>
+<td><code>rbig.GIS</code></td>
+</tr>
+<tr>
+<td>Generative model</td>
+<td><code>rbig.SIG</code></td>
+</tr>
+<tr>
+<td>Shared early stopping</td>
+<td><code>rbig._src.convergence.StoppingCriterion</code></td>
+</tr>
+<tr>
+<td>RBIG baseline</td>
+<td><code>rbig.AnnealedRBIG</code></td>
+</tr>
+</tbody>
+</table>
+<p>See the hands-on notebooks:
+<a href="../../notebooks/14_sliced_gaussianization/">GIS demo</a> ·
+<a href="../../notebooks/15_sig_vs_rbig_convergence/">SIG vs RBIG convergence</a> ·
+<a href="../../notebooks/16_gis_density_estimation/">density estimation quality</a> ·
+<a href="../../notebooks/17_sig_sampling_quality/">sampling quality</a> ·
+<a href="../../notebooks/18_sig_boundary_behavior/">boundary behavior</a>.</p>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Dai, B., &amp; Seljak, U. (2020). <em>Sliced Iterative Normalizing Flows.</em>
+  <a href="https://arxiv.org/abs/2007.00674">arXiv:2007.00674</a></li>
+<li>Laparra, V., Camps-Valls, G., &amp; Malo, J. (2011). <em>Iterative Gaussianization:
+  from ICA to Random Rotations.</em> IEEE Transactions on Neural Networks, 22(4), 537–549.</li>
+<li>Durkan, C., Bekasov, A., Murray, I., &amp; Papamakarios, G. (2019). <em>Neural
+  Spline Flows.</em> NeurIPS. <a href="https://arxiv.org/abs/1906.04032">arXiv:1906.04032</a></li>
+<li>Wen, Z., &amp; Yin, W. (2013). <em>A feasible method for optimization with
+  orthogonality constraints.</em> Mathematical Programming, 142, 397–434.</li>
+<li>Bonneel, N., Rabin, J., Peyré, G., &amp; Pfister, H. (2015). <em>Sliced and Radon
+  Wasserstein Barycenters of Measures.</em> Journal of Mathematical Imaging and
+  Vision, 51, 22–45.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
