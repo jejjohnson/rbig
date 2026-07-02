@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.15](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.14...rbig-v0.1.15) (2026-07-02)
+
+
+### Features
+
+* add Sliced Iterative Gaussianization (SIG/GIS) ([#111](https://github.com/jejjohnson/rbig/issues/111)) ([53c39de](https://github.com/jejjohnson/rbig/commit/53c39de668a5757794f1e76f6ebebfab753cb265))
+
+
+### Documentation
+
+* add SIG/GIS theory page and example notebooks ([#118](https://github.com/jejjohnson/rbig/issues/118)) ([f3fbbfa](https://github.com/jejjohnson/rbig/commit/f3fbbfa1fb5da52a4161ccbc9c7a72e56aa49f60)), closes [#75](https://github.com/jejjohnson/rbig/issues/75) [#76](https://github.com/jejjohnson/rbig/issues/76) [#77](https://github.com/jejjohnson/rbig/issues/77) [#78](https://github.com/jejjohnson/rbig/issues/78) [#79](https://github.com/jejjohnson/rbig/issues/79) [#80](https://github.com/jejjohnson/rbig/issues/80)
+
 ## [0.1.14](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.13...rbig-v0.1.14) (2026-03-26)
 
 
