@@ -12,6 +12,28 @@
       show_root_heading: true
       members_order: source
 
+## Sliced Gaussianization
+
+::: rbig.GIS
+    options:
+      show_root_heading: true
+      members_order: source
+
+::: rbig.SIG
+    options:
+      show_root_heading: true
+      members_order: source
+
+::: rbig.SIGLayer
+    options:
+      show_root_heading: true
+      members_order: source
+
+::: rbig.RQSpline
+    options:
+      show_root_heading: true
+      members_order: source
+
 ## Marginal Transforms
 
 ::: rbig.MarginalUniformize
