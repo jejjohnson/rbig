@@ -215,7 +215,20 @@ def test_zero_variance_column_warns_and_fits():
 # ── Golden regression ────────────────────────────────────────────────────────
 
 
-def test_transform_golden(golden):
+def test_score_samples_golden(golden):
+    """Pin fixed-seed log-densities to detect numeric drift.
+
+    ``score_samples`` (not ``transform``) is the cross-platform regression
+    target: PCA eigenvector *signs* differ between BLAS backends (Linux
+    OpenBLAS vs macOS Accelerate), flipping latent columns, but the
+    log-density is exactly invariant to those flips (``phi(z) == phi(-z)``
+    and the log-det carries no rotation sign).
+    """
     X, _ = make_banana(n_samples=500, seed=11)
     model = AnnealedRBIG(n_layers=5, random_state=0).fit(X)
-    golden("annealed_rbig_transform_banana", model.transform(X[:20]))
+    golden(
+        "annealed_rbig_score_samples_banana",
+        model.score_samples(X[:20]),
+        rtol=1e-8,
+        atol=1e-10,
+    )
