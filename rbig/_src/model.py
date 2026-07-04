@@ -816,7 +816,12 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         # add the accumulated log-det-Jacobian stored during fit
         return log_pz + self.log_det_train_
 
-    def sample(self, n_samples: int, random_state: int | None = None) -> np.ndarray:
+    def sample(
+        self,
+        n_samples: int,
+        random_state: int | None = None,
+        jitter: bool = False,
+    ) -> np.ndarray:
         """Generate samples from the learned distribution.
 
         Draws i.i.d. standard Gaussian samples in the latent space and maps
@@ -829,6 +834,12 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         random_state : int or None, optional
             Seed for the random number generator.  If ``None``, a random
             seed is used.
+        jitter : bool, default False
+            Add post-inverse noise ``N(0, sigma_k^2 / n_train)`` per
+            dimension.  At small training sizes the inverse interpolates
+            through a finite quantile grid, so repeated latent draws can
+            land on duplicate outputs; the jitter breaks those grid
+            duplicates without visibly changing the distribution.
 
         Returns
         -------
@@ -838,7 +849,185 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         check_is_fitted(self)
         rng = np.random.default_rng(random_state)
         Z = rng.standard_normal((n_samples, self.n_features_in_))  # latent samples
-        return self.inverse_transform(Z)
+        X_new = self.inverse_transform(Z)
+        if jitter:
+            support = self.layers_[0].marginal.support_
+            sigma = support.std(axis=0) / np.sqrt(support.shape[0])
+            X_new = X_new + sigma[None, :] * rng.standard_normal(X_new.shape)
+        return X_new
+
+    def get_feature_names_out(self, input_features=None) -> np.ndarray:
+        """Feature names of the transformed output: ``rbig0 .. rbig{d-1}``.
+
+        Enables ``set_output(transform="pandas")`` on the transformer.
+
+        Parameters
+        ----------
+        input_features : ignored
+            Present for scikit-learn API compatibility.
+
+        Returns
+        -------
+        names : np.ndarray of shape (n_features_in_,)
+            Output feature names.
+        """
+        check_is_fitted(self)
+        return np.asarray(
+            [f"rbig{i}" for i in range(self.n_features_in_)], dtype=object
+        )
+
+    def sample_conditional(
+        self,
+        X_cond: np.ndarray,
+        cond_dims: list[int],
+        n_samples: int = 100,
+        random_state: int | None = None,
+        oversample: int = 50,
+        grid_size: int = 512,
+    ) -> np.ndarray:
+        """Sample from the conditional ``p(x_free | x[cond_dims] = X_cond)``.
+
+        Two regimes, chosen automatically:
+
+        - **One free dimension** — exact inverse-CDF sampling on a grid of
+          the model's own density (``score_samples`` along the free axis),
+          normalized numerically.  Accuracy is limited only by the fitted
+          density and ``grid_size``.
+        - **Multiple free dimensions** — nearest-neighbor rejection (ABC):
+          draw ``oversample * n_samples`` joint samples from the model and
+          keep the ``n_samples`` closest to ``X_cond`` on the conditioned
+          dimensions (whitened distance), then overwrite the conditioned
+          coordinates exactly.  Asymptotically exact as ``oversample``
+          grows; a documented approximation at finite ``oversample``.
+
+        (The "fix the latent coordinates" shortcut sometimes quoted for
+        Gaussianization flows is *not* used: rotations mix dimensions, so
+        fixing latent indices does not hold the conditioned data
+        coordinates fixed.)
+
+        Parameters
+        ----------
+        X_cond : np.ndarray of shape (len(cond_dims),)
+            Values to condition on, in the order of ``cond_dims``.
+        cond_dims : list of int
+            Indices of the conditioned dimensions.
+        n_samples : int, default 100
+            Number of conditional samples to draw.
+        random_state : int or None, optional
+            Seed for the sampler.
+        oversample : int, default 50
+            Joint-sample multiplier for the multi-dimensional ABC regime.
+        grid_size : int, default 512
+            Grid resolution for the one-free-dimension exact regime.
+
+        Returns
+        -------
+        X_new : np.ndarray of shape (n_samples, n_features_in_)
+            Conditional samples; conditioned coordinates equal ``X_cond``.
+        """
+        check_is_fitted(self)
+        d = self.n_features_in_
+        cond_dims = list(cond_dims)
+        x_cond = np.asarray(X_cond, dtype=float).ravel()
+        if len(cond_dims) != x_cond.size:
+            raise ValueError(
+                f"X_cond has {x_cond.size} values but cond_dims names "
+                f"{len(cond_dims)} dimensions."
+            )
+        if not 0 < len(cond_dims) < d:
+            raise ValueError("cond_dims must name at least 1 and at most d-1 dims.")
+        free_dims = [j for j in range(d) if j not in cond_dims]
+        rng = np.random.default_rng(random_state)
+
+        if len(free_dims) == 1:
+            # Exact: p(x_free | x_cond) ∝ p([x_cond, x_free]) on a grid.
+            # The grid range comes from model samples *near the conditioning
+            # value* — a global range would sweep through the off-support
+            # plateau of the clipped flow and fatten the conditional tails.
+            j = free_dims[0]
+            ref = self.sample(4000, random_state=rng.integers(2**31))
+            scale = ref[:, cond_dims].std(axis=0)
+            scale[scale == 0.0] = 1.0
+            dist = np.linalg.norm((ref[:, cond_dims] - x_cond) / scale, axis=1)
+            neighbors = ref[np.argsort(dist)[:400], j]
+            lo, hi = neighbors.min(), neighbors.max()
+            pad = 0.25 * (hi - lo)
+            grid = np.linspace(lo - pad, hi + pad, grid_size)
+            P = np.empty((grid_size, d))
+            P[:, cond_dims] = x_cond
+            P[:, j] = grid
+            log_p = self.score_samples(P)
+            log_p -= log_p.max()
+            pdf = np.exp(log_p)
+            cdf = np.cumsum(pdf)
+            cdf /= cdf[-1]
+            u = rng.uniform(size=n_samples)
+            # Invert the numeric CDF by interpolation.
+            free_vals = np.interp(u, cdf, grid)
+            X_new = np.empty((n_samples, d))
+            X_new[:, cond_dims] = x_cond
+            X_new[:, j] = free_vals
+            return X_new
+
+        # ABC nearest-neighbor regime for multiple free dimensions.
+        pool = self.sample(oversample * n_samples, random_state=rng.integers(2**31))
+        scale = pool[:, cond_dims].std(axis=0)
+        scale[scale == 0.0] = 1.0
+        dist = np.linalg.norm((pool[:, cond_dims] - x_cond) / scale, axis=1)
+        keep = np.argsort(dist)[:n_samples]
+        X_new = pool[keep]
+        X_new[:, cond_dims] = x_cond
+        return X_new
+
+    def _n_effective_params(self) -> int:
+        """Heuristic parameter count for AIC/BIC (documented, not exact)."""
+        n_nodes = max(len(layer.marginal.support_) for layer in self.layers_)
+        return len(self.layers_) * self.n_features_in_ * (n_nodes + self.n_features_in_)
+
+    def aic(self, X: np.ndarray) -> float:
+        """Akaike information criterion: ``2k − 2·Σ log p(x)``.
+
+        The effective parameter count ``k = n_layers · d · (n_nodes + d)``
+        is a *heuristic* (quantile nodes plus rotation entries per layer),
+        not a likelihood-theory quantity — use AIC/BIC to compare RBIG
+        models of different sizes on the same data, not across model
+        families.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_features)
+            Held-out data.
+
+        Returns
+        -------
+        aic : float
+            The criterion value (lower is better).
+        """
+        check_is_fitted(self)
+        return float(
+            2.0 * self._n_effective_params() - 2.0 * np.sum(self.score_samples(X))
+        )
+
+    def bic(self, X: np.ndarray) -> float:
+        """Bayesian information criterion: ``k·ln(n) − 2·Σ log p(x)``.
+
+        See :meth:`aic` for the (heuristic) parameter-count definition.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_features)
+            Held-out data.
+
+        Returns
+        -------
+        bic : float
+            The criterion value (lower is better).
+        """
+        check_is_fitted(self)
+        return float(
+            self._n_effective_params() * np.log(X.shape[0])
+            - 2.0 * np.sum(self.score_samples(X))
+        )
 
     def predict_proba(
         self,
