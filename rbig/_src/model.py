@@ -13,6 +13,44 @@ from rbig._src._progress import maybe_tqdm
 from rbig._src.marginal import MarginalGaussianize
 from rbig._src.rotation import PCARotation
 
+SERIALIZATION_FORMAT_VERSION = 1
+
+
+class _RestoredRotation:
+    """Rotation reconstructed from its effective affine map.
+
+    Every rotation used inside :class:`RBIGLayer` is an affine transform
+    ``z = X @ W + b``.  Serialization (:meth:`AnnealedRBIG.to_dict`)
+    extracts ``(W, b)`` from the fitted rotation, and this class replays
+    the exact same map — class-agnostic, with the inverse solved linearly
+    and the (constant) log-det-Jacobian from ``slogdet(W)``.
+    """
+
+    def __init__(self, W: np.ndarray, b: np.ndarray):
+        self.W = np.asarray(W, dtype=float)  # W: (D, D)
+        self.b = np.asarray(b, dtype=float)  # b: (D,)
+        _sign, self._log_abs_det = np.linalg.slogdet(self.W)
+
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        return X @ self.W + self.b
+
+    def inverse_transform(self, Z: np.ndarray) -> np.ndarray:
+        # Solve W.T @ X.T = (Z - b).T for X (exact affine inverse).
+        return np.linalg.solve(self.W.T, (Z - self.b).T).T
+
+    def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        return np.full(X.shape[0], self._log_abs_det)
+
+    def to_dict(self) -> dict:
+        return {"class": "_RestoredRotation", "W": self.W, "b": self.b}
+
+
+def _rotation_affine_map(rotation, n_features: int) -> tuple[np.ndarray, np.ndarray]:
+    """Extract ``(W, b)`` with ``rotation.transform(X) == X @ W + b``."""
+    b = rotation.transform(np.zeros((1, n_features)))[0]  # b: (D,)
+    W = rotation.transform(np.eye(n_features)) - b  # W: (D, D)
+    return W, b
+
 
 @dataclass
 class RBIGLayer:
@@ -261,6 +299,14 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
     where H(Xᵢ) is the marginal entropy of the i-th feature and H(X) is
     the joint entropy.  For a fully Gaussianized, independent dataset,
     TC = 0.
+
+    **Fitted memory.** Each layer's default marginal stores the full sorted
+    training columns, so fitted memory scales as ``O(n_layers · n · d)`` —
+    at ``n=1e5, d=20`` and 50 layers that is roughly 800 MB.  To cap it,
+    use marginals with ``n_quantiles`` set (e.g.
+    ``MarginalGaussianize(n_quantiles=1000)``), which stores a fixed
+    quantile grid instead: ``O(n_layers · n_quantiles · d)``, ~8 MB in the
+    same scenario, with negligible accuracy loss for ``n ≫ n_quantiles``.
 
     References
     ----------
@@ -569,6 +615,118 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
             Average per-sample log-likelihood in nats.
         """
         return float(np.mean(self.score_samples(X)))
+
+    def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        """Accumulated per-sample log |det J_f| over all fitted layers.
+
+        The public single-call access to the flow's log-Jacobian, so that
+        downstream estimators never loop over ``layers_`` themselves:
+
+            log|det J_f(x)| = ∑ₖ log|det J_fₖ(xₖ₋₁)|
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_features)
+            Input data at which to evaluate the log-det-Jacobian.
+
+        Returns
+        -------
+        log_det : np.ndarray of shape (n_samples,)
+            Per-sample log absolute determinant of the full flow Jacobian.
+        """
+        check_is_fitted(self)
+        X = validate_data(self, X, reset=False)
+        Xt = X.copy()
+        log_det = np.zeros(X.shape[0])  # accumulator; shape (n_samples,)
+        for layer in self.layers_:
+            log_det += layer.log_det_jacobian(Xt)
+            Xt = layer.transform(Xt)
+        return log_det
+
+    def to_dict(self) -> dict:
+        """Serialize the fitted model to a versioned dict of plain arrays.
+
+        The returned dict contains only builtin types and NumPy arrays
+        (joblib/`np.savez`-friendly; call ``.tolist()`` on arrays for JSON).
+        Rotations are stored as their effective affine map ``(W, b)`` —
+        exact for every rotation family — and marginals via their own
+        ``to_dict``.  Training caches (``X_transformed_``,
+        ``log_det_train_``) are *not* stored, so :meth:`entropy` and
+        :meth:`score_samples_raw_` are unavailable on restored models.
+
+        Returns
+        -------
+        state : dict
+            Versioned state with key ``"format_version"``.
+
+        Raises
+        ------
+        NotImplementedError
+            If a fitted layer uses a marginal without ``to_dict`` support
+            (e.g. via ``strategy``); use pickle/joblib for those models.
+        """
+        check_is_fitted(self)
+        layers = []
+        for layer in self.layers_:
+            if not hasattr(layer.marginal, "to_dict"):
+                raise NotImplementedError(
+                    f"Marginal {type(layer.marginal).__name__} does not support "
+                    "to_dict; serialize this model with pickle/joblib instead."
+                )
+            W, b = _rotation_affine_map(layer.rotation, self.n_features_in_)
+            layers.append(
+                {
+                    "marginal": layer.marginal.to_dict(),
+                    "rotation": {"W": W, "b": b},
+                }
+            )
+        return {
+            "format_version": SERIALIZATION_FORMAT_VERSION,
+            "class": type(self).__name__,
+            "params": self.get_params(deep=False),
+            "n_features_in_": int(self.n_features_in_),
+            "tc_per_layer_": [float(v) for v in self.tc_per_layer_],
+            "tol_": float(self.tol_),
+            "layers": layers,
+        }
+
+    @classmethod
+    def from_dict(cls, state: dict) -> AnnealedRBIG:
+        """Rebuild a fitted model from :meth:`to_dict` output.
+
+        Parameters
+        ----------
+        state : dict
+            State produced by :meth:`to_dict`.
+
+        Returns
+        -------
+        model : AnnealedRBIG
+            A fitted model whose ``transform`` / ``inverse_transform`` /
+            ``score_samples`` / ``sample`` reproduce the original's.
+
+        Raises
+        ------
+        ValueError
+            If ``state["format_version"]`` is unsupported.
+        """
+        version = state.get("format_version")
+        if version != SERIALIZATION_FORMAT_VERSION:
+            raise ValueError(
+                f"Unsupported format_version {version!r}; this build reads "
+                f"version {SERIALIZATION_FORMAT_VERSION}."
+            )
+        model = cls(**state["params"])
+        model.n_features_in_ = int(state["n_features_in_"])
+        model.tc_per_layer_ = list(state["tc_per_layer_"])
+        model.tol_ = float(state["tol_"])
+        model.layers_ = []
+        for layer_state in state["layers"]:
+            marginal = MarginalGaussianize.from_dict(layer_state["marginal"])
+            rot = layer_state["rotation"]
+            rotation = _RestoredRotation(rot["W"], rot["b"])
+            model.layers_.append(RBIGLayer(marginal=marginal, rotation=rotation))
+        return model
 
     def entropy(self) -> float:
         """Differential entropy of the fitted distribution in nats.
@@ -1116,6 +1274,12 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         """
         from rbig._src.densities import joint_entropy_gaussian, marginal_entropy
 
+        # Zero-variance columns carry no dependence and break the KDE and
+        # log-det estimators; measure TC on the varying columns only.
+        varying = X.std(axis=0) > 0.0
+        if varying.sum() < 2:
+            return 0.0
+        X = X[:, varying]
         marg_h = marginal_entropy(X)  # per-feature entropy; shape (n_features,)
         joint_h = joint_entropy_gaussian(X)  # Gaussian approximation to joint entropy
         return float(np.sum(marg_h) - joint_h)

@@ -352,13 +352,39 @@ class MarginalGaussianize(BaseTransform):
         applying the probit to prevent +/-inf outputs at the tails.
     eps : float, default 1e-6
         Clipping margin for the uniform intermediate value.
+    n_quantiles : int or None, default None
+        Memory cap for the stored empirical quantile nodes.  ``None`` keeps
+        the full sorted training columns (``O(n·d)`` fitted memory); an
+        integer stores that many evenly spaced empirical quantiles instead
+        (``O(n_quantiles·d)``), like sklearn's ``QuantileTransformer``.
+    tail : {None, "gaussian", "pareto"}, default None
+        Parametric tail extension beyond the ``q_tail`` quantiles.
+        ``None`` keeps the classic clipping behavior (desired for anomaly
+        scoring).  ``"gaussian"`` matches a normal through two empirical
+        quantiles per side (exact for truly Gaussian data);``"pareto"``
+        fits a generalized Pareto to the seam exceedances.  Both are
+        C⁰-continuous at the seam with a small C¹ discontinuity.
+    q_tail : float, default 0.95
+        Quantile beyond which the parametric tail replaces the empirical
+        CDF (mirrored below at ``1 - q_tail``).
+    dither : bool, default False
+        Break ties in discrete/ordinal features with seeded uniform jitter
+        at 1% of the feature's minimum positive gap, applied consistently
+        at fit and transform time.
+    random_state : int or None, default None
+        Seed for the dithering jitter.
 
     Attributes
     ----------
-    support_ : np.ndarray of shape (n_samples, n_features)
-        Column-wise sorted training data (empirical quantile nodes).
+    support_ : np.ndarray of shape (n_nodes, n_features)
+        Per-feature empirical quantile nodes (sorted training columns, or
+        the ``n_quantiles`` grid when capped).
     n_features_ : int
         Number of feature dimensions seen during ``fit``.
+    constant_mask_ : np.ndarray of shape (n_features,)
+        True for zero-variance features, which use a centred identity map.
+    tails_ : list of dict or None
+        Per-feature parametric tail specifications (when ``tail`` is set).
 
     Notes
     -----
@@ -390,12 +416,32 @@ class MarginalGaussianize(BaseTransform):
     True
     """
 
-    def __init__(self, bound_correct: bool = True, eps: float = 1e-6):
+    def __init__(
+        self,
+        bound_correct: bool = True,
+        eps: float = 1e-6,
+        n_quantiles: int | None = None,
+        tail: str | None = None,
+        q_tail: float = 0.95,
+        dither: bool = False,
+        random_state: int | None = None,
+    ):
         self.bound_correct = bound_correct
         self.eps = eps
+        self.n_quantiles = n_quantiles
+        self.tail = tail
+        self.q_tail = q_tail
+        self.dither = dither
+        self.random_state = random_state
+
+    def _dither_jitter(self, X: np.ndarray) -> np.ndarray:
+        """Seeded uniform jitter at 1% of each feature's min positive gap."""
+        rng = np.random.default_rng(self.random_state)
+        jitter = rng.uniform(-0.5, 0.5, size=X.shape)
+        return X + jitter * self.dither_scale_[None, :]
 
     def fit(self, X: np.ndarray, y=None) -> MarginalGaussianize:
-        """Fit by storing the column-wise sorted training data.
+        """Fit by storing per-feature empirical quantile nodes.
 
         Parameters
         ----------
@@ -407,14 +453,113 @@ class MarginalGaussianize(BaseTransform):
         self : MarginalGaussianize
             Fitted transform instance.
         """
-        # Sorted columns serve as empirical quantile nodes
-        self.support_ = np.sort(X, axis=0)
+        X = np.asarray(X, dtype=float)
         self.n_features_ = X.shape[1]
+
+        # Dither scale: 1% of the min positive gap per feature (0 disables).
+        scales = np.zeros(self.n_features_)
+        if self.dither:
+            for i in range(self.n_features_):
+                gaps = np.diff(np.unique(X[:, i]))
+                scales[i] = 0.01 * gaps.min() if gaps.size else 0.0
+        self.dither_scale_ = scales  # (n_features,)
+        if self.dither:
+            X = self._dither_jitter(X)
+
+        # Zero-variance features fall back to a centred identity map.
+        self.constant_mask_ = X.max(axis=0) == X.min(axis=0)  # (n_features,)
+        self.offsets_ = np.where(self.constant_mask_, X.mean(axis=0), 0.0)
+        if self.constant_mask_.any():
+            import warnings
+
+            idx = np.flatnonzero(self.constant_mask_).tolist()
+            warnings.warn(
+                f"Features {idx} have zero variance; using an identity "
+                "(centred) marginal for them.",
+                UserWarning,
+                stacklevel=2,
+            )
+
+        # Quantile nodes: full sorted columns, or a memory-capped grid of
+        # n_quantiles evenly spaced empirical quantiles (QuantileTransformer
+        # style) — fitted memory drops from O(n·d) to O(n_quantiles·d).
+        if self.n_quantiles is not None and self.n_quantiles < X.shape[0]:
+            probs = np.linspace(0.0, 1.0, self.n_quantiles)
+            self.support_ = np.quantile(X, probs, axis=0)
+        else:
+            self.support_ = np.sort(X, axis=0)
+
         self.kdes_ = [
-            stats.gaussian_kde(self.support_[:, i].copy())
+            None
+            if self.constant_mask_[i]
+            else stats.gaussian_kde(self.support_[:, i].copy())
             for i in range(self.n_features_)
         ]
+
+        if self.tail is not None:
+            if self.tail not in ("gaussian", "pareto"):
+                raise ValueError(
+                    f"Unknown tail {self.tail!r}. Use None, 'gaussian', or 'pareto'."
+                )
+            self._fit_tails(X)
         return self
+
+    def _fit_tails(self, X: np.ndarray) -> None:
+        """Fit per-feature parametric tails beyond the ``q_tail`` quantiles.
+
+        ``"gaussian"`` matches a normal through two empirical quantiles per
+        side (C⁰-continuous at the seam by construction; recovers the exact
+        probit map for truly Gaussian data).  ``"pareto"`` fits a
+        generalized Pareto to the seam exceedances (falling back to the
+        Gaussian tail when fewer than 5 exceedances exist).
+        """
+        q_hi, q_lo = self.q_tail, 1.0 - self.q_tail
+        self.tails_ = []
+        for i in range(self.n_features_):
+            if self.constant_mask_[i]:
+                self.tails_.append(None)
+                continue
+            col = X[:, i]
+            spec: dict = {"q_hi": q_hi, "q_lo": q_lo}
+            spec["x_hi"] = float(np.quantile(col, q_hi))
+            spec["x_lo"] = float(np.quantile(col, q_lo))
+            for side, x_seam, q_seam, q_mid in (
+                ("hi", spec["x_hi"], q_hi, (1.0 + q_hi) / 2.0),
+                ("lo", spec["x_lo"], q_lo, q_lo / 2.0),
+            ):
+                kind = self.tail
+                if kind == "pareto":
+                    exceed = (
+                        col[col > x_seam] - x_seam
+                        if side == "hi"
+                        else x_seam - col[col < x_seam]
+                    )
+                    if exceed.size >= 5:
+                        c, _loc, scale = stats.genpareto.fit(exceed, floc=0.0)
+                        if c < 0.0:
+                            # A negative shape gives a *bounded* tail (infinite
+                            # log-density beyond the endpoint).  Clamp to the
+                            # exponential boundary case, scale by its MLE.
+                            c, scale = 0.0, float(exceed.mean())
+                        spec[side] = {
+                            "kind": "pareto",
+                            "c": float(c),
+                            "scale": float(scale),
+                        }
+                        continue
+                    kind = "gaussian"  # too few exceedances: fall back
+                # Gaussian tail via two-point quantile matching.
+                x_mid = float(np.quantile(col, q_mid))
+                z_seam, z_mid = ndtri(q_seam), ndtri(q_mid)
+                sigma = (x_mid - x_seam) / (z_mid - z_seam)
+                sigma = max(sigma, 1e-12)
+                mu = x_seam - sigma * z_seam
+                spec[side] = {
+                    "kind": "gaussian",
+                    "mu": float(mu),
+                    "sigma": float(sigma),
+                }
+            self.tails_.append(spec)
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         """Map each feature to N(0, 1) via empirical CDF then probit.
@@ -431,8 +576,15 @@ class MarginalGaussianize(BaseTransform):
         Xt : np.ndarray of shape (n_samples, n_features)
             Gaussianized data; each column has approximately N(0, 1) marginal.
         """
+        X = np.asarray(X, dtype=float)
+        if self.dither:
+            X = self._dither_jitter(X)
         Xt = np.zeros_like(X, dtype=float)
         for i in range(self.n_features_):
+            if self.constant_mask_[i]:
+                # Zero-variance feature: centred identity map.
+                Xt[:, i] = X[:, i] - self.offsets_[i]
+                continue
             # Step 1: empirical CDF -> uniform value in (0, 1)
             u = MarginalUniformize._uniformize(X[:, i], self.support_[:, i])
             if self.bound_correct:
@@ -440,7 +592,41 @@ class MarginalGaussianize(BaseTransform):
                 u = np.clip(u, self.eps, 1 - self.eps)
             # Step 2: probit transform Phi^{-1}(u) -> standard normal
             Xt[:, i] = ndtri(u)
+            if self.tail is not None:
+                # Override tail regions with the (unclipped) parametric maps.
+                Xt[:, i] = self._tail_probit(X[:, i], Xt[:, i], i)
         return Xt
+
+    def _tail_probit(self, x: np.ndarray, z: np.ndarray, i: int) -> np.ndarray:
+        """Replace probit values beyond the seams with the parametric tails.
+
+        For the Gaussian tail the composition ``Phi^{-1}(Phi((x-mu)/sigma))``
+        collapses to ``(x-mu)/sigma`` exactly, so arbitrarily far inputs map
+        to finite, strictly increasing latents with no clipping.
+        """
+        spec = self.tails_[i]
+        z = z.copy()
+        hi = x > spec["x_hi"]
+        lo = x < spec["x_lo"]
+        if hi.any():
+            t = spec["hi"]
+            if t["kind"] == "gaussian":
+                z[hi] = (x[hi] - t["mu"]) / t["sigma"]
+            else:  # pareto: F(x) = q_hi + (1-q_hi) * F_gpd(x - x_hi)
+                y = x[hi] - spec["x_hi"]
+                u = spec["q_hi"] + (1.0 - spec["q_hi"]) * stats.genpareto.cdf(
+                    y, t["c"], scale=t["scale"]
+                )
+                z[hi] = ndtri(np.clip(u, 1e-300, 1.0 - 1e-16))
+        if lo.any():
+            t = spec["lo"]
+            if t["kind"] == "gaussian":
+                z[lo] = (x[lo] - t["mu"]) / t["sigma"]
+            else:  # pareto: F(x) = q_lo * SF_gpd(x_lo - x)
+                y = spec["x_lo"] - x[lo]
+                u = spec["q_lo"] * stats.genpareto.sf(y, t["c"], scale=t["scale"])
+                z[lo] = ndtri(np.clip(u, 1e-300, 1.0 - 1e-16))
+        return z
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
         """Map standard-normal values back to the original space.
@@ -459,15 +645,56 @@ class MarginalGaussianize(BaseTransform):
         Xt : np.ndarray of shape (n_samples, n_features)
             Data approximately recovered in the original input space.
         """
+        X = np.asarray(X, dtype=float)
         Xt = np.zeros_like(X, dtype=float)
         for i in range(self.n_features_):
+            if self.constant_mask_[i]:
+                Xt[:, i] = X[:, i] + self.offsets_[i]
+                continue
             # Invert probit: z -> Phi(z) in (0, 1)
             u = stats.norm.cdf(X[:, i])
             # Invert empirical CDF via linear interpolation
             Xt[:, i] = np.interp(
                 u, np.linspace(0, 1, len(self.support_[:, i])), self.support_[:, i]
             )
+            if self.tail is not None:
+                Xt[:, i] = self._tail_ppf(X[:, i], u, Xt[:, i], i)
         return Xt
+
+    def _tail_ppf(
+        self, z: np.ndarray, u: np.ndarray, x: np.ndarray, i: int
+    ) -> np.ndarray:
+        """Replace inverse-CDF values beyond the seams with the tail inverses.
+
+        Gaussian tails invert directly from the latent ``z`` (``x = mu +
+        sigma * z``), so the inverse stays exact even where ``Phi(z)``
+        saturates to 1 in float64.
+        """
+        spec = self.tails_[i]
+        x = x.copy()
+        hi = u > spec["q_hi"]
+        lo = u < spec["q_lo"]
+        if hi.any():
+            t = spec["hi"]
+            if t["kind"] == "gaussian":
+                x[hi] = t["mu"] + t["sigma"] * z[hi]
+            else:
+                frac = (u[hi] - spec["q_hi"]) / (1.0 - spec["q_hi"])
+                frac = np.clip(frac, 0.0, 1.0 - 1e-16)
+                x[hi] = spec["x_hi"] + stats.genpareto.ppf(
+                    frac, t["c"], scale=t["scale"]
+                )
+        if lo.any():
+            t = spec["lo"]
+            if t["kind"] == "gaussian":
+                x[lo] = t["mu"] + t["sigma"] * z[lo]
+            else:
+                frac = 1.0 - u[lo] / spec["q_lo"]
+                frac = np.clip(frac, 0.0, 1.0 - 1e-16)
+                x[lo] = spec["x_lo"] - stats.genpareto.ppf(
+                    frac, t["c"], scale=t["scale"]
+                )
+        return x
 
     def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
         """Log |det J| for marginal Gaussianization.
@@ -524,9 +751,16 @@ class MarginalGaussianize(BaseTransform):
         Xt : np.ndarray of shape (n_samples, n_features)
             Only returned when ``return_transform=True``.
         """
+        X = np.asarray(X, dtype=float)
         Xt = self.transform(X)  # Gaussianized output, shape (N, D)
+        if self.dither:
+            # Evaluate densities at the same jittered inputs transform saw.
+            X = self._dither_jitter(X)
         log_derivs = np.zeros_like(X, dtype=float)
         for i in range(self.n_features_):
+            if self.constant_mask_[i]:
+                # Identity marginal: log|dz/dx| = 0.
+                continue
             # KDE-based density estimate for feature i
             # After pickle with readonly memmap, the KDE's internal arrays
             # may be read-only.  Re-create the KDE from a writable copy of
@@ -537,6 +771,8 @@ class MarginalGaussianize(BaseTransform):
                 self.kdes_[i] = kde
             xi = np.ascontiguousarray(X[:, i])
             log_f_i = np.log(np.maximum(kde(xi), 1e-300))
+            if self.tail is not None:
+                log_f_i = self._tail_log_density(xi, log_f_i, i)
             # Log standard-normal PDF at Gaussianized value: log phi(z_i)
             log_phi_gi = stats.norm.logpdf(Xt[:, i])
             # Chain rule: log|dz/dx| = log f(x) - log phi(z)
@@ -544,6 +780,75 @@ class MarginalGaussianize(BaseTransform):
         if return_transform:
             return log_derivs, Xt
         return log_derivs
+
+    def _tail_log_density(self, x: np.ndarray, log_f: np.ndarray, i: int) -> np.ndarray:
+        """Replace log-density values beyond the seams with the tail densities."""
+        spec = self.tails_[i]
+        log_f = log_f.copy()
+        hi = x > spec["x_hi"]
+        lo = x < spec["x_lo"]
+        if hi.any():
+            t = spec["hi"]
+            if t["kind"] == "gaussian":
+                log_f[hi] = stats.norm.logpdf(x[hi], loc=t["mu"], scale=t["sigma"])
+            else:
+                y = x[hi] - spec["x_hi"]
+                log_f[hi] = np.log1p(-spec["q_hi"]) + stats.genpareto.logpdf(
+                    y, t["c"], scale=t["scale"]
+                )
+        if lo.any():
+            t = spec["lo"]
+            if t["kind"] == "gaussian":
+                log_f[lo] = stats.norm.logpdf(x[lo], loc=t["mu"], scale=t["sigma"])
+            else:
+                y = spec["x_lo"] - x[lo]
+                log_f[lo] = np.log(spec["q_lo"]) + stats.genpareto.logpdf(
+                    y, t["c"], scale=t["scale"]
+                )
+        return log_f
+
+    def to_dict(self) -> dict:
+        """Serialize the fitted marginal to a dict of plain arrays.
+
+        Returns
+        -------
+        state : dict
+            Fitted state; consumed by :meth:`from_dict`.  The per-feature
+            KDEs are rebuilt deterministically from ``support_``.
+        """
+        return {
+            "class": type(self).__name__,
+            "params": self.get_params(deep=False),
+            "support_": np.asarray(self.support_),
+            "n_features_": int(self.n_features_),
+            "constant_mask_": np.asarray(self.constant_mask_),
+            "offsets_": np.asarray(self.offsets_),
+            "dither_scale_": np.asarray(self.dither_scale_),
+            "tails_": getattr(self, "tails_", None),
+        }
+
+    @classmethod
+    def from_dict(cls, state: dict) -> MarginalGaussianize:
+        """Rebuild a fitted marginal from :meth:`to_dict` output."""
+        if state.get("class") != cls.__name__:
+            raise ValueError(
+                f"State is for {state.get('class')!r}, not {cls.__name__}."
+            )
+        obj = cls(**state["params"])
+        obj.support_ = np.asarray(state["support_"], dtype=float)
+        obj.n_features_ = int(state["n_features_"])
+        obj.constant_mask_ = np.asarray(state["constant_mask_"], dtype=bool)
+        obj.offsets_ = np.asarray(state["offsets_"], dtype=float)
+        obj.dither_scale_ = np.asarray(state["dither_scale_"], dtype=float)
+        if state.get("tails_") is not None:
+            obj.tails_ = state["tails_"]
+        obj.kdes_ = [
+            None
+            if obj.constant_mask_[i]
+            else stats.gaussian_kde(obj.support_[:, i].copy())
+            for i in range(obj.n_features_)
+        ]
+        return obj
 
 
 class MarginalKDEGaussianize(BaseTransform):
@@ -693,6 +998,35 @@ class MarginalKDEGaussianize(BaseTransform):
                     # Root not found in [-100, 100]; fall back to zero
                     Xt[j, i] = 0.0
         return Xt
+
+    def log_det_jacobian(self, X: np.ndarray) -> np.ndarray:
+        """Log |det J| for the KDE-CDF Gaussianization.
+
+        For ``g(x) = Phi^{-1}(F_KDE(x))`` the per-feature log-derivative is::
+
+            log|dg/dx| = log f_KDE(x) - log phi(g(x))
+
+        where ``f_KDE`` is the fitted kernel density itself — the exact
+        derivative of the smooth KDE CDF, so this quantity matches central
+        finite differences of :meth:`transform` to high accuracy.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape (n_samples, n_features)
+            Input data at which to evaluate the log-det-Jacobian.
+
+        Returns
+        -------
+        log_jac : np.ndarray of shape (n_samples,)
+            Per-sample sum of per-feature log-derivatives.
+        """
+        Xt = self.transform(X)  # Gaussianized output, shape (N, D)
+        log_jac = np.zeros(X.shape[0])
+        for i in range(self.n_features_):
+            xi = np.ascontiguousarray(X[:, i])
+            log_f_i = np.log(np.maximum(self.kdes_[i](xi), 1e-300))
+            log_jac += log_f_i - stats.norm.logpdf(Xt[:, i])
+        return log_jac
 
 
 class QuantileGaussianizer(Bijector):
