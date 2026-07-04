@@ -1,0 +1,43 @@
+name: Nightly Statistical Tests
+
+# Runs the large-n statistical test suite (@pytest.mark.statistical) that is
+# deselected from per-PR CI. Tolerances follow the tests/truth.py policy:
+# no retry loops — a flaky test gets a wider documented tolerance or a
+# bigger n (see issue #132).
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  statistical:
+    name: Statistical suite (Python 3.13, ubuntu-latest)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync --extra test
+
+      - name: Run statistical suite
+        run: uv run pytest tests -v -m statistical
+
+      - name: Flake-policy guard (no retry plugins)
+        run: |
+          if grep -riE "pytest-rerunfailures|flaky" pyproject.toml; then
+            echo "Retry plugins are banned: widen tolerance or raise n instead."
+            exit 1
+          fi
