@@ -74,8 +74,12 @@ def random_orthogonal_directions(
     k = min(n_directions, n_features)
     m = rng.standard_normal((n_features, k))
     q, r = np.linalg.qr(m)
-    # Fix column signs so the result is deterministic given the seed.
-    q = q * np.sign(np.diag(r))
+    # Fix column signs so the result is deterministic given the seed.  A
+    # zero diagonal entry (rank deficiency) must map to +1, not 0, or the
+    # column would be zeroed out.
+    signs = np.sign(np.diag(r))
+    signs[signs == 0.0] = 1.0
+    q = q * signs
     return q[:, :k]
 
 
@@ -185,10 +189,24 @@ def max_sliced_wasserstein_directions(
         tau = lr
         accepted = False
         for _ls in range(25):
-            cayley = np.linalg.solve(eye + (tau / 2.0) * W, eye - (tau / 2.0) * W)
-            A_new = cayley @ A
-            obj_new, grad_new = _kswd_objective_and_grad(A_new, Xs, Zs)
-            if obj_new > obj:
+            # An ill-conditioned solve (large ``W`` from heavy-tailed data at
+            # a big step size) can silently return non-finite entries on some
+            # BLAS backends; the objective then evaluates to inf and would be
+            # "adopted" as an improvement.  Reject non-finite candidates and
+            # keep backtracking instead.
+            try:
+                with np.errstate(all="ignore"):
+                    cayley = np.linalg.solve(
+                        eye + (tau / 2.0) * W, eye - (tau / 2.0) * W
+                    )
+                    A_new = cayley @ A
+                    if not np.isfinite(A_new).all():
+                        raise np.linalg.LinAlgError
+                    obj_new, grad_new = _kswd_objective_and_grad(A_new, Xs, Zs)
+            except np.linalg.LinAlgError:
+                tau *= 0.5
+                continue
+            if np.isfinite(obj_new) and obj_new > obj:
                 accepted = True
                 break
             tau *= 0.5
@@ -205,6 +223,9 @@ def max_sliced_wasserstein_directions(
     # Re-orthonormalize to clean up any accumulated numerical drift.
     A, _ = np.linalg.qr(A)
     A = A[:, :k]
+    if not np.isfinite(A).all():
+        # Last-resort platform guard: never hand back non-finite directions.
+        A = random_orthogonal_directions(d, k, random_state=rng.integers(2**31))
 
     if return_history:
         return A, history
