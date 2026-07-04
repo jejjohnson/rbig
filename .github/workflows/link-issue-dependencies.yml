@@ -1,0 +1,74 @@
+name: Link Issue Dependencies
+
+# Applies native blocked-by relationships between issues. Manual-only:
+# provide space-separated "blocked:blocker" issue-number pairs, e.g.
+# "121:120 122:121". Defaults encode the sklearn estimator-suite epic
+# (#119) dependency graph.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pairs:
+        description: 'Space-separated blocked:blocker issue-number pairs'
+        required: true
+        default: '120:132 121:120 122:121 123:121 124:121 125:123 126:120 126:124 127:122 128:124 129:121 129:123 130:124 131:121 131:123 133:122 133:125 133:128 133:131'
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  link:
+    name: Apply blocked-by links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply links
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PAIRS: ${{ inputs.pairs }}
+        run: |
+          set -u
+          fail=0
+          for pair in $PAIRS; do
+            blocked="${pair%%:*}"
+            blocker="${pair##*:}"
+            # REST issue-dependencies endpoint (needs the blocker's numeric id)
+            blocker_id=$(gh api "repos/$REPO/issues/$blocker" --jq .id)
+            if out=$(gh api -X POST "repos/$REPO/issues/$blocked/dependencies/blocked_by" -F issue_id="$blocker_id" 2>&1); then
+              echo "OK   #$blocked blocked-by #$blocker (REST)"
+              continue
+            fi
+            if echo "$out" | grep -qiE 'already|duplicate'; then
+              echo "SKIP #$blocked already blocked-by #$blocker"
+              continue
+            fi
+            # Fallback: GraphQL addBlockedBy
+            blocked_node=$(gh api "repos/$REPO/issues/$blocked" --jq .node_id)
+            blocker_node=$(gh api "repos/$REPO/issues/$blocker" --jq .node_id)
+            if out2=$(gh api graphql \
+                 -f query='mutation($this: ID!, $blocker: ID!) { addBlockedBy(input: {issueId: $this, blockingIssueId: $blocker}) { issue { number } } }' \
+                 -f this="$blocked_node" -f blocker="$blocker_node" 2>&1); then
+              echo "OK   #$blocked blocked-by #$blocker (GraphQL)"
+            elif echo "$out2" | grep -qiE 'already|duplicate'; then
+              echo "SKIP #$blocked already blocked-by #$blocker"
+            else
+              echo "FAIL #$blocked blocked-by #$blocker"
+              echo "  REST:    $out"
+              echo "  GraphQL: $out2"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PAIRS: ${{ inputs.pairs }}
+        run: |
+          issues=$(for pair in $PAIRS; do echo "${pair%%:*}"; done | sort -un)
+          for n in $issues; do
+            blockers=$(gh api "repos/$REPO/issues/$n/dependencies/blocked_by" --jq '[.[].number] | join(",")' 2>/dev/null || echo 'endpoint unavailable')
+            echo "#$n blocked by: $blockers"
+          done
