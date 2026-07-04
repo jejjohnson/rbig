@@ -241,7 +241,7 @@ class _BaseSliced(TransformerMixin, BaseEstimator):
         X = validate_data(self, X)
         n, d = X.shape
         if n < 2:
-            raise ValueError(f"Need at least 2 samples, got {n}.")
+            raise ValueError(f"Need at least 2 samples, got n_samples = {n}.")
         if self.whiten and n <= d:
             # PCA(whiten=True) keeps only min(n_samples, n_features) (and at
             # most n_samples - 1) components, so wide data yields a
@@ -358,6 +358,27 @@ class _BaseSliced(TransformerMixin, BaseEstimator):
         rng = np.random.default_rng(random_state)
         Z = rng.standard_normal((n_samples, self.n_features_in_))
         return self.inverse_transform(Z)
+
+    def get_feature_names_out(self, input_features=None) -> np.ndarray:
+        """Feature names of the transformed output (``<class>0 ..``).
+
+        Enables ``set_output(transform="pandas")`` on the transformer.
+
+        Parameters
+        ----------
+        input_features : ignored
+            Present for scikit-learn API compatibility.
+
+        Returns
+        -------
+        names : np.ndarray of shape (n_features_in_,)
+            Output feature names, prefixed with the lowercased class name.
+        """
+        check_is_fitted(self)
+        prefix = type(self).__name__.lower()
+        return np.asarray(
+            [f"{prefix}{i}" for i in range(self.n_features_in_)], dtype=object
+        )
 
 
 class GIS(_BaseSliced):

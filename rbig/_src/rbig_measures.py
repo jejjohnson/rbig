@@ -322,3 +322,317 @@ def estimate_kld(
     model_Y = AnnealedRBIG(**kwargs)
     model_Y.fit(Y)
     return kl_divergence_rbig_reduction(model_Y, X, rbig_kwargs=kwargs)
+
+
+# ---------------------------------------------------------------------------
+# Extended measures (issue #124): CMI, DTC, O-information, interaction
+# information, JSD, pairwise MI — all reduced to entropy combinations.
+# ---------------------------------------------------------------------------
+
+
+def _clamp(value: float, lo: float, hi: float, name: str, tol: float = 0.05) -> float:
+    """Clamp an estimate to its theoretical range, warning on large cuts.
+
+    Silent clamping is how estimator bias hides: when the raw value violates
+    the bound by more than ``tol`` nats, a ``UserWarning`` reports it so the
+    bias is visible while downstream code still receives a valid value.
+    """
+    clipped = float(min(max(value, lo), hi))
+    if abs(clipped - value) > tol:
+        import warnings
+
+        warnings.warn(
+            f"{name} estimate {value:.4f} clamped to {clipped:.4f} "
+            f"(theoretical range [{lo}, {hi}]); the excess indicates "
+            "estimator bias at this sample size.",
+            UserWarning,
+            stacklevel=3,
+        )
+    return clipped
+
+
+def estimate_cmi(
+    X: np.ndarray, Y: np.ndarray, Z: np.ndarray, **rbig_kwargs: Any
+) -> float:
+    """Estimate conditional mutual information I(X; Y | Z).
+
+    Uses the entropy decomposition (4 RBIG fits)::
+
+        I(X; Y | Z) = H([X,Z]) + H([Y,Z]) - H([X,Y,Z]) - H(Z)
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n_samples, d_x)
+        Samples of X.
+    Y : np.ndarray of shape (n_samples, d_y)
+        Samples of Y.
+    Z : np.ndarray of shape (n_samples, d_z)
+        Samples of the conditioning variable.
+    **rbig_kwargs
+        Forwarded to ``AnnealedRBIG`` for all four fits.
+
+    Returns
+    -------
+    cmi : float
+        Estimated conditional MI in nats (clamped to >= 0 with a warning
+        when the raw estimate is materially negative).
+    """
+    h_xz = estimate_entropy(np.hstack([X, Z]), **rbig_kwargs)
+    h_yz = estimate_entropy(np.hstack([Y, Z]), **rbig_kwargs)
+    h_xyz = estimate_entropy(np.hstack([X, Y, Z]), **rbig_kwargs)
+    h_z = estimate_entropy(Z, **rbig_kwargs)
+    return _clamp(h_xz + h_yz - h_xyz - h_z, 0.0, np.inf, "CMI")
+
+
+def estimate_dtc(X: np.ndarray, **rbig_kwargs: Any) -> float:
+    """Estimate dual total correlation (binding information) of X.
+
+    Uses the entropy decomposition (d + 1 RBIG fits)::
+
+        DTC(X) = sum_i H(X_{-i}) - (d - 1) * H(X)
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n_samples, d)
+        Data matrix (d >= 2).
+    **rbig_kwargs
+        Forwarded to ``AnnealedRBIG``.
+
+    Returns
+    -------
+    dtc : float
+        Estimated dual total correlation in nats (clamped to >= 0).
+    """
+    d = X.shape[1]
+    if d < 2:
+        raise ValueError("DTC requires at least 2 dimensions.")
+    h_joint = estimate_entropy(X, **rbig_kwargs)
+    h_minus = sum(
+        estimate_entropy(np.delete(X, i, axis=1), **rbig_kwargs) for i in range(d)
+    )
+    return _clamp(h_minus - (d - 1) * h_joint, 0.0, np.inf, "DTC")
+
+
+def estimate_o_information(X: np.ndarray, **rbig_kwargs: Any) -> float:
+    """Estimate the O-information Omega(X) = TC(X) - DTC(X).
+
+    Positive values indicate redundancy-dominated interdependence, negative
+    values synergy-dominated (Rosas et al. 2019).  Roughly 2d + 1 RBIG fits.
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n_samples, d)
+        Data matrix (d >= 3 for a meaningful sign).
+    **rbig_kwargs
+        Forwarded to ``AnnealedRBIG``.
+
+    Returns
+    -------
+    omega : float
+        Estimated O-information in nats (signed; not clamped).
+    """
+    return float(estimate_tc(X, **rbig_kwargs) - estimate_dtc(X, **rbig_kwargs))
+
+
+def estimate_interaction_information(
+    X: np.ndarray, Y: np.ndarray, Z: np.ndarray, **rbig_kwargs: Any
+) -> float:
+    """Estimate interaction information II(X; Y; Z) = I(X;Y|Z) - I(X;Y).
+
+    Signed: positive means Z enhances the X-Y dependence (synergy),
+    negative means Z explains part of it (redundancy).  About 7 RBIG fits.
+
+    Parameters
+    ----------
+    X, Y, Z : np.ndarray of shape (n_samples, d_*)
+        Samples of the three variables.
+    **rbig_kwargs
+        Forwarded to ``AnnealedRBIG``.
+
+    Returns
+    -------
+    ii : float
+        Estimated interaction information in nats (signed; not clamped).
+    """
+    # Raw (unclamped) CMI so the sign structure is preserved.
+    h_xz = estimate_entropy(np.hstack([X, Z]), **rbig_kwargs)
+    h_yz = estimate_entropy(np.hstack([Y, Z]), **rbig_kwargs)
+    h_xyz = estimate_entropy(np.hstack([X, Y, Z]), **rbig_kwargs)
+    h_z = estimate_entropy(Z, **rbig_kwargs)
+    cmi_raw = h_xz + h_yz - h_xyz - h_z
+    return float(cmi_raw - estimate_mi(X, Y, **rbig_kwargs))
+
+
+def estimate_jsd(X: np.ndarray, Y: np.ndarray, **rbig_kwargs: Any) -> float:
+    """Estimate the Jensen-Shannon divergence JSD(P || Q).
+
+    Uses the mixture-entropy identity (3 RBIG fits)::
+
+        JSD = H(M) - (H(P) + H(Q)) / 2,   M = (P + Q) / 2
+
+    with the mixture represented by an equal-size balanced concatenation
+    of the two samples.  Bounded in [0, ln 2]; tail-sensitive like every
+    sample-based divergence — prefer tail-extended marginals (see the
+    marginal ``tail`` parameter) when the supports differ.
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n_p, d)
+        Samples from P.
+    Y : np.ndarray of shape (n_q, d)
+        Samples from Q.
+    **rbig_kwargs
+        Forwarded to ``AnnealedRBIG``.
+
+    Returns
+    -------
+    jsd : float
+        Estimated JSD in nats, clamped to [0, ln 2].
+    """
+    m = min(X.shape[0], Y.shape[0])
+    mixture = np.vstack([X[:m], Y[:m]])
+    h_m = estimate_entropy(mixture, **rbig_kwargs)
+    h_p = estimate_entropy(X, **rbig_kwargs)
+    h_q = estimate_entropy(Y, **rbig_kwargs)
+    return _clamp(h_m - 0.5 * (h_p + h_q), 0.0, float(np.log(2.0)), "JSD")
+
+
+def pairwise_mi_matrix(
+    X: np.ndarray, normalized: bool = False, **rbig_kwargs: Any
+) -> np.ndarray:
+    """Pairwise mutual-information matrix of the columns of X.
+
+    Diagonal entries are the marginal entropies; off-diagonal entries the
+    pairwise MI ``I(X_i; X_j)``.  Cost is 3 RBIG fits per pair — use
+    :class:`InformationMeasures` to amortize repeated queries.
+
+    Parameters
+    ----------
+    X : np.ndarray of shape (n_samples, d)
+        Data matrix.
+    normalized : bool, default False
+        Normalize off-diagonal entries to ``I / sqrt(H_i * H_j)``.
+    **rbig_kwargs
+        Forwarded to ``AnnealedRBIG``.
+
+    Returns
+    -------
+    M : np.ndarray of shape (d, d)
+        Symmetric MI matrix.
+    """
+    d = X.shape[1]
+    M = np.zeros((d, d))
+    for i in range(d):
+        M[i, i] = estimate_entropy(X[:, [i]], **rbig_kwargs)
+    for i in range(d):
+        for j in range(i + 1, d):
+            mi = estimate_mi(X[:, [i]], X[:, [j]], **rbig_kwargs)
+            if normalized:
+                denom = np.sqrt(max(M[i, i] * M[j, j], 1e-300))
+                mi = mi / denom
+            M[i, j] = M[j, i] = mi
+    return M
+
+
+class InformationMeasures:
+    """Fit-caching interface to the RBIG information-theoretic measures.
+
+    Every measure reduces to a combination of joint entropies over column
+    subsets; this class caches each subset's entropy (one ``AnnealedRBIG``
+    fit per distinct subset), so composite quantities and repeated queries
+    do not refit.  On d=20 data the O-information alone needs ~2d+1 = 41
+    fits — caching is what makes interactive use viable.
+
+    Parameters
+    ----------
+    **rbig_kwargs
+        Forwarded to every internal ``AnnealedRBIG`` fit (e.g.
+        ``n_layers=40, tol=1e-5, random_state=0``).
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from rbig import InformationMeasures
+    >>> X = np.random.default_rng(0).standard_normal((500, 3))
+    >>> im = InformationMeasures(n_layers=10, random_state=0).fit(X)
+    >>> float(im.tc()) >= 0.0
+    True
+    """
+
+    def __init__(self, **rbig_kwargs: Any):
+        self.rbig_kwargs = rbig_kwargs
+        self._cache: dict[tuple[int, ...], float] = {}
+        self._X: np.ndarray | None = None
+
+    def fit(self, X: np.ndarray) -> InformationMeasures:
+        """Store the data and clear the entropy cache."""
+        self._X = np.asarray(X, dtype=float)
+        self._cache = {}
+        return self
+
+    def _require_fit(self) -> np.ndarray:
+        if self._X is None:
+            raise ValueError("Call fit(X) before querying measures.")
+        return self._X
+
+    def entropy(self, cols: tuple[int, ...] | list[int] | None = None) -> float:
+        """Joint entropy of the given columns (cached; 1 fit per subset)."""
+        X = self._require_fit()
+        key = tuple(sorted(range(X.shape[1]) if cols is None else cols))
+        if key not in self._cache:
+            self._cache[key] = estimate_entropy(X[:, list(key)], **self.rbig_kwargs)
+        return self._cache[key]
+
+    def mi(self, cols_a: list[int], cols_b: list[int]) -> float:
+        """Mutual information between two column groups (<= 3 fits)."""
+        joint = tuple(sorted([*cols_a, *cols_b]))
+        return _clamp(
+            self.entropy(cols_a) + self.entropy(cols_b) - self.entropy(joint),
+            0.0,
+            np.inf,
+            "MI",
+        )
+
+    def cmi(self, cols_a: list[int], cols_b: list[int], cols_c: list[int]) -> float:
+        """Conditional MI I(A; B | C) (<= 4 fits)."""
+        return _clamp(
+            self.entropy([*cols_a, *cols_c])
+            + self.entropy([*cols_b, *cols_c])
+            - self.entropy([*cols_a, *cols_b, *cols_c])
+            - self.entropy(cols_c),
+            0.0,
+            np.inf,
+            "CMI",
+        )
+
+    def tc(self) -> float:
+        """Total correlation of all columns (<= d + 1 fits)."""
+        X = self._require_fit()
+        marginals = sum(self.entropy([i]) for i in range(X.shape[1]))
+        return _clamp(marginals - self.entropy(), 0.0, np.inf, "TC")
+
+    def dtc(self) -> float:
+        """Dual total correlation of all columns (<= d + 1 fits)."""
+        X = self._require_fit()
+        d = X.shape[1]
+        h_minus = sum(self.entropy([j for j in range(d) if j != i]) for i in range(d))
+        return _clamp(h_minus - (d - 1) * self.entropy(), 0.0, np.inf, "DTC")
+
+    def o_information(self) -> float:
+        """O-information Omega = TC - DTC (signed; <= 2d + 1 fits)."""
+        return float(self.tc() - self.dtc())
+
+    def pairwise_mi_matrix(self, normalized: bool = False) -> np.ndarray:
+        """Pairwise MI matrix over all columns (cached entropies)."""
+        X = self._require_fit()
+        d = X.shape[1]
+        M = np.zeros((d, d))
+        for i in range(d):
+            M[i, i] = self.entropy([i])
+        for i in range(d):
+            for j in range(i + 1, d):
+                mi = self.mi([i], [j])
+                if normalized:
+                    mi = mi / np.sqrt(max(M[i, i] * M[j, j], 1e-300))
+                M[i, j] = M[j, i] = mi
+        return M
