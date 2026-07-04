@@ -152,6 +152,17 @@ def test_o_information_signs():
     c = np.sign(a * b) + 0.1 * rng.standard_normal((5000, 1))
     synergy = np.hstack([a, b, c])
     assert estimate_o_information(synergy, **FAST) < -0.05
-    # Correlated Gaussians: Omega ~ 0.
-    X, _ = make_equicorrelated_gaussian(n_samples=5000, d=3, rho=0.6, seed=1)
-    assert abs(estimate_o_information(X, **FAST)) < 0.1
+    # Correlated Gaussians: Omega matches the analytic value.  (The draft
+    # design doc claimed "Omega = 0 for multivariate Gaussians" — that is
+    # false: for equicorrelated rho=0.6, d=3, TC = 0.522 and DTC = 0.375,
+    # so Omega = +0.147, redundancy-dominated.  The estimator agrees.)
+    from tests.truth import equicorr_tc, gaussian_entropy
+
+    rho, d = 0.6, 3
+    cov3 = np.full((d, d), rho)
+    np.fill_diagonal(cov3, 1.0)
+    h3 = gaussian_entropy(cov3)
+    h2 = gaussian_entropy(cov3[:2, :2])
+    omega_true = equicorr_tc(d, rho) - (d * h2 - (d - 1) * h3)
+    X, _ = make_equicorrelated_gaussian(n_samples=5000, d=d, rho=rho, seed=1)
+    assert estimate_o_information(X, **FAST) == pytest.approx(omega_true, abs=0.07)
