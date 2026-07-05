@@ -55,10 +55,14 @@ XFAIL: dict[str, dict[str, str]] = {
     "RBIGOutlierDetector": {
         "check_methods_subset_invariance": (
             "Inherited from AnnealedRBIG (decision_function is its "
-            "score_samples shifted by a constant): empirical-CDF ties "
-            "resolve differently on numpy/BLAS builds whose matmul "
-            "results depend on batch size (observed on macOS CI). See the "
-            "AnnealedRBIG entry above for the mechanism."
+            "score_samples shifted by a constant), with two amplification "
+            "paths: on batch-size-dependent BLAS builds the empirical-CDF "
+            "tie flips move the continuous scores past atol (macOS CI), "
+            "and on every platform `predict` discretizes at the "
+            "contamination threshold, so a sub-tolerance batch epsilon on "
+            "a point sitting at decision ~ 0 flips its +/-1 label "
+            "(observed on ubuntu 3.13 CI). See the AnnealedRBIG entry for "
+            "the tie mechanism."
         ),
     },
 }
