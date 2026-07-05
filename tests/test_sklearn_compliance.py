@@ -15,7 +15,16 @@ from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 from sklearn.utils.estimator_checks import parametrize_with_checks
 
-from rbig import GIS, SIG, AnnealedRBIG, make_banana, make_rings
+from rbig import (
+    GIS,
+    SIG,
+    AnnealedRBIG,
+    RBIGMISelector,
+    RBIGOutlierDetector,
+    RBIGReducer,
+    make_banana,
+    make_rings,
+)
 
 # The registry of public estimators under full compliance, and the only
 # sanctioned place to skip a check: map check name -> documented reason.
@@ -23,6 +32,11 @@ ESTIMATOR_REGISTRY = [
     AnnealedRBIG(n_layers=3, patience=2),
     GIS(n_layers=3, patience=2),
     SIG(n_layers=3, patience=2),
+    RBIGOutlierDetector(n_layers=3, contamination=0.1, random_state=0),
+    RBIGReducer(n_components=1),
+    RBIGMISelector(
+        n_features_to_select=1, strategy="filter", n_layers_rbig=3, random_state=0
+    ),
 ]
 # Per-class check name -> documented reason; non-strict xfails.
 XFAIL: dict[str, dict[str, str]] = {

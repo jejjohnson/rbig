@@ -19,6 +19,7 @@ from rbig._src.datasets import (
     make_variance_leak,
     make_xor_labels,
 )
+from rbig._src.decomposition import RBIGReducer
 from rbig._src.densities import (
     Cube,
     Exp,
@@ -34,6 +35,7 @@ from rbig._src.densities import (
     marginal_entropy,
     total_correlation,
 )
+from rbig._src.feature_selection import RBIGMISelector
 from rbig._src.image import (
     DCTRotation,
     HartleyRotation,
@@ -72,6 +74,7 @@ from rbig._src.metrics import (
     total_correlation_rbig,
 )
 from rbig._src.model import AnnealedRBIG, RBIGLayer
+from rbig._src.outliers import RBIGOutlierDetector
 from rbig._src.parametric import (
     BoxCoxTransform,
     LogitTransform,
@@ -162,6 +165,9 @@ __all__ = [
     "QuantileGaussianizer",
     "QuantileTransform",
     "RBIGLayer",
+    "RBIGMISelector",
+    "RBIGOutlierDetector",
+    "RBIGReducer",
     "RQSpline",
     "RandomChannelRotation",
     "RandomOrthogonalProjection",
