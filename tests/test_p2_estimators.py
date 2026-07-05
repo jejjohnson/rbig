@@ -244,6 +244,39 @@ def test_selector_support_and_path_consistency():
     assert sel.transform(X).shape[1] == 2
 
 
+def test_selector_categorical_labels():
+    """String class labels are ordinal-encoded before dithering."""
+    rng = np.random.default_rng(0)
+    X = rng.standard_normal((500, 3))
+    y = np.where(X[:, 1] > 0, "dog", "cat")
+    sel = RBIGMISelector(n_features_to_select=1, strategy="filter", **SEL_FAST)
+    sel.fit(X, y)
+    assert list(sel.get_support(indices=True)) == [1]
+
+
+def test_selector_mi_threshold_can_empty_selection():
+    """An unmet mi_threshold yields an empty (n, 0) selection."""
+    rng = np.random.default_rng(0)
+    X = rng.standard_normal((400, 3))
+    y = rng.standard_normal(400)  # independent target: all MI ~ 0
+    sel = RBIGMISelector(
+        n_features_to_select=2, strategy="filter", mi_threshold=0.2, **SEL_FAST
+    ).fit(X, y)
+    assert sel.support_.sum() == 0
+    with pytest.warns(UserWarning, match="No features were selected"):
+        assert sel.transform(X).shape == (400, 0)
+
+
+def test_selector_joint_small_d():
+    """Exhaustive joint selection finds the informative pair at small d."""
+    rng = np.random.default_rng(0)
+    X = rng.standard_normal((500, 3))
+    y = X[:, 0] + X[:, 2] + 0.2 * rng.standard_normal(500)
+    sel = RBIGMISelector(n_features_to_select=2, strategy="joint", **SEL_FAST)
+    sel.fit(X, y)
+    assert set(sel.selected_features_) == {0, 2}
+
+
 def test_selector_fractional_k_and_validation():
     rng = np.random.default_rng(0)
     X = rng.standard_normal((200, 4))
@@ -254,6 +287,8 @@ def test_selector_fractional_k_and_validation():
     assert sel.support_.sum() == 2
     with pytest.raises(ValueError, match="strategy"):
         RBIGMISelector(strategy="magic").fit(X, y)
+    with pytest.raises(ValueError, match="positive integer"):
+        RBIGMISelector(n_features_to_select=-1, strategy="filter").fit(X, y)
 
 
 def test_selector_joint_guard_raises_actionably():

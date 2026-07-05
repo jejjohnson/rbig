@@ -9,8 +9,9 @@ entropy combinations).  Four strategies of increasing fidelity and cost:
 - ``"greedy"`` — forward selection on exact *conditional* MI
   ``I(X_j; Y | X_S) = I([X_j, X_S]; Y) - I(X_S; Y)``; captures synergy
   (XOR-style feature pairs) that univariate filters provably miss.
-- ``"joint"`` — exhaustive ``argmax_S I(X_S; Y)`` with sub-additivity
-  pruning; guarded to ``d <= 20`` unless ``force=True``.
+- ``"joint"`` — exhaustive ``argmax_S I(X_S; Y)``; guarded to
+  ``d <= 20`` unless ``force=True`` (no pruning: MI is not sub-additive,
+  synergistic groups can beat the sum of their univariate scores).
 
 Discrete targets are dithered with seeded uniform jitter before MI
 estimation (the marginal-layer recipe from the P0 batch), mirroring how
@@ -108,7 +109,14 @@ class RBIGMISelector(SelectorMixin, BaseEstimator):
         }
 
     def _prepare_y(self, y: np.ndarray) -> np.ndarray:
-        """Column-shape y; dither discrete targets with seeded jitter."""
+        """Column-shape y; dither discrete targets with seeded jitter.
+
+        Non-numeric (categorical) labels are ordinal-encoded first, so
+        string classes work exactly like integer classes.
+        """
+        y = np.asarray(y)
+        if not np.issubdtype(y.dtype, np.number):
+            _classes, y = np.unique(y, return_inverse=True)
         y = np.asarray(y, dtype=float).reshape(-1, 1)
         uniques = np.unique(y)
         if uniques.size < max(20, int(np.sqrt(y.size))):
@@ -172,7 +180,13 @@ class RBIGMISelector(SelectorMixin, BaseEstimator):
                 raise ValueError("Fractional n_features_to_select must be in (0, 1].")
             k = max(1, int(round(self.n_features_to_select * d)))
         else:
-            k = min(int(self.n_features_to_select), d)
+            k = int(self.n_features_to_select)
+            if k < 1:
+                raise ValueError(
+                    f"n_features_to_select must be a positive integer or a "
+                    f"fraction in (0, 1]; got {self.n_features_to_select!r}."
+                )
+            k = min(k, d)
         if self.strategy == "joint" and d > 20 and not self.force:
             raise ValueError(
                 f"strategy='joint' is exhaustive and guarded to d <= 20 "
@@ -199,12 +213,13 @@ class RBIGMISelector(SelectorMixin, BaseEstimator):
         else:  # joint
             selected, path = self._fit_joint(d, k)
 
-        if self.mi_threshold is not None:
-            kept = [j for j in selected if self.mi_scores_[j] >= self.mi_threshold]
-            # Synergistic picks may have low univariate MI but real joint
-            # gain; only apply the threshold to filter/mrmr semantics.
-            if self.strategy in ("filter", "mrmr"):
-                selected = kept or selected[:1]
+        if self.mi_threshold is not None and self.strategy in ("filter", "mrmr"):
+            # Honor the cutoff fully: if every candidate is weaker than the
+            # requested minimum MI, the selection is empty and transform
+            # returns an (n, 0) matrix — screening semantics, like
+            # SelectKBest(k=0).  (Greedy/joint scores are group gains, so
+            # the univariate threshold does not apply to them.)
+            selected = [j for j in selected if self.mi_scores_[j] >= self.mi_threshold]
 
         self.selected_features_ = selected
         self.selection_path_ = path
@@ -253,10 +268,11 @@ class RBIGMISelector(SelectorMixin, BaseEstimator):
         from itertools import combinations
 
         best_set, best_rel = None, -np.inf
+        # No univariate-sum pruning: MI is not sub-additive (synergistic
+        # groups can beat the sum of their univariate scores), so any such
+        # bound could skip the true argmax.  The d <= 20 guard is the only
+        # cost control; joint is exponential by design.
         for combo in combinations(range(d), k):
-            # Sub-additivity pruning: I(X_S; Y) <= sum_j I(X_j; Y).
-            if sum(self.mi_scores_[list(combo)]) <= best_rel:
-                continue
             rel = self._joint_relevance(combo)
             if rel > best_rel:
                 best_set, best_rel = combo, rel

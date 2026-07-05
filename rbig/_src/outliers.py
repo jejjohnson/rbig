@@ -39,7 +39,12 @@ class RBIGOutlierDetector(OutlierMixin, BaseEstimator):
         Total-correlation convergence tolerance of the underlying flow.
     contamination : float, default 0.05
         Expected fraction of outliers; sets the decision threshold at the
-        corresponding quantile of the training scores.
+        corresponding quantile of the training scores.  Points scoring
+        exactly at the threshold count as inliers, so on data with heavy
+        score ties (duplicated/quantized samples) the flagged fraction
+        can undershoot the requested rate — in the degenerate all-tied
+        case nothing is flagged.  With continuous scores the calibration
+        is exact to ~1/n.
     patience : int, default 10
         Non-improving layers tolerated before the flow stops early.
     rotation : str, default "pca"
