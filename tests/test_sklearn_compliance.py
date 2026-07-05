@@ -15,7 +15,16 @@ from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 from sklearn.utils.estimator_checks import parametrize_with_checks
 
-from rbig import GIS, SIG, AnnealedRBIG, make_banana, make_rings
+from rbig import (
+    GIS,
+    SIG,
+    AnnealedRBIG,
+    RBIGMISelector,
+    RBIGOutlierDetector,
+    RBIGReducer,
+    make_banana,
+    make_rings,
+)
 
 # The registry of public estimators under full compliance, and the only
 # sanctioned place to skip a check: map check name -> documented reason.
@@ -23,6 +32,11 @@ ESTIMATOR_REGISTRY = [
     AnnealedRBIG(n_layers=3, patience=2),
     GIS(n_layers=3, patience=2),
     SIG(n_layers=3, patience=2),
+    RBIGOutlierDetector(n_layers=3, contamination=0.1, random_state=0),
+    RBIGReducer(n_components=1),
+    RBIGMISelector(
+        n_features_to_select=1, strategy="filter", n_layers_rbig=3, random_state=0
+    ),
 ]
 # Per-class check name -> documented reason; non-strict xfails.
 XFAIL: dict[str, dict[str, str]] = {
@@ -36,6 +50,19 @@ XFAIL: dict[str, dict[str, str]] = {
             "inputs after the first rotation — a one-rank jump at small n "
             "is a visible probit step. GIS/SIG use continuous splines and "
             "are unaffected."
+        ),
+    },
+    "RBIGOutlierDetector": {
+        "check_methods_subset_invariance": (
+            "Inherited from AnnealedRBIG (decision_function is its "
+            "score_samples shifted by a constant), with two amplification "
+            "paths: on batch-size-dependent BLAS builds the empirical-CDF "
+            "tie flips move the continuous scores past atol (macOS CI), "
+            "and on every platform `predict` discretizes at the "
+            "contamination threshold, so a sub-tolerance batch epsilon on "
+            "a point sitting at decision ~ 0 flips its +/-1 label "
+            "(observed on ubuntu 3.13 CI). See the AnnealedRBIG entry for "
+            "the tie mechanism."
         ),
     },
 }
