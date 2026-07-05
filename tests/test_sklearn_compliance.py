@@ -52,6 +52,15 @@ XFAIL: dict[str, dict[str, str]] = {
             "are unaffected."
         ),
     },
+    "RBIGOutlierDetector": {
+        "check_methods_subset_invariance": (
+            "Inherited from AnnealedRBIG (decision_function is its "
+            "score_samples shifted by a constant): empirical-CDF ties "
+            "resolve differently on numpy/BLAS builds whose matmul "
+            "results depend on batch size (observed on macOS CI). See the "
+            "AnnealedRBIG entry above for the mechanism."
+        ),
+    },
 }
 
 
