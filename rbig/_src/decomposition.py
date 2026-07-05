@@ -240,6 +240,4 @@ class RBIGReducer(TransformerMixin, BaseEstimator):
             Output feature names.
         """
         check_is_fitted(self)
-        return np.asarray(
-            [f"rbigreducer{i}" for i in range(self.d_out_)], dtype=object
-        )
+        return np.asarray([f"rbigreducer{i}" for i in range(self.d_out_)], dtype=object)

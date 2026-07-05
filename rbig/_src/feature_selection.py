@@ -81,7 +81,7 @@ class RBIGMISelector(SelectorMixin, BaseEstimator):
 
     def __init__(
         self,
-        n_features_to_select: int | float = 10,
+        n_features_to_select: float = 10,
         strategy: str = "greedy",
         mi_threshold: float | None = None,
         n_layers_rbig: int = 25,

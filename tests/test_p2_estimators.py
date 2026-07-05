@@ -31,7 +31,9 @@ from rbig import (
 @pytest.fixture(scope="module")
 def banana_detector():
     X, _ = make_banana(n_samples=2000, seed=0)
-    return X, RBIGOutlierDetector(n_layers=10, contamination=0.05, random_state=0).fit(X)
+    return X, RBIGOutlierDetector(n_layers=10, contamination=0.05, random_state=0).fit(
+        X
+    )
 
 
 def test_outlier_contamination_calibration(banana_detector):
@@ -143,9 +145,7 @@ def test_reducer_ranks_signal_above_noise():
         kept = np.flatnonzero(red.keep_mask_)
         # The kept whitened axes carry the mode structure: each correlates
         # strongly with a mode label; dropped axes do not.
-        corr_kept = max(
-            abs(np.corrcoef(Z[:, j], meta["labels"])[0, 1]) for j in kept
-        )
+        corr_kept = max(abs(np.corrcoef(Z[:, j], meta["labels"])[0, 1]) for j in kept)
         assert corr_kept > 0.5, seed
         # And the negentropy gap is decisive: kept min >> dropped max.
         dropped = np.flatnonzero(~red.keep_mask_)
@@ -169,7 +169,9 @@ def test_reducer_reconstruction_error_monotone_in_threshold():
         red = RBIGReducer(n_components=k).fit(X)
         errors.append(red.reconstruction_error(X))
     assert errors[0] == pytest.approx(0.0, abs=1e-10)  # keep-all is lossless
-    assert all(e2 >= e1 - 1e-12 for e1, e2 in zip(errors, errors[1:]))
+    from itertools import pairwise
+
+    assert all(e2 >= e1 - 1e-12 for e1, e2 in pairwise(errors))
 
 
 def test_reducer_auto_threshold_and_feature_names():
@@ -332,12 +334,18 @@ def test_selector_recovery_vs_selectkbest():
     recovered_rbig, recovered_skb = [], []
     for seed in range(3):
         X, y, coef = make_regression(
-            n_samples=3000, n_features=10, n_informative=5, coef=True,
-            random_state=seed, noise=1.0,
+            n_samples=3000,
+            n_features=10,
+            n_informative=5,
+            coef=True,
+            random_state=seed,
+            noise=1.0,
         )
         informative = set(np.flatnonzero(coef))
         sel = RBIGMISelector(
-            n_features_to_select=5, strategy="greedy", n_layers_rbig=10,
+            n_features_to_select=5,
+            strategy="greedy",
+            n_layers_rbig=10,
             random_state=seed,
         ).fit(X, y)
         recovered_rbig.append(len(informative & set(sel.selected_features_)))
