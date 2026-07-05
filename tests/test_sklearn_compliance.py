@@ -65,6 +65,20 @@ XFAIL: dict[str, dict[str, str]] = {
             "are unaffected."
         ),
     },
+    "RBIGKMeans": {
+        "check_methods_subset_invariance": (
+            "Inherited from AnnealedRBIG: transform/predict/predict_proba/"
+            "score_samples all route through the flow's transform, and the "
+            "check evaluates on the training points, which sit exactly on "
+            "the empirical-CDF nodes — a batch-size-dependent matmul "
+            "epsilon flips their interpolation rank into a visible probit "
+            "step, and the rotation then spreads it across coordinates "
+            "(observed on ubuntu 3.10/3.13 CI at n=30 with ~80% of "
+            "entries shifted; macOS passed the same run — the flip side "
+            "of the environment-conditionality documented on the "
+            "AnnealedRBIG entry)."
+        ),
+    },
     "RBIGOutlierDetector": {
         "check_methods_subset_invariance": (
             "Inherited from AnnealedRBIG (decision_function is its "
