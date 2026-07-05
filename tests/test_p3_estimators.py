@@ -272,6 +272,32 @@ def test_classifier_class_guards():
         RBIGBayesClassifier(min_samples_per_class=1).fit(X, y)
 
 
+def test_classifier_log_likelihood_length_mismatch_raises():
+    X, y = _rings2(120, 5)
+    clf = RBIGBayesClassifier(n_layers=3, random_state=0).fit(X, y)
+    with pytest.raises(ValueError, match="entries"):
+        clf.log_likelihood(X, y[:-10])  # silent prefix scoring is a bug
+
+
+def test_classifier_small_class_constant_feature_uses_empirical():
+    """A small class with a zero-variance column must not crash on KDE.
+
+    gaussian_kde raises on singular columns; the fallback detects the
+    constant feature and keeps the empirical marginals instead.
+    """
+    rng = np.random.default_rng(0)
+    X = np.column_stack([rng.standard_normal(215), rng.standard_normal(215)])
+    X[:15, 1] = 0.0  # class 0: 15 samples with a constant second feature
+    X[:15, 0] += 5.0
+    y = np.array([0] * 15 + [1] * 200)
+    with pytest.warns(UserWarning) as record:
+        # Two warnings: the small-class fallback and the marginal's own
+        # zero-variance identity notice.
+        clf = RBIGBayesClassifier(n_layers=5, random_state=0).fit(X, y)
+    assert any("empirical marginals" in str(w.message) for w in record)
+    assert clf.predict(X).shape == (215,)
+
+
 def test_classifier_small_class_kde_fallback_warns():
     X, y = _rings2(150, 3)
     idx = np.concatenate([np.where(y == 0)[0][:15], np.where(y == 1)[0]])
@@ -811,6 +837,20 @@ def test_fair_alpha_sweep_monotone():
     assert apreds[1] <= apreds[0] + 0.02, apreds
     assert apreds[2] <= apreds[1] + 0.02, apreds
     assert min(tasks) >= max(tasks) - 0.02, tasks
+
+
+def test_fair_transport_integer_input_not_truncated():
+    """Integer feature matrices must not truncate transported floats."""
+    rng = np.random.default_rng(0)
+    A = np.repeat([0, 1], 150)
+    X = rng.integers(0, 20, size=(300, 3))  # count-like integer features
+    ft = RBIGFairTransformer(strategy="transport", n_layers=3, random_state=0).fit(
+        X, A=A
+    )
+    out = ft.transform(X, A=A)
+    assert np.issubdtype(out.dtype, np.floating)
+    # Continuous transport output: truncation would leave them integral.
+    assert not np.allclose(out, np.round(out))
 
 
 def test_fair_deterministic_given_seed():

@@ -152,21 +152,29 @@ class RBIGBayesClassifier(ClassifierMixin, BaseEstimator):
                 "marginal_kwargs": {"tail": "gaussian"},
             }
             if n_c < min_n:
+                # KDE marginals smooth the sparse empirical CDF; the
+                # shallow budget avoids overfitting n_c points.  But
+                # gaussian_kde cannot handle zero-variance columns, so a
+                # class with constant features keeps the empirical
+                # marginals (which have a constant-feature fallback).
+                has_constant = bool((X[y_idx == c].var(axis=0) == 0).any())
+                marginal = "empirical" if has_constant else "KDE"
                 warnings.warn(
                     f"Class {self.classes_[c]!r} has {n_c} samples "
-                    f"(< {min_n}); using KDE marginals and a reduced "
-                    f"layer budget for its density.",
+                    f"(< {min_n}); using {marginal} marginals and a "
+                    f"reduced layer budget for its density.",
                     UserWarning,
                     stacklevel=2,
                 )
-                # KDE marginals smooth the sparse empirical CDF; the
-                # shallow budget avoids overfitting n_c points.
                 kwargs = {
                     "n_layers": min(self.n_layers, 10),
                     "tol": self.tol,
                     "random_state": self.random_state,
-                    "strategy": [["pca", "kde"]],
                 }
+                if has_constant:
+                    kwargs["marginal_kwargs"] = {"tail": "gaussian"}
+                else:
+                    kwargs["strategy"] = [["pca", "kde"]]
             self.class_models_.append(AnnealedRBIG(**kwargs).fit(X[y_idx == c]))
         return self
 
@@ -255,8 +263,14 @@ class RBIGBayesClassifier(ClassifierMixin, BaseEstimator):
             ``mean_i log p(y_i | x_i)`` in nats (higher is better).
         """
         log_proba = self.predict_log_proba(X)
-        y = np.asarray(y)
+        y = np.asarray(y).ravel()
+        if y.shape[0] != log_proba.shape[0]:
+            raise ValueError(
+                f"y has {y.shape[0]} entries, X has {log_proba.shape[0]} rows."
+            )
         idx = np.searchsorted(self.classes_, y)
+        # Short-circuit keeps classes_[idx] safe: it only runs when every
+        # idx is in range.
         if (idx >= self.classes_.size).any() or (self.classes_[idx] != y).any():
             raise ValueError("y contains labels not seen during fit.")
         return float(log_proba[np.arange(y.size), idx].mean())

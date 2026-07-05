@@ -243,8 +243,13 @@ class RBIGFairTransformer(TransformerMixin, BaseEstimator):
             The fitted transformer.
         """
         # sensitive_col mode consumes one column, so at least 2 are needed.
+        # dtype=float: integer inputs would otherwise truncate the
+        # continuous transport outputs written into empty_like buffers.
         X = validate_data(
-            self, X, ensure_min_features=2 if self.sensitive_col is not None else 1
+            self,
+            X,
+            dtype=float,
+            ensure_min_features=2 if self.sensitive_col is not None else 1,
         )
         if self.strategy not in _STRATEGIES:
             raise ValueError(
@@ -351,7 +356,8 @@ class RBIGFairTransformer(TransformerMixin, BaseEstimator):
         return feat - (fc @ sub.T) @ sub
 
     def _transport(self, feat: np.ndarray, a: np.ndarray) -> np.ndarray:
-        out = np.empty_like(feat)
+        # float buffer: transported values are continuous regardless of input
+        out = np.empty_like(feat, dtype=float)
         for g, flow in self.group_flows_.items():
             mask = a == g
             if not mask.any():
@@ -368,7 +374,8 @@ class RBIGFairTransformer(TransformerMixin, BaseEstimator):
         return out
 
     def _conditional(self, feat: np.ndarray, a: np.ndarray, y: np.ndarray):
-        out = np.empty_like(feat)
+        # float buffer: transported values are continuous regardless of input
+        out = np.empty_like(feat, dtype=float)
         done = np.zeros(feat.shape[0], dtype=bool)
         for (g, s), flow in self.stratum_flows_.items():
             mask = (a == g) & (y == s)
@@ -405,7 +412,7 @@ class RBIGFairTransformer(TransformerMixin, BaseEstimator):
             ``sensitive_col`` mode, ``n_features`` otherwise.
         """
         check_is_fitted(self)
-        X = validate_data(self, X, reset=False)
+        X = validate_data(self, X, dtype=float, reset=False)
         feat, a = self._split_sensitive(X, A)
 
         if self.strategy in ("projection", "subspace"):
