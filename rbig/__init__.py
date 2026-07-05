@@ -8,6 +8,8 @@ from rbig._src.base import (
     MarginalBijector,
     RotationBijector,
 )
+from rbig._src.classify import RBIGBayesClassifier
+from rbig._src.cluster import RBIGKMeans
 from rbig._src.datasets import (
     make_banana,
     make_bimodal,
@@ -35,6 +37,8 @@ from rbig._src.densities import (
     marginal_entropy,
     total_correlation,
 )
+from rbig._src.diagnostics import ResidualDiagnostics
+from rbig._src.fairness import RBIGFairTransformer
 from rbig._src.feature_selection import RBIGMISelector
 from rbig._src.image import (
     DCTRotation,
@@ -164,6 +168,9 @@ __all__ = [
     "PicardRotation",
     "QuantileGaussianizer",
     "QuantileTransform",
+    "RBIGBayesClassifier",
+    "RBIGFairTransformer",
+    "RBIGKMeans",
     "RBIGLayer",
     "RBIGMISelector",
     "RBIGOutlierDetector",
@@ -172,6 +179,7 @@ __all__ = [
     "RandomChannelRotation",
     "RandomOrthogonalProjection",
     "RandomRotation",
+    "ResidualDiagnostics",
     "RotationBijector",
     "SIGLayer",
     "SplineGaussianizer",
