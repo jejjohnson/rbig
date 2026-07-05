@@ -9,7 +9,10 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import (
+    LinearRegression as _LinearRegression,
+    LogisticRegression,
+)
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
@@ -19,9 +22,13 @@ from rbig import (
     GIS,
     SIG,
     AnnealedRBIG,
+    RBIGBayesClassifier,
+    RBIGFairTransformer,
+    RBIGKMeans,
     RBIGMISelector,
     RBIGOutlierDetector,
     RBIGReducer,
+    ResidualDiagnostics,
     make_banana,
     make_rings,
 )
@@ -36,6 +43,12 @@ ESTIMATOR_REGISTRY = [
     RBIGReducer(n_components=1),
     RBIGMISelector(
         n_features_to_select=1, strategy="filter", n_layers_rbig=3, random_state=0
+    ),
+    RBIGKMeans(n_clusters=2, n_layers_rbig=3, n_init=2, random_state=0),
+    RBIGBayesClassifier(n_layers=3, min_samples_per_class=1, random_state=0),
+    ResidualDiagnostics(_LinearRegression(), n_layers_rbig=3, random_state=0),
+    RBIGFairTransformer(
+        strategy="projection", sensitive_col=0, n_layers=3, random_state=0
     ),
 ]
 # Per-class check name -> documented reason; non-strict xfails.

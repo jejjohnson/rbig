@@ -267,6 +267,14 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         Optional per-layer override list.  Each entry may be a string
         (rotation name) or a ``(rotation_name, marginal_name)`` pair.
         Entries cycle if the list is shorter than ``n_layers``.
+    marginal_kwargs : dict or None, default=None
+        Keyword arguments forwarded to the default
+        :class:`MarginalGaussianize` of every layer (ignored for layers
+        whose marginal is overridden by ``strategy``).  For example
+        ``{"tail": "gaussian"}`` fits parametric tails so that
+        log-densities stay finite and comparable beyond the training
+        support — required by cross-model likelihood comparisons such as
+        per-class Bayes classification.
     verbose : bool or int, default=False
         Controls progress bar display.  ``False`` (or ``0``) disables all
         progress bars.  ``True`` (or ``1``) shows a progress bar for the
@@ -339,6 +347,7 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         random_state: int | None = None,
         strategy: list | None = None,
         verbose: bool | int = False,
+        marginal_kwargs: dict | None = None,
     ):
         self.n_layers = n_layers
         self.rotation = rotation
@@ -347,6 +356,7 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
         self.random_state = random_state
         self.strategy = strategy
         self.verbose = verbose
+        self.marginal_kwargs = marginal_kwargs
 
     @property
     def zero_tolerance(self):
@@ -1279,7 +1289,7 @@ class AnnealedRBIG(TransformerMixin, BaseEstimator):
                 entry[1] if isinstance(entry, list | tuple) else "gaussianize"
             )
             return self._get_component(marginal_name, "marginal", layer_index)
-        return MarginalGaussianize()
+        return MarginalGaussianize(**(self.marginal_kwargs or {}))
 
     def _get_component(self, name: str, kind: str, seed: int = 0):
         """Instantiate a rotation or marginal component by name.
