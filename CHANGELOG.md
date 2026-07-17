@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.16](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.15...rbig-v0.1.16) (2026-07-17)
+
+
+### Features
+
+* add P0 foundation — test infrastructure, core hardening, marginal contract ([#135](https://github.com/jejjohnson/rbig/issues/135)) ([4ec1208](https://github.com/jejjohnson/rbig/commit/4ec12087498b0bd835ac75077c9b90aeac52916e)), closes [#132](https://github.com/jejjohnson/rbig/issues/132) [#120](https://github.com/jejjohnson/rbig/issues/120) [#121](https://github.com/jejjohnson/rbig/issues/121)
+* add P1 pillars — sklearn compliance, density workflow, IT extensions ([#137](https://github.com/jejjohnson/rbig/issues/137)) ([6814391](https://github.com/jejjohnson/rbig/commit/6814391fa0d720ce3d38fdd267212ff0e7fe9516)), closes [#122](https://github.com/jejjohnson/rbig/issues/122) [#123](https://github.com/jejjohnson/rbig/issues/123) [#124](https://github.com/jejjohnson/rbig/issues/124)
+* add P2 analytical estimators — outlier detector, negentropy reducer, MI selector ([#138](https://github.com/jejjohnson/rbig/issues/138)) ([e1115e6](https://github.com/jejjohnson/rbig/commit/e1115e62888ef6154d4995dbfb39f514e384a52b)), closes [#125](https://github.com/jejjohnson/rbig/issues/125) [#126](https://github.com/jejjohnson/rbig/issues/126) [#128](https://github.com/jejjohnson/rbig/issues/128)
+* add P3 composed estimators — clustering, Bayes classifier, residual diagnostics, fairness transformer ([#139](https://github.com/jejjohnson/rbig/issues/139)) ([3b56a32](https://github.com/jejjohnson/rbig/commit/3b56a32c359570433d6ae61c67add43005ac12fc)), closes [#127](https://github.com/jejjohnson/rbig/issues/127) [#129](https://github.com/jejjohnson/rbig/issues/129) [#130](https://github.com/jejjohnson/rbig/issues/130) [#131](https://github.com/jejjohnson/rbig/issues/131)
+
+
+### Documentation
+
+* benchmark suite, estimator gallery, and README four-identity table ([#143](https://github.com/jejjohnson/rbig/issues/143)) ([ba85d5c](https://github.com/jejjohnson/rbig/commit/ba85d5c185f05cc64856b6ad40cec8ca69e6a689)), closes [#133](https://github.com/jejjohnson/rbig/issues/133)
+
 ## [0.1.15](https://github.com/jejjohnson/rbig/compare/rbig-v0.1.14...rbig-v0.1.15) (2026-07-02)
 
 
