@@ -30,6 +30,33 @@ This also makes RBIG a natural tool for computing information-theoretic measures
 
 ---
 
+## One flow, four identities
+
+A single fitted RBIG flow is simultaneously a density model, a generator, an information estimator, and a feature transformer:
+
+| Identity | Core method | What it gives you |
+| --- | --- | --- |
+| **Density** | `score_samples(X)` | exact `log p(x)` via change-of-variables |
+| **Generator** | `sample(n)` | draws `z ~ N(0, I)` and inverts the flow |
+| **Information** | `estimate_mi`, `estimate_tc`, … | entropy / MI / TC through total-correlation reduction |
+| **Transformer** | `transform` / `inverse_transform` | an invertible map to a Gaussianized latent space |
+
+Every estimator in the **scikit-learn suite** is a thin, `check_estimator`-compliant wrapper exposing one of these identities:
+
+| Estimator | Role | Identity |
+| --- | --- | --- |
+| `RBIGOutlierDetector` | `OutlierMixin` | density |
+| `RBIGReducer` | `TransformerMixin` | information (negentropy) |
+| `RBIGMISelector` | `SelectorMixin` | information (MI) |
+| `RBIGKMeans` | `ClusterMixin` | transformer + inverse |
+| `RBIGBayesClassifier` | `ClassifierMixin` | density (per class) |
+| `RBIGFairTransformer` | `TransformerMixin` | transformer + inverse (transport) |
+| `ResidualDiagnostics` | meta `RegressorMixin` | information (residual MI) |
+
+See the [estimator suite overview](docs/estimators.md) and the honest [benchmark report](docs/benchmarks.md) — which shows where each estimator beats its sklearn baseline **and where the baseline wins**.
+
+---
+
 ## Key Features
 
 - **Multiple marginal Gaussianization methods**: Quantile Transform, KDE, Gaussian Mixture Model, Spline
@@ -63,15 +90,26 @@ pip install "rbig[all]"     # everything
 import numpy as np
 from rbig import AnnealedRBIG
 
-# Generate correlated 2D data
-rng = np.random.RandomState(42)
-data = rng.randn(1000, 2) @ [[1, 0.8], [0.8, 1]]
+rng = np.random.default_rng(0)
+X = rng.standard_normal((1000, 2)) @ [[1, 0.8], [0.8, 1]]
 
-# Fit RBIG and transform to Gaussian
-model = AnnealedRBIG(n_layers=50, rotation="pca")
-Z = model.fit_transform(data)
+model = AnnealedRBIG(n_layers=50, random_state=0).fit(X)
 
-# Z is now approximately standard Gaussian
+Z = model.transform(X)              # 1. transformer: Gaussianized latent
+logp = model.score_samples(X)       # 2. density: exact log p(x)
+samples = model.sample(500)         # 3. generator: new draws
+X_back = model.inverse_transform(Z) # 4. invert the flow back to data space
+```
+
+Persist a fitted model with the **versioned** dictionary format — the
+state carries a `format_version` field so older model files stay
+loadable (and `from_dict` rejects unknown versions):
+
+```python
+import pickle
+state = model.to_dict()                    # dict with a "format_version" tag
+pickle.dump(state, open("model.pkl", "wb"))
+restored = AnnealedRBIG.from_dict(pickle.load(open("model.pkl", "rb")))
 ```
 
 ---
