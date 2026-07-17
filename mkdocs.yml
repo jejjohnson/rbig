@@ -67,6 +67,19 @@ nav:
   - Home: index.md
   - Quickstart: quickstart.md
   - Configuration: configuration.md
+  - Estimator Suite:
+      - Overview: estimators.md
+      - Outlier Detection: notebooks/19_outlier_detection.ipynb
+      - Negentropy Reduction: notebooks/20_negentropy_reduction.ipynb
+      - MI Feature Selection: notebooks/21_mi_feature_selection.ipynb
+      - Gaussianize-then-Cluster: notebooks/22_gaussianize_then_cluster.ipynb
+      - Nonlinear Bayes Classifier: notebooks/23_bayes_classifier.ipynb
+      - Fairness Transform: notebooks/24_fairness_transform.ipynb
+      - Residual Diagnostics: notebooks/25_residual_diagnostics.ipynb
+  - Guides:
+      - Choosing a Marginal: guides/choosing_a_marginal.md
+      - Fairness API: guides/fairness.md
+  - Benchmarks: benchmarks.md
   - Notes:
       - Algorithm:
           - RBIG Walk-Through: notebooks/03_rbig_walkthrough.ipynb

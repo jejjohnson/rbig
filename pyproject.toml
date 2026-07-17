@@ -127,6 +127,11 @@ ignore = [
 ]
 unfixable = ["ERA001", "F841", "T201", "T203"]
 
+[tool.ruff.lint.per-file-ignores]
+# Benchmark tables use math unicode (ρ, ×, ↓, ↑) in string literals, the
+# string-variant of the already-ignored RUF002 (docstring math).
+"benchmarks/*" = ["RUF001"]
+
 [tool.ruff.lint.isort]
 combine-as-imports = true
 force-sort-within-sections = true
